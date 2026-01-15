@@ -1,0 +1,132 @@
+:root {
+    /* 🎨 Paleta de colores propuesta */
+    --gold: #d4a857;
+    --gold-light: #d4a857;
+    --dark: #1a1a1a;
+    --gray: #e6e6e6;
+    --white: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    background: var(--dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 20px;
+}
+
+.login-container {
+    background: var(--white);
+    padding: 40px 30px;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 18px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+    text-align: center;
+}
+
+.logo {
+    width: 120px;
+    margin-bottom: 10px;
+}
+
+.brand-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--dark);
+}
+
+.brand-subtitle {
+    font-size: 14px;
+    color: var(--gold);
+    margin-bottom: 30px;
+}
+
+.login-form {
+    text-align: left;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    font-size: 14px;
+    color: var(--dark);
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 6px;
+    border-radius: 10px;
+    border: 1px solid var(--gray);
+    background: var(--gray);
+    font-size: 14px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.form-group input:focus {
+    border-color: var(--gold);
+    background: #fff8e8;
+}
+
+.btn-login {
+    width: 100%;
+    background: var(--gold);
+    color: var(--dark);
+    padding: 14px;
+    margin-top: 8px;
+    font-size: 16px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-login:hover {
+    background: var(--gold-light);
+}
+
+.links {
+    margin-top: 18px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.links a {
+    color: var(--gold);
+    font-size: 13px;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.links a:hover {
+    color: var(--dark);
+}
+.hero-buttons .btn-primary {
+    background: var(--gold);
+    border: 1px solid var(--gold);
+    border-radius: 40px;
+}
+
+.hero-buttons .btn-outline {
+    color: #5e2ea6;
+    /* el púrpura elegante que pusiste */
+    border: none;
+    background: transparent;
+    font-weight: 500;
+}
+
+.hero-buttons .btn-outline:hover {
+    text-decoration: underline;
+}
