@@ -320,3 +320,19 @@ input, textarea{
   .products{ grid-template-columns: 1fr; }
 }
 
+.top-banner{
+  width: 100vw;
+  margin-left: calc(50% - 50vw);   /* rompe el container */
+  height: 140px;
+  background-image: url("assets/franja.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+@media (max-width: 768px){
+  .top-banner{
+    height: 95px;
+  }
+}
