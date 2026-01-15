@@ -1,0 +1,227 @@
+/* ===============================
+   SECCIÓN HERO
+================================ */
+
+.hero {
+    background: radial-gradient(circle at top, #2c2c2c, #000);
+    color: var(--white);
+    padding: 120px 0 100px;
+}
+
+.hero-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 40px;
+    align-items: center;
+}
+
+.hero-text h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.hero-text p {
+    font-size: 1rem;
+    color: #e6e6e6;
+    margin-bottom: 25px;
+    max-width: 520px;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+/* Forzar tamaño del logo del hero (si lo usas ahí) */
+.hero img {
+    width: 180px;
+    height: auto;
+}
+
+/* Tarjeta lateral */
+.hero-card {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 24px;
+    border-radius: 20px;
+    border: 1px solid rgba(212, 168, 87, 0.4);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
+}
+
+.hero-card h2 {
+    color: var(--gold-light);
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+}
+
+.hero-card p {
+    color: #f5f5f5;
+    font-size: 0.95rem;
+    margin-bottom: 14px;
+}
+
+.hero-card ul {
+    list-style: none;
+    color: #ffffff;
+    padding-left: 0;
+}
+
+.hero-card li::before {
+    content: "• ";
+    color: var(--gold);
+}
+
+/* ===============================
+   SERVICIOS
+================================ */
+
+.section {
+    padding: 70px 0;
+}
+
+.services {
+    background: var(--bg-soft);
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.card {
+    background: var(--white);
+    padding: 20px;
+    border-radius: 18px;
+    border: 1px solid rgba(212, 168, 87, 0.2);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    border-color: var(--gold);
+}
+
+/* ===============================
+   PORTAFOLIO
+================================ */
+
+.portfolio {
+    background: var(--white);
+}
+
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.portfolio-item {
+    background: radial-gradient(circle at 10% 0, #222, #000),
+        radial-gradient(circle at 100% 100%, rgba(212, 168, 87, 0.7), #000);
+    border-radius: 16px;
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+}
+
+.portfolio-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+    color: var(--white);
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.portfolio-item:hover .portfolio-overlay {
+    opacity: 1;
+}
+
+/* ===============================
+   PROCESO
+================================ */
+
+.process-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.step {
+    background: var(--white);
+    padding: 20px;
+    border-radius: 18px;
+    border: 1px solid rgba(212, 168, 87, 0.2);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.step-number {
+    position: absolute;
+    top: -15px;
+    left: 20px;
+    background: var(--gold);
+    color: var(--dark);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ===============================
+   CONTACTO
+================================ */
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+.contact-form {
+    background: var(--white);
+    padding: 25px;
+    border-radius: 18px;
+    border: 1px solid rgba(212, 168, 87, 0.2);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid var(--gray);
+    margin-bottom: 15px;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 768px) {
+
+    .hero-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cards-grid,
+    .portfolio-grid,
+    .process-steps,
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-card {
+        margin-top: 20px;
+    }
+}
