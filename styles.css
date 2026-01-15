@@ -183,7 +183,7 @@ h1{
   background: rgba(255,255,255,.06);
   border: 1px solid rgba(255,255,255,.12);
   border-radius: var(--radius);
-  height: 400px;
+  height: 340px;
   width: 100%;
   max-width: 650px;
   overflow: hidden;
@@ -209,14 +209,14 @@ h1{
     justify-content: center;
   }
   .hero__image{
-    height: 260px;
+    height: 280px;
     max-width: 100%;
   }
 }
 
 @media (max-width: 520px){
   .hero__image{
-    height: 200px;
+    height: 230px;
   }
 }
 }
