@@ -175,13 +175,9 @@ h1{
   height: 100%;
   object-fit: cover;   /* llena el cuadro sin deformar */
   border-radius: var(--radius);
+   .hero__image img{
+  object-position: center 65%;
 }
-
-}
-
-
-}
-
 .section{ padding: 46px 0; }
 .section--dark{
   background: rgba(255,255,255,.04);
@@ -344,6 +340,16 @@ input, textarea{
 @media (max-width: 768px){
   .top-banner{
     height: 95px;
+  }
+}
+@media (max-width: 900px){
+  .hero__image{
+    height: 220px;
+  }
+}
+@media (max-width: 520px){
+  .hero__image{
+    height: 200px;
   }
 }
 
