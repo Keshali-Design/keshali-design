@@ -379,19 +379,5 @@ input, textarea{
   border-bottom: 1px solid rgba(255,255,255,.08);
 }
 
-@media (max-width: 768px){
-  .top-banner{
-    height: 95px;
-  }
-}
-@media (max-width: 900px){
-  .hero__image{
-    height: 220px;
-  }
-}
-@media (max-width: 520px){
-  .hero__image{
-    height: 200px;
-  }
-}
+
 
