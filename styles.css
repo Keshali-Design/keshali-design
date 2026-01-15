@@ -164,7 +164,7 @@ h1{
   background: rgba(255,255,255,.06);
   border: 1px solid rgba(255,255,255,.12);
   border-radius: var(--radius);
-  height: 320px;
+  height: 260px;
   display:flex;
   align-items:center;
   justify-content:center;
