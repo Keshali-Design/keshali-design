@@ -130,3 +130,32 @@ body {
 .hero-buttons .btn-outline:hover {
     text-decoration: underline;
 }
+/* --- FIXES GENERALES --- */
+* { box-sizing: border-box; }
+img { max-width: 100%; height: auto; display: block; }
+
+body { overflow-x: hidden; }
+
+/* Evita que un bloque se monte encima de otros */
+section { position: relative; z-index: 1; }
+
+/* Contenedores grandes: que no se salgan del ancho */
+.container, .contenedor, .wrapper, main {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* Si tus tarjetas están en fila y se salen, que hagan wrap */
+.cards, .card-grid, .servicios, .portfolio, .proceso {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+/* Tarjetas: ancho flexible en pantallas pequeñas */
+.card {
+  flex: 1 1 240px;
+  max-width: 360px;
+}
