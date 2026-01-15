@@ -160,23 +160,41 @@ h1{
   font-weight: 600;
   font-size: 14px;
 }
+/* HERO IMAGE COMPLETO */
 .hero__image{
   background: rgba(255,255,255,.06);
   border: 1px solid rgba(255,255,255,.12);
   border-radius: var(--radius);
   height: 260px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color: rgba(255,255,255,.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
   box-shadow: var(--shadow);
- .hero__image img{
+}
+
+/* Imagen dentro del hero */
+.hero__image > img{
   width: 100%;
   height: 100%;
-  object-fit: cover;   /* llena el cuadro sin deformar */
-  border-radius: var(--radius);
-   .hero__image img{
+  object-fit: cover;
   object-position: center 65%;
+  border-radius: var(--radius);
+}
+
+/* Responsive */
+@media (max-width: 900px){
+  .hero__image{
+    height: 220px;
+  }
+}
+
+@media (max-width: 520px){
+  .hero__image{
+    height: 200px;
+  }
+}
+
 }
 .section{ padding: 46px 0; }
 .section--dark{
