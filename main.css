@@ -1,0 +1,260 @@
+/* =========================================================
+   VARIABLES GLOBALES
+   ========================================================= */
+
+:root {
+    --gold: #d4a857;
+    --gold-light: #f2d9a6;
+    --gold-soft: #e8c98a;
+    --dark: #1a1a1a;
+    --white: #ffffff;
+    --gray: #e6e6e6;
+    --bg-soft: #faf8f4;
+
+    --font-main: "Poppins", sans-serif;
+}
+
+/* =========================================================
+   RESET Y CONFIGURACIÓN BASE
+   ========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-main);
+    background: var(--bg-soft);
+    color: var(--dark);
+    line-height: 1.6;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+}
+
+a {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+ul {
+    list-style: none;
+}
+
+
+/* =========================================================
+   BOTONES
+   ========================================================= */
+
+.btn {
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    display: inline-block;
+    transition: 0.3s ease;
+    border: none;
+}
+
+.btn-primary {
+    background: var(--gold);
+    color: var(--dark);
+    border: 1px solid var(--gold);
+}
+
+.btn-primary:hover {
+    background: var(--gold-light);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--gold-soft);
+    font-weight: 500;
+}
+
+.btn-outline:hover {
+    color: var(--gold);
+}
+
+
+/* =========================================================
+   HEADER & NAV
+   ========================================================= */
+
+.header {
+    background: rgba(0, 0, 0, 0.9);
+    color: var(--white);
+    padding: 12px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* LOGO + TEXTO */
+
+.logo-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-box img {
+    width: 65px;
+    height: auto;
+    object-fit: contain;
+}
+
+.logo-title {
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--white);
+}
+
+.logo-subtitle {
+    color: var(--gold-light);
+    font-size: 0.75rem;
+    opacity: 0.95;
+    margin-top: -2px;
+}
+
+/* NAVIGATION */
+
+.nav-list {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.nav-list a {
+    font-size: 0.9rem;
+    color: var(--white);
+    position: relative;
+    padding-bottom: 2px;
+}
+
+.nav-list a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    width: 0%;
+    height: 2px;
+    background: var(--gold);
+    transition: width 0.3s ease;
+}
+
+.nav-list a:hover::after {
+    width: 100%;
+}
+
+.nav-login {
+    border: 1px solid var(--gold);
+    padding: 6px 14px;
+    border-radius: 22px;
+    transition: 0.3s ease;
+}
+
+.nav-login:hover {
+    background: var(--gold);
+    color: var(--dark);
+}
+
+/* Menú móvil */
+
+.nav-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    background: none;
+    border: none;
+}
+
+.nav-toggle span {
+    width: 24px;
+    height: 2px;
+    background: var(--white);
+}
+
+
+/* =========================================================
+   SECCIONES GENERALES
+   ========================================================= */
+
+.section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.section-subtitle {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 35px;
+    color: #444;
+    font-size: 1rem;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.footer {
+    background: var(--dark);
+    padding: 20px 0;
+    text-align: center;
+    color: var(--white);
+    margin-top: 40px;
+}
+
+.footer p {
+    font-size: 0.85rem;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 850px) {
+
+    .nav-toggle {
+        display: flex;
+    }
+
+    .nav {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        left: 0;
+        background: rgba(0, 0, 0, 0.95);
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        text-align: center;
+        padding: 0;
+    }
+
+    .nav.open {
+        max-height: 300px;
+        padding: 20px 0;
+    }
+
+    .nav-list {
+        flex-direction: column;
+        gap: 16px;
+    }
+}
