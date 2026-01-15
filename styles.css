@@ -255,35 +255,23 @@ h1{
 .card h3{ margin:0 0 8px; }
 .card p{ margin:0; color: var(--muted); }
 
-.products{
-  display:grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+
 }
+
+.price{ color: var(--gold); font-weight: 900; }
+
+.grid-3.products{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
 .product{
   background: rgba(0,0,0,.25);
   border: 1px solid rgba(255,255,255,.12);
-  border-radius: var(--radius);
+  border-radius: 16px;
   padding: 16px;
 }
-.product__img{
-  height: 160px;
-  border-radius: 12px;
-  background: rgba(255,255,255,.08);
-  border: 1px solid rgba(255,255,255,.12);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color: rgba(255,255,255,.6);
-  margin-bottom: 12px;
-}
-.products{
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  align-items: stretch;
-}
-
 @media (max-width: 900px){
   .products{
     grid-template-columns: repeat(2, 1fr);
@@ -296,9 +284,7 @@ h1{
   }
 }
 
-.price{ color: var(--gold); font-weight: 900; }
-
-.grid-3{
+{
   display:grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
@@ -399,21 +385,21 @@ input, textarea{
 }
 
 .product__img{
-  height: 180px;
-  background: rgba(255,255,255,.08);
+  height: 200px;
+  background: #111;
   border: 1px solid rgba(255,255,255,.12);
   border-radius: 12px;
   overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .product__img img{
   width: 100%;
   height: 100%;
-  object-fit: contain;   /* ✅ muestra completo, NO recorta */
+  object-fit: cover;        /* llena toda la caja */
+  object-position: center;  /* no corta raro */
   display: block;
+}
+
 }
 
 
