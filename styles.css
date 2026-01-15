@@ -98,7 +98,7 @@ img{ max-width:100%; height:auto; display:block; }
   font-size: 18px;
 }
 
-.hero{ padding: 56px 0 24px; }
+.hero{ padding: 28px 0 24px; }
 .hero__grid{
   display:grid;
   grid-template-columns: 1.1fr .9fr;
@@ -336,4 +336,4 @@ input, textarea{
     height: 95px;
   }
 }
-.hero{ padding: 56px 0 24px; }
+
