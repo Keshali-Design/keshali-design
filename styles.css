@@ -183,9 +183,9 @@ h1{
   background: rgba(255,255,255,.06);
   border: 1px solid rgba(255,255,255,.12);
   border-radius: var(--radius);
-  height: 260px;
+  height: 320px;
   width: 100%;
-  max-width: 520px;
+  max-width: 600px;
   overflow: hidden;
   box-shadow: var(--shadow);
   display: block;
@@ -209,7 +209,7 @@ h1{
     justify-content: center;
   }
   .hero__image{
-    height: 220px;
+    height: 260px;
     max-width: 100%;
   }
 }
