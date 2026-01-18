@@ -401,4 +401,14 @@ input, textarea{
   .products{ grid-template-columns: 1fr; }
 }
 
+.card--link{
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.card--link:hover{
+  transform: translateY(-2px);
+  border-color: rgba(255,255,255,.22);
+}
 
