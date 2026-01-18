@@ -445,3 +445,26 @@ input, textarea{
   font-size: 12px;
   line-height: 1;
 }
+
+.stock{
+  display: inline-block;
+  margin: 6px 0 8px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .3px;
+}
+
+.stock--ok{
+  background: rgba(76, 175, 80, .15);
+  border: 1px solid rgba(76, 175, 80, .45);
+  color: #7CFF89;
+}
+
+.stock--out{
+  background: rgba(244, 67, 54, .15);
+  border: 1px solid rgba(244, 67, 54, .45);
+  color: #FF8A80;
+}
+
