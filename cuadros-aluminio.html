@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cuadros de aluminio | Keshali Design</title>
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container header__inner">
+      <a class="brand" href="index.html#inicio">
+        <img class="brand__logo" src="assets/Design.png" alt="Keshali Design">
+        <span class="brand__name">Keshali Design</span>
+      </a>
+
+    <nav class="nav" id="nav">
+      <a href="index.html#inicio">Inicio</a>
+      <a href="index.html#catalogo">Catálogo</a>
+      <a href="index.html#nosotros">Nosotros</a>
+      <a href="index.html#contacto">Contacto</a>
+    </nav>
+
+      <div class="header__actions">
+        <button class="menu-btn" id="menuBtn" aria-label="Abrir menú">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="top-banner"></section>
+
+  <!-- CONTENIDO -->
+  <main class="section section--dark">
+    <div class="container">
+
+      <div class="section__head">
+        <h2>Cuadros de aluminio personalizados</h2>
+        <p>Acabado moderno y duradero para espacios especiales.</p>
+      </div>
+
+      <div class="products">
+
+        <!-- Cuadro 1 -->
+        <article class="product">
+          <div class="product__img">
+            <img src="assets/cuadro1.png" alt="Cuadro de aluminio personalizado clásico">
+          </div>
+
+          <h3>Cuadro de aluminio</h3>
+          <p class="price">$120.000</p>
+
+          <p class="meta">Medida: 30 x 40 cm</p>
+          <p class="meta">Estado: <span class="estado disponible">Disponible</span></p>
+
+          <a class="btn btn--small" target="_blank"
+             href="https://wa.me/573177301489?text=Hola%2C%20quiero%20un%20cuadro%20de%20aluminio%20personalizado%2030x40">
+            Pedir por WhatsApp
+          </a>
+        </article>
+
+        <!-- Cuadro 2 -->
+        <article class="product">
+          <div class="product__img">
+            <img src="assets/cuadro2.png" alt="Cuadro de aluminio ilustrado personalizado">
+          </div>
+
+          <h3>Cuadro de aluminio ilustrado</h3>
+          <p class="price">$140.000</p>
+
+          <p class="meta">Medida: 40 x 60 cm</p>
+          <p class="meta">Estado: <span class="estado disponible">Disponible</span></p>
+
+          <a class="btn btn--small" target="_blank"
+             href="https://wa.me/573177301489?text=Hola%2C%20quiero%20un%20cuadro%20de%20aluminio%20ilustrado%2040x60">
+            Pedir por WhatsApp
+          </a>
+        </article>
+
+        <!-- Cuadro 3 -->
+        <article class="product">
+          <div class="product__img">
+            <img src="assets/cuadro3.png" alt="Cuadro de aluminio premium personalizado">
+          </div>
+
+          <h3>Cuadro de aluminio premium</h3>
+          <p class="price">$160.000</p>
+
+          <p class="meta">Medida: 50 x 70 cm</p>
+          <p class="meta">Estado: <span class="estado agotado">Agotado</span></p>
+
+          <button class="btn btn--small btn--ghost" disabled>
+            No disponible
+          </button>
+        </article>
+
+      </div>
+
+      <!-- VOLVER -->
+      <div class="back-row">
+        <a href="index.html#destacados" class="btn btn--ghost">
+          ← Volver a categorías
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <p>© <span id="year"></span> Keshali Design</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    const y = document.getElementById("year");
+    if (y) y.textContent = new Date().getFullYear();
+  </script>
+
+</body>
+</html>
