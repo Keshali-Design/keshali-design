@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Keshali Design | Mugs</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header class="header">
+  <div class="container header__inner">
+    <a class="brand" href="index.html#inicio">
+      <img class="brand__logo" src="assets/Design.png" alt="Keshali Design">
+      <span class="brand__name">Keshali Design</span>
+    </a>
+
+    <nav class="nav" id="nav">
+      <a href="index.html#inicio">Inicio</a>
+      <a href="index.html#catalogo">Catálogo</a>
+      <a href="index.html#nosotros">Nosotros</a>
+      <a href="index.html#contacto">Contacto</a>
+    </nav>
+
+    <div class="header__actions">
+      <button class="menu-btn" id="menuBtn">☰</button>
+    </div>
+  </div>
+</header>
+
+<section class="section section--dark">
+  <div class="container">
+    <div class="section__head">
+      <h2>Mugs</h2>
+      <p>Explora nuestra colección de mugs personalizados y pide por WhatsApp.</p>
+    </div>
+
+    <div class="products">
+
+      <!-- Mug 1 -->
+      <article class="product">
+        <div class="product__img">
+          <img src="assets/mug-25000.png" alt="Mug personalizado clásico">
+        </div>
+        <h3>Mug personalizado</h3>
+        <p class="price">$25.000</p>
+
+        <p class="product__meta">Estado: <span class="tag tag--ok">Disponible</span></p>
+
+        <a class="btn btn--small" target="_blank"
+           href="https://wa.me/573177301489?text=Hola%2C%20quiero%20un%20mug%20personalizado%20de%20%2425.000">
+          Pedir por WhatsApp
+        </a>
+      </article>
+
+      <!-- Mug 2 (ejemplo) -->
+      <article class="product">
+        <div class="product__img">
+          <img src="assets/mug-35000.png" alt="Mug premium personalizado">
+        </div>
+        <h3>Mug premium</h3>
+        <p class="price">$35.000</p>
+
+        <p class="product__meta">Estado: <span class="tag tag--ok">Disponible</span></p>
+
+        <a class="btn btn--small" target="_blank"
+           href="https://wa.me/573177301489?text=Hola%2C%20quiero%20un%20mug%20premium%20de%20%2435.000">
+          Pedir por WhatsApp
+        </a>
+      </article>
+
+      <!-- Mug 3 (Agotado visual) -->
+      <article class="product">
+        <div class="product__img">
+          <img src="assets/mug-negro.png" alt="Mug negro personalizado">
+        </div>
+        <h3>Mug negro</h3>
+        <p class="price">$30.000</p>
+
+        <p class="product__meta">Estado: <span class="tag tag--off">Agotado</span></p>
+
+        <a class="btn btn--small btn--ghost" href="#" onclick="return false;">
+          No disponible
+        </a>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <p>© Keshali Design</p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
