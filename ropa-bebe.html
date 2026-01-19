@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ropa para bebé | Keshali Design</title>
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container header__inner">
+      <a class="brand" href="index.html#inicio">
+        <img class="brand__logo" src="assets/Design.png" alt="Keshali Design">
+        <span class="brand__name">Keshali Design</span>
+      </a>
+
+      <nav class="nav" id="nav">
+        <a href="index.html#inicio">Inicio</a>
+        <a href="index.html#catalogo">Catálogo</a>
+        <a href="index.html#nosotros">Nosotros</a>
+        <a href="index.html#contacto">Contacto</a>
+      </nav>
+
+      <div class="header__actions">
+        <button class="menu-btn" id="menuBtn" aria-label="Abrir menú">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="top-banner"></section>
+
+  <!-- CONTENIDO -->
+  <main class="section section--dark">
+    <div class="container">
+
+      <div class="section__head">
+        <h2>Ropa para bebé personalizada</h2>
+        <p>Prendas suaves y tiernas personalizadas para los más pequeños.</p>
+      </div>
+
+      <div class="products">
+
+        <!-- Bebé 1 -->
+        <article class="product">
+          <div class="product__img">
+            <img src="assets/bebe1.png" alt="Body personalizado para bebé">
+          </div>
+
+          <h3>Body personalizado</h3>
+          <p class="price">$40.000</p>
+
+          <p class="meta">Talla: 0–6 meses</p>
+          <p class="meta">Estado: <span class="estado disponible">Disponible</span></p>
+
+          <a class="btn btn--small" target="_blank"
+             href="https://wa.me/573177301489?text=Hola%2C%20quiero%20un%20body%20personalizado%20para%20beb%C3%A9">
+            Pedir por WhatsApp
+          </a>
+        </article>
+
+        <!-- Bebé 2 -->
+        <article class="product">
+          <div class="product__img">
+            <img src="assets/bebe2.png" alt="Camiseta para bebé personalizada">
+          </div>
+
+          <h3>Camiseta para bebé</h3>
+          <p class="price">$45.000</p>
+
+          <p class="meta">Talla: 6–12 meses</p>
+          <p class="meta">Estado: <span class="estado disponible">Disponible</span></p>
+
+          <a class="btn btn--small" target="_blank"
+             href="https://wa.me/573177301489?text=Hola%2C%20quiero%20una%20camiseta%20personalizada%20para%20beb%C3%A9">
+            Pedir por WhatsApp
+          </a>
+        </article>
+
+        <!-- Bebé 3 -->
+        <article class="product">
+          <div class="product__img">
+            <img src="assets/bebe3.png" alt="Set de ropa para bebé personalizado">
+          </div>
+
+          <h3>Set para bebé</h3>
+          <p class="price">$55.000</p>
+
+          <p class="meta">Talla: 12–18 meses</p>
+          <p class="meta">Estado: <span class="estado agotado">Agotado</span></p>
+
+          <button class="btn btn--small btn--ghost" disabled>
+            No disponible
+          </button>
+        </article>
+
+      </div>
+
+      <!-- VOLVER -->
+      <div class="back-row">
+        <a href="index.html#destacados" class="btn btn--ghost">
+          ← Volver a categorías
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <p>© <span id="year"></span> Keshali Design</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    const y = document.getElementById("year");
+    if (y) y.textContent = new Date().getFullYear();
+  </script>
+
+</body>
+</html>
