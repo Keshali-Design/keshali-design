@@ -468,3 +468,29 @@ input, textarea{
   color: #FF8A80;
 }
 
+.product__meta{
+  margin: 10px 0 12px;
+  color: rgba(255,255,255,.75);
+  font-weight: 600;
+}
+
+.tag{
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  margin-left: 6px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+}
+
+.tag--ok{
+  border-color: rgba(60, 200, 120, .35);
+  background: rgba(60, 200, 120, .12);
+}
+
+.tag--off{
+  border-color: rgba(255, 80, 80, .35);
+  background: rgba(255, 80, 80, .12);
+}
