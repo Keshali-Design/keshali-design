@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bolsas ecológicas | Keshali Design</title>
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container header__inner">
+      <a class="brand" href="index.html#inicio">
+        <img class="brand__logo" src="assets/Design.png" alt="Keshali Design">
+        <span class="brand__name">Keshali Design</span>
+      </a>
+
+      <nav class="nav" id="nav">
+        <a href="index.html#inicio">Inicio</a>
+        <a href="index.html#catalogo">Catálogo</a>
+        <a href="index.html#nosotros">Nosotros</a>
+        <a href="index.html#contacto">Contacto</a>
+      </nav>
+
+      <div class="header__actions">
+        <button class="menu-btn" id="menuBtn" aria-label="Abrir menú">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="top-banner"></section>
+
+  <!-- CONTENIDO -->
+  <main class="section section--dark">
+    <div class="container">
+
+      <div class="section__head">
+        <h2>Bolsas ecológicas personalizadas</h2>
+        <p>Bolsas reutilizables con logos, frases y arte. Pide por WhatsApp.</p>
+      </div>
+
+      <div class="products">
+
+        <!-- Bolsa 1 -->
+        <article class="product">
+          <div class="product__img">
+            <img src="assets/bolsa1.png" alt="Bolsa ecológica personalizada clásica">
+          </div>
+
+          <h3>Bolsa ecológica personalizada</h3>
+          <p class="price">$28.000</p>
+
+          <p class="meta">Medida: 35 x 40 cm</p>
+          <p class="meta">Estado: <span class="estado disponible">Disponible</span></p>
+
+          <a class="btn btn--small" target="_blank"
+             href="https://wa.me/573177301489?text=Hola%2C%20quiero%20una%20bolsa%20ecol%C3%B3gica%20personalizada%20(35x40)">
+            Pedir por WhatsApp
+          </a>
+        </article>
+
+        <!-- Bolsa 2 -->
+        <article class="product">
+          <div class="product__img">
+            <img src="assets/bolsa2.png" alt="Bolsa ecológica ilustrada personalizada">
+          </div>
+
+          <h3>Bolsa ecológica ilustrada</h3>
+          <p class="price">$30.000</p>
+
+          <p class="meta">Medida: 35 x 40 cm</p>
+          <p class="meta">Estado: <span class="estado disponible">Disponible</span></p>
+
+          <a class="btn btn--small" target="_blank"
+             href="https://wa.me/573177301489?text=Hola%2C%20quiero%20una%20bolsa%20ecol%C3%B3gica%20ilustrada%20(35x40)">
+            Pedir por WhatsApp
+          </a>
+        </article>
+
+        <!-- Bolsa 3 -->
+        <article class="product">
+          <div class="product__img">
+            <img src="assets/bolsa3.png" alt="Bolsa ecológica premium personalizada">
+          </div>
+
+          <h3>Bolsa ecológica premium</h3>
+          <p class="price">$32.000</p>
+
+          <p class="meta">Medida: 35 x 40 cm</p>
+          <p class="meta">Estado: <span class="estado agotado">Agotado</span></p>
+
+          <button class="btn btn--small btn--ghost" disabled>
+            No disponible
+          </button>
+        </article>
+
+      </div>
+
+      <!-- VOLVER -->
+      <div class="back-row">
+        <a href="index.html#destacados" class="btn btn--ghost">
+          ← Volver a categorías
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <p>© <span id="year"></span> Keshali Design</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    const y = document.getElementById("year");
+    if (y) y.textContent = new Date().getFullYear();
+  </script>
+
+</body>
+</html>
