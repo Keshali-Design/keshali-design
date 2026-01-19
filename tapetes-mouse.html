@@ -4,122 +4,109 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tapetes para mouse | Keshali Design</title>
-
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-<!-- HEADER -->
-<header class="header">
-  <div class="container header__inner">
-    <a class="brand" href="index.html#inicio">
-      <img class="brand__logo" src="assets/Design.png" alt="Keshali Design">
-      <span class="brand__name">Keshali Design</span>
-    </a>
-
-    <nav class="nav" id="nav">
-      <a href="index.html#inicio">Inicio</a>
-      <a href="index.html#catalogo">Catálogo</a>
-      <a href="index.html#nosotros">Nosotros</a>
-      <a href="index.html#contacto">Contacto</a>
-    </nav>
-
-    <div class="header__actions">
-      <button class="menu-btn" id="menuBtn">☰</button>
-    </div>
-  </div>
-</header>
-
-<section class="top-banner"></section>
-
-<!-- CONTENIDO -->
-<main class="section section--dark">
-  <div class="container">
-
-    <div class="section__head">
-      <h2>Tapetes para mouse personalizados</h2>
-      <p>Formato grande (deskmat), ideales para escritorio y gaming.</p>
-    </div>
-
-    <div class="products">
-
-      <!-- TAPETE 1 -->
-      <article class="product">
-        <div class="product__img">
-          <img src="assets/tapete1.png" alt="Tapete para mouse personalizado clásico">
-        </div>
-
-        <h3>Tapete para mouse clásico</h3>
-        <p class="price">$50.000</p>
-
-        <p class="meta">Medida: 80 x 30 cm</p>
-        <p class="meta">Estado: <span class="estado disponible">Disponible</span></p>
-
-        <a class="btn btn--small" target="_blank"
-           href="https://wa.me/573177301489?text=Hola%2C%20quiero%20un%20tapete%20para%20mouse%20cl%C3%A1sico%2080x30">
-          Pedir por WhatsApp
-        </a>
-      </article>
-
-      <!-- TAPETE 2 -->
-      <article class="product">
-        <div class="product__img">
-          <img src="assets/tapete2.png" alt="Tapete para mouse ilustrado">
-        </div>
-
-        <h3>Tapete para mouse ilustrado</h3>
-        <p class="price">$55.000</p>
-
-        <p class="meta">Medida: 80 x 30 cm</p>
-        <p class="meta">Estado: <span class="estado disponible">Disponible</span></p>
-
-        <a class="btn btn--small" target="_blank"
-           href="https://wa.me/573177301489?text=Hola%2C%20quiero%20un%20tapete%20para%20mouse%20ilustrado%2080x30">
-          Pedir por WhatsApp
-        </a>
-      </article>
-
-      <!-- TAPETE 3 -->
-      <article class="product">
-        <div class="product__img">
-          <img src="assets/tapete3.png" alt="Tapete para mouse premium">
-        </div>
-
-        <h3>Tapete para mouse premium</h3>
-        <p class="price">$65.000</p>
-
-        <p class="meta">Medida: 90 x 40 cm</p>
-        <p class="meta">Estado: <span class="estado agotado">Agotado</span></p>
-
-        <button class="btn btn--small btn--ghost" disabled>
-          No disponible
-        </button>
-      </article>
-
-    </div>
-
-    <!-- VOLVER A CATEGORÍAS -->
-    <div class="back-row">
-      <a href="index.html#destacados" class="btn btn--ghost">
-        ← Volver a categorías
+  <header class="header">
+    <div class="container header__inner">
+      <a class="brand" href="index.html#inicio">
+        <img class="brand__logo" src="assets/Design.png" alt="Keshali Design">
+        <span class="brand__name">Keshali Design</span>
       </a>
+
+      <nav class="nav" id="nav">
+        <a href="index.html#inicio">Inicio</a>
+        <a href="index.html#catalogo">Catálogo</a>
+        <a href="index.html#nosotros">Nosotros</a>
+        <a href="index.html#contacto">Contacto</a>
+      </nav>
+
+      <div class="header__actions">
+        <button class="menu-btn" id="menuBtn" aria-label="Abrir menú">☰</button>
+      </div>
     </div>
+  </header>
 
-  </div>
-</main>
+  <section class="top-banner"></section>
 
-<!-- FOOTER -->
-<footer class="footer">
-  <div class="container footer__inner">
-    <p>© <span id="year"></span> Keshali Design</p>
-  </div>
-</footer>
+  <main class="section section--dark">
+    <div class="container">
 
-<script src="app.js"></script>
-<script>
-  const y = document.getElementById("year");
-  if (y) y.textContent = new Date().getFullYear();
-</script>
+      <div class="section__head">
+        <h2>Tapetes para mouse personalizados</h2>
+        <p>Formato grande (deskmat), ideales para escritorio y gaming.</p>
+      </div>
+
+      <div class="products">
+
+        <article class="product">
+          <div class="product__img">
+            <img src="assets/tapete1.png" alt="Tapete para mouse personalizado clásico">
+          </div>
+          <h3>Tapete para mouse clásico</h3>
+          <p class="price">$45.000</p>
+          <p class="meta">Medida: 80 x 30 cm</p>
+          <p class="meta">Estado: <span class="estado disponible">Disponible</span></p>
+
+          <a class="btn btn--small" target="_blank"
+             href="https://wa.me/573177301489?text=Hola%2C%20quiero%20un%20tapete%20para%20mouse%20cl%C3%A1sico%2080x30">
+            Pedir por WhatsApp
+          </a>
+        </article>
+
+        <article class="product">
+          <div class="product__img">
+            <img src="assets/tapete2.png" alt="Tapete para mouse ilustrado">
+          </div>
+          <h3>Tapete para mouse ilustrado</h3>
+          <p class="price">$55.000</p>
+          <p class="meta">Medida: 80 x 30 cm</p>
+          <p class="meta">Estado: <span class="estado disponible">Disponible</span></p>
+
+          <a class="btn btn--small" target="_blank"
+             href="https://wa.me/573177301489?text=Hola%2C%20quiero%20un%20tapete%20para%20mouse%20ilustrado%2080x30">
+            Pedir por WhatsApp
+          </a>
+        </article>
+
+        <article class="product">
+          <div class="product__img">
+            <img src="assets/tapete3.png" alt="Tapete para mouse premium">
+          </div>
+          <h3>Tapete para mouse premium</h3>
+          <p class="price">$65.000</p>
+          <p class="meta">Medida: 90 x 40 cm</p>
+          <p class="meta">Estado: <span class="estado agotado">Agotado</span></p>
+
+          <button class="btn btn--small btn--ghost" disabled>
+            No disponible
+          </button>
+        </article>
+
+      </div>
+
+      <div class="back-row">
+        <a href="index.html#destacados" class="btn btn--ghost">
+          ← Volver a categorías
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <p>© <span id="year"></span> Keshali Design</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    const y = document.getElementById("year");
+    if (y) y.textContent = new Date().getFullYear();
+  </script>
 
 </body>
 </html>
+v
