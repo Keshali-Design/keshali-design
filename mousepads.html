@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mousepads | Keshali Design</title>
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container header__inner">
+      <a class="brand" href="index.html#inicio">
+        <img class="brand__logo" src="assets/Design.png" alt="Keshali Design">
+        <span class="brand__name">Keshali Design</span>
+      </a>
+
+      <nav class="nav" id="nav">
+        <a href="index.html#inicio">Inicio</a>
+        <a href="index.html#catalogo">Catálogo</a>
+        <a href="index.html#nosotros">Nosotros</a>
+        <a href="index.html#contacto">Contacto</a>
+      </nav>
+
+      <div class="header__actions">
+        <button class="menu-btn" id="menuBtn" aria-label="Abrir menú">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="top-banner"></section>
+
+  <!-- CONTENIDO -->
+  <main class="section section--dark">
+    <div class="container">
+
+      <div class="section__head">
+        <h2>Mousepads personalizados</h2>
+        <p>Ideales para oficina, estudio o regalos corporativos.</p>
+      </div>
+
+      <div class="products">
+
+        <!-- Mousepad 1 -->
+        <article class="product">
+          <div class="product__img">
+            <img src="assets/mousepad1.png" alt="Mousepad personalizado clásico">
+          </div>
+
+          <h3>Mousepad personalizado</h3>
+          <p class="price">$30.000</p>
+
+          <p class="meta">Medida: 22 x 18 cm</p>
+          <p class="meta">Estado: <span class="estado disponible">Disponible</span></p>
+
+          <a class="btn btn--small" target="_blank"
+             href="https://wa.me/573177301489?text=Hola%2C%20quiero%20un%20mousepad%20personalizado%2022x18">
+            Pedir por WhatsApp
+          </a>
+        </article>
+
+        <!-- Mousepad 2 -->
+        <article class="product">
+          <div class="product__img">
+            <img src="assets/mousepad2.png" alt="Mousepad ilustrado personalizado">
+          </div>
+
+          <h3>Mousepad ilustrado</h3>
+          <p class="price">$35.000</p>
+
+          <p class="meta">Medida: 22 x 18 cm</p>
+          <p class="meta">Estado: <span class="estado disponible">Disponible</span></p>
+
+          <a class="btn btn--small" target="_blank"
+             href="https://wa.me/573177301489?text=Hola%2C%20quiero%20un%20mousepad%20ilustrado%2022x18">
+            Pedir por WhatsApp
+          </a>
+        </article>
+
+        <!-- Mousepad 3 -->
+        <article class="product">
+          <div class="product__img">
+            <img src="assets/mousepad3.png" alt="Mousepad premium personalizado">
+          </div>
+
+          <h3>Mousepad premium</h3>
+          <p class="price">$40.000</p>
+
+          <p class="meta">Medida: 22 x 18 cm</p>
+          <p class="meta">Estado: <span class="estado agotado">Agotado</span></p>
+
+          <button class="btn btn--small btn--ghost" disabled>
+            No disponible
+          </button>
+        </article>
+
+      </div>
+
+      <!-- VOLVER -->
+      <div class="back-row">
+        <a href="index.html#destacados" class="btn btn--ghost">
+          ← Volver a categorías
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <p>© <span id="year"></span> Keshali Design</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    const y = document.getElementById("year");
+    if (y) y.textContent = new Date().getFullYear();
+  </script>
+
+</body>
+</html>
