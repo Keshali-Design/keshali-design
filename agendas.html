@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agendas | Keshali Design</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- HEADER (igual al index, simple) -->
+  <header class="header">
+    <div class="container header__inner">
+      <a class="brand" href="index.html#inicio">
+        <img class="brand__logo" src="assets/Design.png" alt="Keshali Design">
+        <span class="brand__name">Keshali Design</span>
+      </a>
+
+      <nav class="nav" id="nav">
+        <a href="index.html#inicio">Inicio</a>
+        <a href="index.html#catalogo">Catálogo</a>
+        <a href="index.html#nosotros">Nosotros</a>
+        <a href="index.html#contacto">Contacto</a>
+      </nav>
+
+      <div class="header__actions">
+        <button class="menu-btn" id="menuBtn">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO / TITULO PAGINA -->
+  <section class="section section--dark">
+    <div class="container">
+      <div class="section__head">
+        <h2>Agendas</h2>
+        <p>Explora nuestra colección de agendas personalizadas y pide por WhatsApp.</p>
+      </div>
+
+      <!-- GRID PRODUCTOS -->
+      <div class="products">
+
+        <!-- Agenda Premium - Disponible -->
+        <article class="product">
+          <div class="product__img">
+            <img src="assets/agenda1.png" alt="Agenda premium personalizada">
+          </div>
+
+          <h3>Agenda Premium</h3>
+          <p class="price">$45.000</p>
+
+          <p class="meta">
+            <strong>Medida:</strong> A5 ·
+            <strong>Estado:</strong>
+            <span class="pill pill--ok">Disponible</span>
+          </p>
+
+          <a class="btn btn--small" target="_blank"
+             href="https://wa.me/573177301489?text=Hola%2C%20quiero%20una%20Agenda%20Premium%20personalizada%20(A5)">
+            Pedir por WhatsApp
+          </a>
+        </article>
+
+        <!-- Agenda Personalizada - Disponible -->
+        <article class="product">
+          <div class="product__img">
+            <img src="assets/agenda2.png" alt="Agenda personalizada">
+          </div>
+
+          <h3>Agenda Personalizada</h3>
+          <p class="price">$35.000</p>
+
+          <p class="meta">
+            <strong>Medida:</strong> A5 ·
+            <strong>Estado:</strong>
+            <span class="pill pill--ok">Disponible</span>
+          </p>
+
+          <a class="btn btn--small" target="_blank"
+             href="https://wa.me/573177301489?text=Hola%2C%20quiero%20una%20Agenda%20Personalizada%20(A5)">
+            Pedir por WhatsApp
+          </a>
+        </article>
+
+        <!-- Agenda Sencilla - Agotado -->
+        <article class="product product--off">
+          <div class="product__img">
+            <img src="assets/agenda3.png" alt="Agenda sencilla">
+          </div>
+
+          <h3>Agenda Sencilla</h3>
+          <p class="price">$25.000</p>
+
+          <p class="meta">
+            <strong>Medida:</strong> A5 ·
+            <strong>Estado:</strong>
+            <span class="pill pill--off">Agotado</span>
+          </p>
+
+          <button class="btn btn--small btn--disabled" type="button" disabled>
+            No disponible
+          </button>
+        </article>
+
+      </div>
+
+      <!-- BOTON VOLVER ABAJO -->
+      <div style="margin-top:24px;">
+        <a class="btn btn--ghost" href="index.html#destacados">← Volver a categorías</a>
+      </div>
+    </div>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>
