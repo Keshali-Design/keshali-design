@@ -64,7 +64,7 @@ export function verifyWompiWebhook(body: WompiWebhookBody): boolean {
     return val ?? "";
   });
 
-  const str = [...values, body.timestamp, secret].join("~");
+  const str = [...values, body.timestamp, secret].join("");
   const expected = crypto.createHash("sha256").update(str).digest("hex");
 
   console.log("[wompi] checksum expected:", expected);
