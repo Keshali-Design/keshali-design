@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { Pencil, Check, X } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
+import { updateVariant } from "@/app/admin/productos/edit-actions";
 
 type Props = {
   id: string;
@@ -13,7 +12,6 @@ type Props = {
 };
 
 export function EditVariantForm({ id, price, stock, active }: Props) {
-  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [values, setValues] = useState({ price, stock, active });
   const [saving, setSaving] = useState(false);
@@ -22,17 +20,10 @@ export function EditVariantForm({ id, price, stock, active }: Props) {
   async function handleSave() {
     setSaving(true);
     setError(null);
-    const supabase = createClient();
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { error } = await (supabase.from("product_variants") as any).update({
-      price: values.price,
-      stock: values.stock,
-      active: values.active,
-      updated_at: new Date().toISOString(),
-    }).eq("id", id);
+    const { error: err } = await updateVariant(id, values);
 
-    if (error) {
+    if (err) {
       setError("Error al guardar");
       setSaving(false);
       return;
@@ -40,7 +31,6 @@ export function EditVariantForm({ id, price, stock, active }: Props) {
 
     setSaving(false);
     setOpen(false);
-    router.refresh();
   }
 
   if (!open) {
