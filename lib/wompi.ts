@@ -48,18 +48,28 @@ export function buildWompiUrl({
 }
 
 export function verifyWompiWebhook(body: WompiWebhookBody): boolean {
-  const secret = process.env.WOMPI_EVENTS_SECRET!;
-  const { properties, checksum } = body.signature;
+  const secret = process.env.WOMPI_EVENTS_SECRET?.trim();
+  if (!secret) {
+    console.error("[wompi] WOMPI_EVENTS_SECRET not set");
+    return false;
+  }
 
-  // Build string: value1~value2~...~timestamp~secret
-  const tx = body.data.transaction;
+  const { properties, checksum } = body.signature;
+  // Cast to Record so we can access any field Wompi sends
+  const tx = body.data.transaction as Record<string, unknown>;
+
   const values = properties.map((prop) => {
-    const key = prop.replace("transaction.", "") as keyof typeof tx;
-    return tx[key];
+    const key = prop.replace("transaction.", "");
+    const val = tx[key];
+    return val ?? "";
   });
 
   const str = [...values, body.timestamp, secret].join("~");
   const expected = crypto.createHash("sha256").update(str).digest("hex");
+
+  console.log("[wompi] checksum expected:", expected);
+  console.log("[wompi] checksum received:", checksum);
+
   return expected === checksum;
 }
 
