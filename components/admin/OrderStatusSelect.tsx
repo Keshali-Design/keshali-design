@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
+import { updateOrderStatus } from "@/app/admin/pedidos/actions";
 
 const STATUSES = [
   { value: "pending", label: "Pendiente", color: "text-yellow-400" },
@@ -19,7 +18,6 @@ export function OrderStatusSelect({
   orderId: string;
   currentStatus: string;
 }) {
-  const router = useRouter();
   const [status, setStatus] = useState(currentStatus);
   const [saving, setSaving] = useState(false);
 
@@ -28,16 +26,11 @@ export function OrderStatusSelect({
   async function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
     const newStatus = e.target.value;
     setSaving(true);
-    const supabase = createClient();
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await (supabase.from("orders") as any)
-      .update({ status: newStatus, updated_at: new Date().toISOString() })
-      .eq("id", orderId);
-
     setStatus(newStatus);
+
+    await updateOrderStatus(orderId, newStatus);
+
     setSaving(false);
-    router.refresh();
   }
 
   return (

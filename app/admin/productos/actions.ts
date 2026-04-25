@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 
 export type CreateVariantInput = {
@@ -30,7 +30,7 @@ export async function createVariant(
   input: CreateVariantInput,
   imageFile: FormData | null
 ): Promise<{ error: string | null; sku: string | null }> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
 
   // 1. Create new product if needed
   let productId = input.productId;
