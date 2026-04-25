@@ -1,9 +1,11 @@
 import { Resend } from "resend";
 import { formatCOP } from "./utils";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-const OWNER_EMAIL = process.env.OWNER_EMAIL ?? "";
 const FROM = "Keshali Design <onboarding@resend.dev>";
+
+function getResend() {
+  return new Resend(process.env.RESEND_API_KEY ?? "");
+}
 
 type OrderEmailData = {
   orderNumber: string;
@@ -109,21 +111,22 @@ function orderEmailHtml(data: OrderEmailData): string {
 }
 
 export async function sendNewOrderNotification(data: OrderEmailData) {
-  if (!OWNER_EMAIL) {
+  const ownerEmail = process.env.OWNER_EMAIL ?? "";
+  if (!ownerEmail) {
     console.warn("OWNER_EMAIL no configurado — omitiendo email de notificación");
     return;
   }
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM,
-    to: OWNER_EMAIL,
+    to: ownerEmail,
     subject: `🛍️ Nuevo pedido ${data.orderNumber} — ${formatCOP(data.total)}`,
     html: orderEmailHtml(data),
   });
 }
 
 export async function sendOrderConfirmationToCustomer(data: OrderEmailData) {
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM,
     to: data.customerEmail,
     subject: `Tu pedido ${data.orderNumber} está confirmado ✨`,

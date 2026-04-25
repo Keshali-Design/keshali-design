@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle, XCircle, Clock } from "lucide-react";
@@ -41,7 +41,16 @@ const STATUS_CONFIG: Record<Exclude<Status, "loading">, {
   },
 };
 
-export default function ResultadoPage() {
+function LoadingSpinner() {
+  return (
+    <div className="section max-w-md text-center py-24">
+      <div className="w-12 h-12 border-2 border-gold/30 border-t-gold rounded-full animate-spin mx-auto mb-4" />
+      <p className="text-muted text-sm">Verificando tu pago...</p>
+    </div>
+  );
+}
+
+function ResultadoContent() {
   const searchParams = useSearchParams();
   const { clearCart } = useCart();
   const [status, setStatus] = useState<Status>("loading");
@@ -58,18 +67,11 @@ export default function ResultadoPage() {
       return;
     }
 
-    // Query Supabase for the order linked to this transaction
-    // Wompi sends ?id={transaction_id} — we use the reference to find the order
     async function fetchOrderStatus() {
       const supabase = createClient();
-      // The reference in Wompi equals the order_number we generated
-      // We can find it by checking recent pending orders (approx by timestamp in the ID)
-      // Simplest: just show pending and let webhook update it
-      // If the user lands here, the payment was at least submitted
       setStatus("pending");
       setOrderNumber(null);
 
-      // Try to get order by recent pending status as fallback
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data } = await (supabase.from("orders") as any)
         .select("order_number, status")
@@ -80,7 +82,7 @@ export default function ResultadoPage() {
       if (data) {
         const row = data as { order_number: string; status: string };
         setOrderNumber(row.order_number);
-        const s = (row.status as string).toLowerCase();
+        const s = row.status.toLowerCase();
         if (s === "confirmed" || s === "approved") setStatus("approved");
         else if (s === "cancelled" || s === "declined") setStatus("declined");
         else setStatus("pending");
@@ -91,14 +93,7 @@ export default function ResultadoPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (status === "loading") {
-    return (
-      <div className="section max-w-md text-center py-24">
-        <div className="w-12 h-12 border-2 border-gold/30 border-t-gold rounded-full animate-spin mx-auto mb-4" />
-        <p className="text-muted text-sm">Verificando tu pago...</p>
-      </div>
-    );
-  }
+  if (status === "loading") return <LoadingSpinner />;
 
   const config = STATUS_CONFIG[status];
 
@@ -143,5 +138,13 @@ export default function ResultadoPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function ResultadoPage() {
+  return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <ResultadoContent />
+    </Suspense>
   );
 }
