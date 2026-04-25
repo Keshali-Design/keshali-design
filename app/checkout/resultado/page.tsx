@@ -70,16 +70,17 @@ export default function ResultadoPage() {
       setOrderNumber(null);
 
       // Try to get order by recent pending status as fallback
-      const { data } = await supabase
-        .from("orders")
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data } = await (supabase.from("orders") as any)
         .select("order_number, status")
         .order("created_at", { ascending: false })
         .limit(1)
         .single();
 
       if (data) {
-        setOrderNumber(data.order_number);
-        const s = (data.status as string).toLowerCase();
+        const row = data as { order_number: string; status: string };
+        setOrderNumber(row.order_number);
+        const s = (row.status as string).toLowerCase();
         if (s === "confirmed" || s === "approved") setStatus("approved");
         else if (s === "cancelled" || s === "declined") setStatus("declined");
         else setStatus("pending");
