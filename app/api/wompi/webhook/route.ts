@@ -12,6 +12,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
+  console.log("[wompi webhook] body:", JSON.stringify(body, null, 2));
+
   // Validate signature
   if (!verifyWompiWebhook(body)) {
     return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
