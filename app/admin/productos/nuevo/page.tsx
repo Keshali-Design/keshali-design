@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { NuevoProductoForm } from "@/components/admin/NuevoProductoForm";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
@@ -7,7 +7,7 @@ import type { Category, Product, Design, Color, Size } from "@/lib/supabase/type
 export const metadata = { title: "Nuevo producto — Admin" };
 
 export default async function NuevoProductoPage() {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
 
   const [
     { data: categories },
