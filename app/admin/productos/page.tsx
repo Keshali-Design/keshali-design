@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Plus } from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { formatCOP } from "@/lib/utils";
 import { EditVariantForm } from "@/components/admin/EditVariantForm";
 
@@ -19,7 +19,7 @@ type VariantRow = {
 };
 
 export default async function AdminProductosPage() {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
 
   const { data: variants } = await supabase
     .from("product_variants")

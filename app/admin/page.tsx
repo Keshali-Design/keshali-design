@@ -1,9 +1,9 @@
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { formatCOP } from "@/lib/utils";
 import type { Order, ProductVariant } from "@/lib/supabase/types";
 
 export default async function AdminDashboardPage() {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
 
   const { count: productCount } = await supabase
     .from("product_variants")

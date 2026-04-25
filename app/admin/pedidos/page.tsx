@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { formatCOP } from "@/lib/utils";
 import { OrderStatusSelect } from "@/components/admin/OrderStatusSelect";
 import type { Order } from "@/lib/supabase/types";
@@ -14,7 +14,7 @@ type OrderWithItems = Order & {
 };
 
 export default async function AdminPedidosPage() {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
 
   const { data: orders } = await supabase
     .from("orders")
