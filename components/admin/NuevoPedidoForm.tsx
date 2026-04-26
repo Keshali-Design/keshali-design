@@ -124,47 +124,52 @@ export function NuevoPedidoForm({ variants }: { variants: Variant[] }) {
         <h2 className="text-[#e8e8e8] font-semibold text-sm border-b border-subtle pb-2">Productos</h2>
 
         {items.map((item, i) => (
-          <div key={i} className="flex gap-2 items-start">
-            <div className="flex-1">
-              <VariantCombobox
-                variants={variants}
-                value={item.variantId}
-                onChange={(variantId, price) => {
-                  const updated = items.map((it, idx) =>
-                    idx === i ? { ...it, variantId, unitPrice: price } : it
-                  );
-                  setItems(updated);
-                }}
-              />
+          <div key={i} className="flex flex-col gap-1.5 pb-3 border-b border-subtle last:border-0 last:pb-0">
+            {/* Row 1: combobox + delete */}
+            <div className="flex gap-2 items-center">
+              <div className="flex-1">
+                <VariantCombobox
+                  variants={variants}
+                  value={item.variantId}
+                  onChange={(variantId, price) => {
+                    setItems(items.map((it, idx) =>
+                      idx === i ? { ...it, variantId, unitPrice: price } : it
+                    ));
+                  }}
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => removeItem(i)}
+                disabled={items.length === 1}
+                className="p-2 text-muted hover:text-red-400 transition-colors disabled:opacity-30 flex-shrink-0"
+              >
+                <Trash2 size={15} />
+              </button>
             </div>
-            <div className="w-20">
-              <input
-                type="number"
-                min="1"
-                value={item.quantity}
-                onChange={(e) => updateItem(i, "quantity", e.target.value)}
-                className={FIELD}
-                placeholder="Cant."
-              />
+            {/* Row 2: qty + price */}
+            <div className="flex gap-2">
+              <div className="w-32">
+                <label className={LABEL}>Cantidad</label>
+                <input
+                  type="number"
+                  min="1"
+                  value={item.quantity}
+                  onChange={(e) => updateItem(i, "quantity", e.target.value)}
+                  className={FIELD}
+                />
+              </div>
+              <div className="flex-1">
+                <label className={LABEL}>Precio unitario</label>
+                <input
+                  type="number"
+                  min="0"
+                  value={item.unitPrice}
+                  onChange={(e) => updateItem(i, "unitPrice", e.target.value)}
+                  className={FIELD}
+                />
+              </div>
             </div>
-            <div className="w-28">
-              <input
-                type="number"
-                min="0"
-                value={item.unitPrice}
-                onChange={(e) => updateItem(i, "unitPrice", e.target.value)}
-                className={FIELD}
-                placeholder="Precio"
-              />
-            </div>
-            <button
-              type="button"
-              onClick={() => removeItem(i)}
-              disabled={items.length === 1}
-              className="mt-1 p-2 text-muted hover:text-red-400 transition-colors disabled:opacity-30"
-            >
-              <Trash2 size={15} />
-            </button>
           </div>
         ))}
 
