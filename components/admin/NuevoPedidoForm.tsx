@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { createManualOrder } from "@/app/admin/pedidos/nuevo/actions";
 import { formatCOP } from "@/lib/utils";
+import { VariantCombobox } from "@/components/admin/VariantCombobox";
 
 type Variant = { id: string; sku: string; title: string; price: number; stock: number };
 type ItemRow = { variantId: string; quantity: number; unitPrice: number };
@@ -50,16 +51,10 @@ export function NuevoPedidoForm({ variants }: { variants: Variant[] }) {
     setItems(items.filter((_, idx) => idx !== i));
   }
 
-  function updateItem(i: number, field: keyof ItemRow, value: string | number) {
-    const updated = items.map((item, idx) => {
-      if (idx !== i) return item;
-      if (field === "variantId") {
-        const v = variants.find((v) => v.id === value);
-        return { ...item, variantId: value as string, unitPrice: v?.price ?? item.unitPrice };
-      }
-      return { ...item, [field]: Number(value) };
-    });
-    setItems(updated);
+  function updateItem(i: number, field: "quantity" | "unitPrice", value: string | number) {
+    setItems(items.map((item, idx) =>
+      idx === i ? { ...item, [field]: Number(value) } : item
+    ));
   }
 
   const subtotal = items.reduce((s, i) => s + i.unitPrice * i.quantity, 0);
@@ -131,17 +126,16 @@ export function NuevoPedidoForm({ variants }: { variants: Variant[] }) {
         {items.map((item, i) => (
           <div key={i} className="flex gap-2 items-start">
             <div className="flex-1">
-              <select
+              <VariantCombobox
+                variants={variants}
                 value={item.variantId}
-                onChange={(e) => updateItem(i, "variantId", e.target.value)}
-                className={FIELD}
-              >
-                {variants.map((v) => (
-                  <option key={v.id} value={v.id} className="bg-[#0f0f10]">
-                    {v.title} — {formatCOP(v.price)}
-                  </option>
-                ))}
-              </select>
+                onChange={(variantId, price) => {
+                  const updated = items.map((it, idx) =>
+                    idx === i ? { ...it, variantId, unitPrice: price } : it
+                  );
+                  setItems(updated);
+                }}
+              />
             </div>
             <div className="w-20">
               <input
