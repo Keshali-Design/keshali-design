@@ -12,8 +12,7 @@ export default async function NuevoPedidoPage() {
   const { data: variants } = await (supabase.from("product_variants") as any)
     .select("id, sku, title, price, stock")
     .eq("active", true)
-    .order("title")
-    .returns<{ id: string; sku: string; title: string; price: number; stock: number }[]>();
+    .order("title");
 
   return (
     <div className="max-w-3xl">
