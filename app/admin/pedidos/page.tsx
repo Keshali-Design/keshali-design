@@ -4,6 +4,8 @@ import { OrderStatusSelect } from "@/components/admin/OrderStatusSelect";
 import type { Order } from "@/lib/supabase/types";
 
 type OrderWithItems = Order & {
+  tracking_code?: string | null;
+  shipping_company?: string | null;
   order_items: Array<{
     id: string;
     quantity: number;
@@ -16,19 +18,35 @@ type OrderWithItems = Order & {
 export default async function AdminPedidosPage() {
   const supabase = createAdminClient();
 
-  const { data: orders } = await supabase
-    .from("orders")
-    .select(
+  const [{ data: orders }, { data: companiesRaw }] = await Promise.all([
+    supabase
+      .from("orders")
+      .select(
+        `
+        id, order_number, customer_name, customer_email, customer_phone,
+        subtotal, shipping_cost, total, status, notes, created_at, updated_at,
+        tracking_code, shipping_company,
+        order_items ( id, quantity, unit_price, total_price,
+          product_variants ( sku, title )
+        )
       `
-      id, order_number, customer_name, customer_email, customer_phone,
-      subtotal, shipping_cost, total, status, notes, created_at, updated_at,
-      order_items ( id, quantity, unit_price, total_price,
-        product_variants ( sku, title )
       )
-    `
-    )
-    .order("created_at", { ascending: false })
-    .returns<OrderWithItems[]>();
+      .order("created_at", { ascending: false })
+      .returns<OrderWithItems[]>(),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (supabase.from("orders") as any)
+      .select("shipping_company")
+      .not("shipping_company", "is", null),
+  ]);
+
+  // Unique non-empty companies, sorted alphabetically
+  const knownCompanies = [
+    ...new Set(
+      (companiesRaw ?? [])
+        .map((r: { shipping_company: string }) => r.shipping_company)
+        .filter(Boolean)
+    ),
+  ].sort() as string[];
 
   return (
     <div className="max-w-6xl">
@@ -64,6 +82,9 @@ export default async function AdminPedidosPage() {
                 <OrderStatusSelect
                   orderId={order.id}
                   currentStatus={order.status}
+                  currentTrackingCode={order.tracking_code}
+                  currentShippingCompany={order.shipping_company}
+                  knownCompanies={knownCompanies}
                 />
               </div>
             </div>
@@ -110,6 +131,23 @@ export default async function AdminPedidosPage() {
                 </div>
               ))}
             </div>
+
+            {(order.shipping_company || order.tracking_code) && (
+              <div className="mt-3 border-t border-subtle pt-3 flex gap-4 text-xs">
+                {order.shipping_company && (
+                  <div>
+                    <p className="text-muted">Transportadora</p>
+                    <p className="text-[#e8e8e8]">{order.shipping_company}</p>
+                  </div>
+                )}
+                {order.tracking_code && (
+                  <div>
+                    <p className="text-muted">Rastreo</p>
+                    <p className="text-gold font-mono">{order.tracking_code}</p>
+                  </div>
+                )}
+              </div>
+            )}
 
             {order.notes && (
               <p className="mt-3 text-xs text-muted border-t border-subtle pt-3">

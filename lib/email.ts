@@ -133,3 +133,101 @@ export async function sendOrderConfirmationToCustomer(data: OrderEmailData) {
     html: orderEmailHtml({ ...data }),
   });
 }
+
+export async function sendOrderShippedEmail({
+  orderNumber,
+  customerName,
+  customerEmail,
+  trackingCode,
+  shippingCompany,
+}: {
+  orderNumber: string;
+  customerName: string;
+  customerEmail: string;
+  trackingCode: string | null;
+  shippingCompany: string | null;
+}) {
+  const trackingHtml = trackingCode
+    ? `
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;margin-bottom:16px;">
+      <p style="margin:0 0 12px;color:#9a9a9a;font-size:11px;text-transform:uppercase;letter-spacing:1px;">Información de envío</p>
+      <table style="width:100%;border-collapse:collapse;">
+        ${shippingCompany ? `<tr><td style="color:#9a9a9a;font-size:12px;padding:2px 0;width:120px;">Transportadora</td><td style="color:#e8e8e8;font-size:13px;">${shippingCompany}</td></tr>` : ""}
+        <tr><td style="color:#9a9a9a;font-size:12px;padding:2px 0;">Código de rastreo</td><td style="color:#caa45a;font-size:13px;font-family:monospace;font-weight:700;">${trackingCode}</td></tr>
+      </table>
+    </div>`
+    : "";
+
+  await getResend().emails.send({
+    from: FROM,
+    to: customerEmail,
+    subject: `Tu pedido ${orderNumber} está en camino 🚚`,
+    html: `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"/></head>
+<body style="margin:0;padding:0;background:#0f0f10;font-family:system-ui,sans-serif;">
+  <div style="max-width:560px;margin:0 auto;padding:32px 16px;">
+    <div style="text-align:center;margin-bottom:32px;">
+      <h1 style="margin:0;font-size:22px;color:#caa45a;letter-spacing:2px;">KESHALI DESIGN</h1>
+    </div>
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:32px;text-align:center;margin-bottom:16px;">
+      <div style="font-size:48px;margin-bottom:16px;">🚚</div>
+      <h2 style="margin:0 0 8px;color:#e8e8e8;font-size:20px;">¡Tu pedido está en camino!</h2>
+      <p style="margin:0;color:#9a9a9a;font-size:14px;">Hola ${customerName}, tu pedido <span style="color:#caa45a;font-weight:700;">${orderNumber}</span> ha sido enviado.</p>
+    </div>
+    ${trackingHtml}
+    <div style="text-align:center;padding:16px;">
+      <p style="color:#9a9a9a;font-size:12px;margin:0 0 8px;">¿Dudas? Escríbenos por WhatsApp</p>
+      <a href="https://wa.me/573177301489" style="color:#caa45a;font-size:12px;">+57 317 730 1489</a>
+    </div>
+    <div style="text-align:center;padding:8px;">
+      <p style="color:#9a9a9a;font-size:12px;margin:0;">© ${new Date().getFullYear()} Keshali Design</p>
+    </div>
+  </div>
+</body>
+</html>`,
+  });
+}
+
+export async function sendOrderDeliveredEmail({
+  orderNumber,
+  customerName,
+  customerEmail,
+}: {
+  orderNumber: string;
+  customerName: string;
+  customerEmail: string;
+}) {
+  await getResend().emails.send({
+    from: FROM,
+    to: customerEmail,
+    subject: `Tu pedido ${orderNumber} fue entregado ✅`,
+    html: `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"/></head>
+<body style="margin:0;padding:0;background:#0f0f10;font-family:system-ui,sans-serif;">
+  <div style="max-width:560px;margin:0 auto;padding:32px 16px;">
+    <div style="text-align:center;margin-bottom:32px;">
+      <h1 style="margin:0;font-size:22px;color:#caa45a;letter-spacing:2px;">KESHALI DESIGN</h1>
+    </div>
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:32px;text-align:center;margin-bottom:16px;">
+      <div style="font-size:48px;margin-bottom:16px;">✅</div>
+      <h2 style="margin:0 0 8px;color:#e8e8e8;font-size:20px;">¡Pedido entregado!</h2>
+      <p style="margin:0;color:#9a9a9a;font-size:14px;">Hola ${customerName}, tu pedido <span style="color:#caa45a;font-weight:700;">${orderNumber}</span> ha sido entregado exitosamente.</p>
+    </div>
+    <div style="background:rgba(202,164,90,0.06);border:1px solid rgba(202,164,90,0.15);border-radius:16px;padding:24px;text-align:center;margin-bottom:16px;">
+      <p style="margin:0;color:#9a9a9a;font-size:13px;">Esperamos que estés encantada con tu pedido 🌟<br/>Si tienes alguna duda no dudes en escribirnos.</p>
+    </div>
+    <div style="text-align:center;padding:16px;">
+      <a href="https://wa.me/573177301489" style="color:#caa45a;font-size:12px;">Contáctanos por WhatsApp</a>
+    </div>
+    <div style="text-align:center;padding:8px;">
+      <p style="color:#9a9a9a;font-size:12px;margin:0;">© ${new Date().getFullYear()} Keshali Design</p>
+    </div>
+  </div>
+</body>
+</html>`,
+  });
+}
