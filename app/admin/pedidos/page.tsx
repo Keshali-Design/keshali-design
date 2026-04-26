@@ -36,8 +36,7 @@ export default async function AdminPedidosPage() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (supabase.from("orders") as any)
       .select("shipping_company")
-      .not("shipping_company", "is", null)
-      .returns<{ shipping_company: string }[]>(),
+      .not("shipping_company", "is", null),
   ]);
 
   // Unique non-empty companies, sorted alphabetically
