@@ -18,20 +18,36 @@ type OrderWithItems = Order & {
 export default async function AdminPedidosPage() {
   const supabase = createAdminClient();
 
-  const { data: orders } = await supabase
-    .from("orders")
-    .select(
+  const [{ data: orders }, { data: companiesRaw }] = await Promise.all([
+    supabase
+      .from("orders")
+      .select(
+        `
+        id, order_number, customer_name, customer_email, customer_phone,
+        subtotal, shipping_cost, total, status, notes, created_at, updated_at,
+        tracking_code, shipping_company,
+        order_items ( id, quantity, unit_price, total_price,
+          product_variants ( sku, title )
+        )
       `
-      id, order_number, customer_name, customer_email, customer_phone,
-      subtotal, shipping_cost, total, status, notes, created_at, updated_at,
-      tracking_code, shipping_company,
-      order_items ( id, quantity, unit_price, total_price,
-        product_variants ( sku, title )
       )
-    `
-    )
-    .order("created_at", { ascending: false })
-    .returns<OrderWithItems[]>();
+      .order("created_at", { ascending: false })
+      .returns<OrderWithItems[]>(),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (supabase.from("orders") as any)
+      .select("shipping_company")
+      .not("shipping_company", "is", null)
+      .returns<{ shipping_company: string }[]>(),
+  ]);
+
+  // Unique non-empty companies, sorted alphabetically
+  const knownCompanies = [
+    ...new Set(
+      (companiesRaw ?? [])
+        .map((r: { shipping_company: string }) => r.shipping_company)
+        .filter(Boolean)
+    ),
+  ].sort() as string[];
 
   return (
     <div className="max-w-6xl">
@@ -69,6 +85,7 @@ export default async function AdminPedidosPage() {
                   currentStatus={order.status}
                   currentTrackingCode={order.tracking_code}
                   currentShippingCompany={order.shipping_company}
+                  knownCompanies={knownCompanies}
                 />
               </div>
             </div>

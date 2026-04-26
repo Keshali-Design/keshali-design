@@ -16,11 +16,13 @@ export function OrderStatusSelect({
   currentStatus,
   currentTrackingCode,
   currentShippingCompany,
+  knownCompanies = [],
 }: {
   orderId: string;
   currentStatus: string;
   currentTrackingCode?: string | null;
   currentShippingCompany?: string | null;
+  knownCompanies?: string[];
 }) {
   const [status, setStatus] = useState(currentStatus);
   const [pending, setPending] = useState<string | null>(null);
@@ -80,11 +82,19 @@ export function OrderStatusSelect({
           <p className="text-xs text-muted">Datos de envío (opcional)</p>
           <input
             type="text"
+            list="companies-list"
             placeholder="Transportadora (ej. Servientrega)"
             value={shippingCompany}
             onChange={(e) => setShippingCompany(e.target.value)}
             className="bg-white/5 border border-subtle rounded px-2 py-1.5 text-xs text-[#e8e8e8] focus:outline-none focus:border-gold/50 w-full"
           />
+          {knownCompanies.length > 0 && (
+            <datalist id="companies-list">
+              {knownCompanies.map((c) => (
+                <option key={c} value={c} />
+              ))}
+            </datalist>
+          )}
           <input
             type="text"
             placeholder="Código de rastreo"
