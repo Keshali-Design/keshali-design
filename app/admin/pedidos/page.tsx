@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { Plus } from "lucide-react";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { formatCOP } from "@/lib/utils";
 import { OrderStatusSelect } from "@/components/admin/OrderStatusSelect";
@@ -50,10 +52,14 @@ export default async function AdminPedidosPage() {
 
   return (
     <div className="max-w-6xl">
-      <h1 className="text-2xl font-bold text-[#e8e8e8] mb-1">Pedidos</h1>
+      <div className="flex items-center justify-between mb-1">
+        <h1 className="text-2xl font-bold text-[#e8e8e8]">Pedidos</h1>
+        <Link href="/admin/pedidos/nuevo" className="btn-gold flex items-center gap-2 text-sm">
+          <Plus size={16} /> Nuevo pedido
+        </Link>
+      </div>
       <p className="text-muted text-sm mb-8">
-        {orders?.length ?? 0} pedido{(orders?.length ?? 0) !== 1 ? "s" : ""} en
-        total
+        {orders?.length ?? 0} pedido{(orders?.length ?? 0) !== 1 ? "s" : ""} en total
       </p>
 
       <div className="flex flex-col gap-4">
