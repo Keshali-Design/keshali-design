@@ -1,7 +1,7 @@
 import { Resend } from "resend";
 import { formatCOP } from "./utils";
 
-const FROM = "Keshali Design <onboarding@resend.dev>";
+const FROM = "Keshali Design <pedidos@keshalidesign.com>";
 
 function getResend() {
   return new Resend(process.env.RESEND_API_KEY ?? "");
