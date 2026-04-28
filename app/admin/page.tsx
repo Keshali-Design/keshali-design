@@ -1,11 +1,11 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { formatCOP } from "@/lib/utils";
-import type { Order, ProductVariant } from "@/lib/supabase/types";
+import type { Order } from "@/lib/supabase/types";
 
 export default async function AdminDashboardPage() {
   const supabase = createAdminClient();
 
-  const { count: productCount } = await supabase
+  const { count: variantCount } = await supabase
     .from("product_variants")
     .select("*", { count: "exact", head: true })
     .eq("active", true);
@@ -14,24 +14,34 @@ export default async function AdminDashboardPage() {
     .from("orders")
     .select("*", { count: "exact", head: true });
 
-  const { data: recentOrders } = await supabase
-    .from("orders")
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: recentOrders } = await (supabase.from("orders") as any)
     .select("id, order_number, customer_name, total, status, created_at")
     .order("created_at", { ascending: false })
-    .limit(5)
-    .returns<Pick<Order, "id" | "order_number" | "customer_name" | "total" | "status" | "created_at">[]>();
+    .limit(5) as { data: Pick<Order, "id" | "order_number" | "customer_name" | "total" | "status" | "created_at">[] | null };
 
-  const { data: lowStock } = await supabase
-    .from("product_variants")
-    .select("sku, title, stock")
+  // Low-stock entries from shared inventory table (category+size+color combos)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: lowStock } = await (supabase.from("inventory") as any)
+    .select(`
+      stock,
+      categories ( name ),
+      sizes ( label ),
+      colors ( name, hex_code )
+    `)
     .lte("stock", 5)
-    .eq("active", true)
     .order("stock")
-    .limit(5)
-    .returns<Pick<ProductVariant, "sku" | "title" | "stock">[]>();
+    .limit(8) as {
+      data: {
+        stock: number;
+        categories: { name: string } | null;
+        sizes: { label: string } | null;
+        colors: { name: string; hex_code: string } | null;
+      }[] | null;
+    };
 
   const stats = [
-    { label: "Variantes activas", value: productCount ?? 0 },
+    { label: "Variantes activas", value: variantCount ?? 0 },
     { label: "Pedidos totales", value: orderCount ?? 0 },
     {
       label: "Stock crítico",
@@ -100,16 +110,24 @@ export default async function AdminDashboardPage() {
           </h2>
           {lowStock && lowStock.length > 0 ? (
             <div className="flex flex-col gap-2">
-              {lowStock.map((v) => (
+              {lowStock.map((inv, i) => (
                 <div
-                  key={v.sku}
+                  key={i}
                   className="flex items-center justify-between text-sm py-2 border-b border-subtle last:border-0"
                 >
-                  <p className="text-[#e8e8e8] text-xs leading-snug flex-1 mr-2">
-                    {v.title}
-                  </p>
-                  <span className={`text-xs font-bold ${v.stock === 0 ? "text-red-400" : "text-yellow-400"}`}>
-                    {v.stock} uds.
+                  <div className="flex items-center gap-2 min-w-0">
+                    {inv.colors?.hex_code && (
+                      <span
+                        className="w-2.5 h-2.5 rounded-full border border-white/20 flex-shrink-0"
+                        style={{ background: inv.colors.hex_code }}
+                      />
+                    )}
+                    <p className="text-[#e8e8e8] text-xs leading-snug truncate">
+                      {inv.categories?.name} · {inv.sizes?.label} · {inv.colors?.name}
+                    </p>
+                  </div>
+                  <span className={`text-xs font-bold flex-shrink-0 ml-2 ${inv.stock === 0 ? "text-red-400" : "text-yellow-400"}`}>
+                    {inv.stock} uds.
                   </span>
                 </div>
               ))}

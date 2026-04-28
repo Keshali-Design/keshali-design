@@ -5,36 +5,53 @@ import { formatCOP } from "@/lib/utils";
 import { OrderStatusSelect } from "@/components/admin/OrderStatusSelect";
 import type { Order } from "@/lib/supabase/types";
 
+type OrderItemRow = {
+  id: string;
+  quantity: number;
+  unit_price: number;
+  total_price: number;
+  product_variants: {
+    sku: string;
+    products: { name: string } | null;
+    sizes: { label: string } | null;
+    colors: { name: string } | null;
+  } | null;
+};
+
 type OrderWithItems = Order & {
   tracking_code?: string | null;
   shipping_company?: string | null;
-  order_items: Array<{
-    id: string;
-    quantity: number;
-    unit_price: number;
-    total_price: number;
-    product_variants: { sku: string; title: string } | null;
-  }>;
+  order_items: OrderItemRow[];
 };
+
+function variantLabel(pv: OrderItemRow["product_variants"]): string {
+  if (!pv) return "Producto eliminado";
+  return [pv.products?.name, pv.sizes?.label, pv.colors?.name].filter(Boolean).join(" · ");
+}
 
 export default async function AdminPedidosPage() {
   const supabase = createAdminClient();
 
   const [{ data: orders }, { data: companiesRaw }] = await Promise.all([
-    supabase
-      .from("orders")
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (supabase.from("orders") as any)
       .select(
         `
         id, order_number, customer_name, customer_email, customer_phone,
         subtotal, shipping_cost, total, status, notes, created_at, updated_at,
         tracking_code, shipping_company,
-        order_items ( id, quantity, unit_price, total_price,
-          product_variants ( sku, title )
+        order_items (
+          id, quantity, unit_price, total_price,
+          product_variants (
+            sku,
+            products ( name ),
+            sizes ( label ),
+            colors ( name )
+          )
         )
       `
       )
-      .order("created_at", { ascending: false })
-      .returns<OrderWithItems[]>(),
+      .order("created_at", { ascending: false }) as { data: OrderWithItems[] | null },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (supabase.from("orders") as any)
       .select("shipping_company")
@@ -129,7 +146,7 @@ export default async function AdminPedidosPage() {
                 >
                   <p className="text-[#e8e8e8] text-xs leading-snug">
                     <span className="text-muted mr-1">x{item.quantity}</span>
-                    {item.product_variants?.title ?? "Producto eliminado"}
+                    {variantLabel(item.product_variants)}
                   </p>
                   <span className="text-muted text-xs">
                     {formatCOP(item.total_price)}
