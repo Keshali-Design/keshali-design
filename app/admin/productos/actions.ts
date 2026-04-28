@@ -30,6 +30,7 @@ export type VariantSkuOverride = {
 
 export async function createProduct(data: {
   category_id: string;
+  subcategory_id?: string;
   name: string;
   description?: string;
   price_varies_by_color: boolean;
@@ -44,6 +45,7 @@ export async function createProduct(data: {
   const { data: product, error: productError } = await (supabase.from("products") as any)
     .insert({
       category_id: data.category_id,
+      subcategory_id: data.subcategory_id || null,
       name: data.name.trim(),
       description: data.description?.trim() || null,
       price_varies_by_color: data.price_varies_by_color,
