@@ -96,7 +96,8 @@ export function NuevoProductoForm({
     });
 
     if (res.error) { setError(res.error); setSaving(false); return; }
-    router.push("/admin/productos");
+    // Redirect to the product edit page so the user can upload images immediately
+    router.push(`/admin/productos/${res.productId}`);
   }
 
   const steps = ["Info básica", "Tamaños y precios", "Colores", "Revisar"];

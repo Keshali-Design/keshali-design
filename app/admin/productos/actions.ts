@@ -101,7 +101,6 @@ export async function createProduct(data: {
         size_id: size.size_id,
         sku: override?.sku?.trim() || baseSku,
         price_override: data.price_varies_by_color ? (override?.price_override ?? null) : null,
-        stock: 0,
         active: true,
       });
     }
