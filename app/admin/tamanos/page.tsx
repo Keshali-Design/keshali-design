@@ -1,5 +1,5 @@
 import { createAdminClient } from "@/lib/supabase/admin";
-import { TamañosManager } from "@/components/admin/TamañosManager";
+import { TamanosManager } from "@/components/admin/TamanosManager";
 
 export const metadata = { title: "Tamaños — Admin" };
 
@@ -42,7 +42,7 @@ export default async function TamañosPage() {
     }
 
     return (
-      <TamañosManager
+      <TamanosManager
         sizeTypes={sizeTypesRes.data ?? []}
         sizes={sizesRes.data ?? []}
       />

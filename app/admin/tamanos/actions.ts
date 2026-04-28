@@ -13,7 +13,7 @@ export async function createSizeType(data: { name: string; unit_label: string })
     unit_label: data.unit_label.trim(),
   });
   if (error) return { error: error.message };
-  revalidatePath("/admin/tamaños");
+  revalidatePath("/admin/tamanos");
   return { error: null };
 }
 
@@ -24,7 +24,7 @@ export async function toggleSizeType(id: string, active: boolean) {
     .update({ active })
     .eq("id", id);
   if (error) return { error: error.message };
-  revalidatePath("/admin/tamaños");
+  revalidatePath("/admin/tamanos");
   return { error: null };
 }
 
@@ -47,7 +47,7 @@ export async function createSize(data: {
     sort_order: data.sort_order,
   });
   if (error) return { error: error.message };
-  revalidatePath("/admin/tamaños");
+  revalidatePath("/admin/tamanos");
   return { error: null };
 }
 
@@ -66,7 +66,7 @@ export async function updateSize(
     })
     .eq("id", id);
   if (error) return { error: error.message };
-  revalidatePath("/admin/tamaños");
+  revalidatePath("/admin/tamanos");
   return { error: null };
 }
 
@@ -77,6 +77,6 @@ export async function toggleSize(id: string, active: boolean) {
     .update({ active })
     .eq("id", id);
   if (error) return { error: error.message };
-  revalidatePath("/admin/tamaños");
+  revalidatePath("/admin/tamanos");
   return { error: null };
 }
