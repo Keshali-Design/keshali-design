@@ -6,13 +6,14 @@ import { EditVariantFullForm } from "@/components/admin/EditVariantFullForm";
 
 export const metadata = { title: "Editar producto — Admin" };
 
-export default async function EditVariantPage({ params }: { params: { id: string } }) {
+export default async function EditVariantPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const supabase = createAdminClient();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: variant } = await (supabase.from("product_variants") as any)
     .select("id, sku, title, price, stock, active, products ( name, model_code, categories ( name ) )")
-    .eq("id", params.id)
+    .eq("id", id)
     .single();
 
   if (!variant) notFound();
@@ -20,7 +21,7 @@ export default async function EditVariantPage({ params }: { params: { id: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: images } = await (supabase.from("product_images") as any)
     .select("id, url, alt_text, sort_order, is_primary")
-    .eq("variant_id", params.id)
+    .eq("variant_id", id)
     .order("sort_order");
 
   return (
