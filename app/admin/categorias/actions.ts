@@ -12,6 +12,8 @@ function toSlug(name: string) {
     .replace(/^-|-$/g, "");
 }
 
+// ── Main categories ───────────────────────────────────────────
+
 export async function createCategory(data: {
   name: string;
   size_type_id: string;
@@ -42,7 +44,7 @@ export async function toggleCategory(id: string, active: boolean) {
 
   if (error) return { error: error.message };
 
-  // Also deactivate/reactivate all products in this category
+  // Cascade to products in this category
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   await (supabase.from("products") as any)
     .update({ active })
@@ -55,12 +57,55 @@ export async function toggleCategory(id: string, active: boolean) {
   return { error: null };
 }
 
+// ── Subcategories ─────────────────────────────────────────────
+
+export async function createSubcategory(data: {
+  name: string;
+  parent_id: string;
+}) {
+  const supabase = createAdminClient();
+  const slug = toSlug(data.name);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase.from("categories") as any).insert({
+    name: data.name.trim(),
+    slug,
+    parent_id: data.parent_id,
+    active: true,
+  });
+
+  if (error) return { error: error.message };
+  revalidatePath("/admin/categorias");
+  return { error: null };
+}
+
+export async function toggleSubcategory(id: string, active: boolean) {
+  const supabase = createAdminClient();
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase.from("categories") as any)
+    .update({ active })
+    .eq("id", id);
+
+  if (error) return { error: error.message };
+
+  // Cascade to products in this subcategory
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  await (supabase.from("products") as any)
+    .update({ active })
+    .eq("subcategory_id", id);
+
+  revalidatePath("/admin/categorias");
+  revalidatePath("/admin/productos");
+  revalidatePath("/");
+  return { error: null };
+}
+
 // ── Category colors ───────────────────────────────────────────
 
 export async function setCategoryColors(categoryId: string, colorIds: string[]) {
   const supabase = createAdminClient();
 
-  // Delete existing and re-insert
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   await (supabase.from("category_colors") as any)
     .delete()

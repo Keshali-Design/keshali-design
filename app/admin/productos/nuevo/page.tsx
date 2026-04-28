@@ -8,11 +8,21 @@ export const metadata = { title: "Nuevo producto — Admin" };
 export default async function NuevoProductoPage() {
   const supabase = createAdminClient();
 
+  // Only main categories (no parent) for product assignment
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: categories } = await (supabase.from("categories") as any)
     .select("id, name, size_type_id, size_types ( name, unit_label )")
     .eq("active", true)
+    .is("parent_id", null)
     .order("name") as { data: CategoryOpt[] | null };
+
+  // All subcategories (with parent_id set) — active only
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: subcategories } = await (supabase.from("categories") as any)
+    .select("id, name, parent_id")
+    .eq("active", true)
+    .not("parent_id", "is", null)
+    .order("name") as { data: SubcategoryOpt[] | null };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: allColors } = await (supabase.from("colors") as any)
@@ -51,6 +61,7 @@ export default async function NuevoProductoPage() {
 
       <NuevoProductoForm
         categories={categories ?? []}
+        subcategories={subcategories ?? []}
         allColors={allColors ?? []}
         allSizes={allSizes ?? []}
         categoryColors={categoryColors ?? []}
@@ -66,5 +77,6 @@ export type CategoryOpt = {
   size_type_id: string | null;
   size_types: { name: string; unit_label: string } | null;
 };
+export type SubcategoryOpt = { id: string; name: string; parent_id: string };
 export type ColorOpt = { id: string; name: string; hex_code: string; color_code: string };
 export type SizeOpt = { id: string; size_type_id: string; label: string; alt_label: string | null; sort_order: number };

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Check } from "lucide-react";
 import { createProduct } from "@/app/admin/productos/actions";
 import { formatCOP } from "@/lib/utils";
-import type { CategoryOpt, ColorOpt, SizeOpt } from "@/app/admin/productos/nuevo/page";
+import type { CategoryOpt, SubcategoryOpt, ColorOpt, SizeOpt } from "@/app/admin/productos/nuevo/page";
 
 const FIELD = "bg-white/5 border border-subtle rounded-lg px-3 py-2.5 text-sm text-[#e8e8e8] focus:outline-none focus:border-gold/50 transition-colors w-full";
 const LABEL = "text-xs text-muted block mb-1";
@@ -14,12 +14,14 @@ type Step = 1 | 2 | 3 | 4;
 
 export function NuevoProductoForm({
   categories,
+  subcategories,
   allColors,
   allSizes,
   categoryColors,
   categorySizes,
 }: {
   categories: CategoryOpt[];
+  subcategories: SubcategoryOpt[];
   allColors: ColorOpt[];
   allSizes: SizeOpt[];
   categoryColors: { category_id: string; color_id: string; active: boolean }[];
@@ -32,7 +34,10 @@ export function NuevoProductoForm({
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [categoryId, setCategoryId] = useState(categories[0]?.id ?? "");
+  const [subcategoryId, setSubcategoryId] = useState("");
   const [priceVariesByColor, setPriceVariesByColor] = useState(false);
+
+  const filteredSubcategories = subcategories.filter((s) => s.parent_id === categoryId);
 
   // Step 2
   const [selectedSizeIds, setSelectedSizeIds] = useState<string[]>([]);
@@ -87,6 +92,7 @@ export function NuevoProductoForm({
 
     const res = await createProduct({
       category_id: categoryId,
+      subcategory_id: subcategoryId || undefined,
       name,
       description: description || undefined,
       price_varies_by_color: priceVariesByColor,
@@ -156,7 +162,12 @@ export function NuevoProductoForm({
             <label className={LABEL}>Categoría *</label>
             <select
               value={categoryId}
-              onChange={(e) => { setCategoryId(e.target.value); setSelectedSizeIds([]); setSelectedColorIds([]); }}
+              onChange={(e) => {
+                setCategoryId(e.target.value);
+                setSubcategoryId("");
+                setSelectedSizeIds([]);
+                setSelectedColorIds([]);
+              }}
               className={FIELD}
             >
               {categories.map((c) => (
@@ -166,6 +177,21 @@ export function NuevoProductoForm({
               ))}
             </select>
           </div>
+          {filteredSubcategories.length > 0 && (
+            <div>
+              <label className={LABEL}>Subcategoría <span className="text-muted">(opcional)</span></label>
+              <select
+                value={subcategoryId}
+                onChange={(e) => setSubcategoryId(e.target.value)}
+                className={FIELD}
+              >
+                <option value="" className="bg-[#0f0f10]">— Sin subcategoría —</option>
+                {filteredSubcategories.map((s) => (
+                  <option key={s.id} value={s.id} className="bg-[#0f0f10]">{s.name}</option>
+                ))}
+              </select>
+            </div>
+          )}
           <div>
             <label className={LABEL}>¿El precio varía también por color?</label>
             <div className="flex gap-3 mt-1">

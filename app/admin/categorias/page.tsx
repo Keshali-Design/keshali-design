@@ -6,9 +6,10 @@ export const metadata = { title: "Categorías — Admin" };
 export default async function CategoriasPage() {
   const supabase = createAdminClient();
 
+  // Load all categories (main + sub) with parent info
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: categories } = await (supabase.from("categories") as any)
-    .select("id, name, slug, active, size_type_id, size_types ( name, unit_label )")
+    .select("id, name, slug, active, size_type_id, parent_id, size_types ( name, unit_label )")
     .order("name") as { data: Category[] | null };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -37,9 +38,14 @@ export default async function CategoriasPage() {
   const { data: categorySizes } = await (supabase.from("category_sizes") as any)
     .select("id, category_id, size_id, active") as { data: CategorySize[] | null };
 
+  const allCats = categories ?? [];
+  const mainCategories = allCats.filter((c) => !c.parent_id);
+  const subcategories = allCats.filter((c) => !!c.parent_id);
+
   return (
     <CategoriasManager
-      categories={categories ?? []}
+      mainCategories={mainCategories}
+      subcategories={subcategories}
       sizeTypes={sizeTypes ?? []}
       allColors={allColors ?? []}
       allSizes={allSizes ?? []}
@@ -55,6 +61,7 @@ export type Category = {
   slug: string;
   active: boolean;
   size_type_id: string | null;
+  parent_id: string | null;
   size_types: { name: string; unit_label: string } | null;
 };
 export type SizeTypeOption = { id: string; name: string; unit_label: string };
