@@ -2,47 +2,89 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { EditVariantFullForm } from "@/components/admin/EditVariantFullForm";
+import { EditProductForm } from "@/components/admin/EditProductForm";
 
-export const metadata = { title: "Editar variante — Admin" };
+export const metadata = { title: "Editar producto — Admin" };
 
-export default async function EditVariantPage({ params }: { params: Promise<{ id: string }> }) {
+export type VariantWithImages = {
+  id: string;
+  sku: string;
+  price_override: number | null;
+  active: boolean;
+  colors: { id: string; name: string; hex_code: string } | null;
+  sizes: { id: string; label: string; alt_label: string | null } | null;
+  images: { id: string; url: string; alt_text: string | null; sort_order: number; is_primary: boolean }[];
+};
+
+export type ProductFull = {
+  id: string;
+  name: string;
+  description: string | null;
+  active: boolean;
+  price_varies_by_color: boolean;
+  categories: { name: string } | null;
+  product_sizes: { size_id: string; price: number }[];
+  variants: VariantWithImages[];
+};
+
+export default async function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const supabase = createAdminClient();
 
+  // Load product with its variants
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: variant } = await (supabase.from("product_variants") as any)
+  const { data: product } = await (supabase.from("products") as any)
     .select(`
-      id, sku, price_override, active,
-      products ( name, category_id, categories ( name ) ),
-      colors ( name, hex_code ),
-      sizes ( label, alt_label )
+      id, name, description, active, price_varies_by_color,
+      categories ( name ),
+      product_sizes ( size_id, price ),
+      product_variants (
+        id, sku, price_override, active,
+        colors ( id, name, hex_code ),
+        sizes ( id, label, alt_label )
+      )
     `)
     .eq("id", id)
-    .single() as {
-      data: {
-        id: string;
-        sku: string;
-        price_override: number | null;
-        active: boolean;
-        products: { name: string; category_id: string; categories: { name: string } | null } | null;
-        colors: { name: string; hex_code: string } | null;
-        sizes: { label: string; alt_label: string | null } | null;
-      } | null;
+    .single() as { data: Omit<ProductFull, "variants"> & {
+      product_variants: Omit<VariantWithImages, "images">[];
+    } | null };
+
+  if (!product) notFound();
+
+  // Load images for all variants
+  const variantIds = product.product_variants.map((v) => v.id);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: allImages } = await (supabase.from("product_images") as any)
+    .select("id, variant_id, url, alt_text, sort_order, is_primary")
+    .in("variant_id", variantIds.length > 0 ? variantIds : ["__none__"])
+    .order("sort_order") as {
+      data: { id: string; variant_id: string; url: string; alt_text: string | null; sort_order: number; is_primary: boolean }[] | null;
     };
 
-  if (!variant) notFound();
+  const imagesByVariant: Record<string, VariantWithImages["images"]> = {};
+  for (const img of allImages ?? []) {
+    if (!imagesByVariant[img.variant_id]) imagesByVariant[img.variant_id] = [];
+    imagesByVariant[img.variant_id].push(img);
+  }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: images } = await (supabase.from("product_images") as any)
-    .select("id, url, alt_text, sort_order, is_primary")
-    .eq("variant_id", id)
-    .order("sort_order") as { data: { id: string; url: string; alt_text?: string; sort_order: number; is_primary: boolean }[] | null };
+  const variants: VariantWithImages[] = product.product_variants.map((v) => ({
+    ...v,
+    images: imagesByVariant[v.id] ?? [],
+  }));
 
-  const sizeLabel = [variant.sizes?.label, variant.sizes?.alt_label].filter(Boolean).join(" / ");
+  const productFull: ProductFull = {
+    id: product.id,
+    name: product.name,
+    description: product.description,
+    active: product.active,
+    price_varies_by_color: product.price_varies_by_color,
+    categories: product.categories,
+    product_sizes: product.product_sizes,
+    variants,
+  };
 
   return (
-    <div className="max-w-2xl">
+    <div className="max-w-4xl">
       <Link
         href="/admin/productos"
         className="inline-flex items-center gap-1 text-muted hover:text-gold transition-colors text-sm mb-6"
@@ -51,23 +93,12 @@ export default async function EditVariantPage({ params }: { params: Promise<{ id
         Volver a productos
       </Link>
 
-      <h1 className="text-2xl font-bold text-[#e8e8e8] mb-1">Editar variante</h1>
-      <p className="text-muted text-sm mb-1">
-        <span className="font-mono text-xs bg-white/5 border border-subtle rounded px-1.5 py-0.5">{variant.sku}</span>
-      </p>
+      <h1 className="text-2xl font-bold text-[#e8e8e8] mb-1">{product.name}</h1>
       <p className="text-muted text-xs mb-8">
-        {variant.products?.categories?.name} · {variant.products?.name}
-        {variant.colors && <> · <span style={{ color: variant.colors.hex_code }}>{variant.colors.name}</span></>}
-        {sizeLabel && <> · {sizeLabel}</>}
+        {product.categories?.name} · {variants.length} variant{variants.length !== 1 ? "es" : "e"}
       </p>
 
-      <EditVariantFullForm
-        id={variant.id}
-        sku={variant.sku}
-        priceOverride={variant.price_override}
-        active={variant.active}
-        images={images ?? []}
-      />
+      <EditProductForm product={productFull} />
     </div>
   );
 }
