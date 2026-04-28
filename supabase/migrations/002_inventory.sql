@@ -18,6 +18,8 @@ CREATE TABLE IF NOT EXISTS inventory (
 ALTER TABLE inventory DISABLE ROW LEVEL SECURITY;
 
 -- 2. Quitar columna stock de product_variants (ya no se usa)
+--    Primero drop la vista que depende de ella, luego la columna
+DROP VIEW IF EXISTS catalog_view;
 ALTER TABLE product_variants DROP COLUMN IF EXISTS stock;
 
 -- 3. Actualizar catalog_view para leer stock desde inventory
