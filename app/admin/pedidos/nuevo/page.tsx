@@ -11,7 +11,7 @@ export default async function NuevoPedidoPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: variants } = await (supabase.from("product_variants") as any)
     .select(`
-      id, sku, stock, price_override,
+      id, sku, price_override,
       products ( name, price_varies_by_color, product_sizes ( size_id, price ) ),
       colors ( id, name, hex_code ),
       sizes ( id, label, alt_label )
@@ -40,7 +40,6 @@ export default async function NuevoPedidoPage() {
 export type VariantOpt = {
   id: string;
   sku: string;
-  stock: number;
   price_override: number | null;
   products: {
     name: string;

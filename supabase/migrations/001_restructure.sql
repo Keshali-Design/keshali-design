@@ -13,6 +13,7 @@ DROP TABLE IF EXISTS product_images CASCADE;
 DROP TABLE IF EXISTS product_variants CASCADE;
 DROP TABLE IF EXISTS products CASCADE;
 DROP TABLE IF EXISTS catalog_view CASCADE;
+DROP TABLE IF EXISTS inventory CASCADE;
 
 -- Tablas del schema viejo que se reemplazan completamente
 DROP TABLE IF EXISTS sizes CASCADE;
@@ -85,7 +86,23 @@ CREATE TABLE IF NOT EXISTS category_sizes (
 );
 
 -- ------------------------------------------------------------
--- 7. PRODUCTOS
+-- 7. INVENTARIO (stock compartido por categoría + tamaño + color)
+--    Una taza blanca de 11oz aplica a TODOS los productos de
+--    la categoría "Tazas" con ese tamaño y ese color.
+-- ------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS inventory (
+  id           uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  category_id  uuid NOT NULL REFERENCES categories(id) ON DELETE CASCADE,
+  size_id      uuid NOT NULL REFERENCES sizes(id) ON DELETE CASCADE,
+  color_id     uuid NOT NULL REFERENCES colors(id) ON DELETE CASCADE,
+  stock        int NOT NULL DEFAULT 0,
+  updated_at   timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (category_id, size_id, color_id)
+);
+
+-- ------------------------------------------------------------
+-- 8. PRODUCTOS
 -- ------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS products (
@@ -100,7 +117,7 @@ CREATE TABLE IF NOT EXISTS products (
 );
 
 -- ------------------------------------------------------------
--- 8. TAMAÑOS DEL PRODUCTO (precio base por tamaño)
+-- 9. TAMAÑOS DEL PRODUCTO (precio base por tamaño)
 -- ------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS product_sizes (
@@ -113,7 +130,7 @@ CREATE TABLE IF NOT EXISTS product_sizes (
 );
 
 -- ------------------------------------------------------------
--- 9. COLORES DEL PRODUCTO
+-- 10. COLORES DEL PRODUCTO
 -- ------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS product_colors (
@@ -125,7 +142,8 @@ CREATE TABLE IF NOT EXISTS product_colors (
 );
 
 -- ------------------------------------------------------------
--- 10. VARIANTES (color × tamaño, auto-generadas)
+-- 11. VARIANTES (color × tamaño, auto-generadas)
+--     Sin stock propio — el stock viene de inventory
 -- ------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS product_variants (
@@ -135,7 +153,6 @@ CREATE TABLE IF NOT EXISTS product_variants (
   size_id        uuid NOT NULL REFERENCES sizes(id),
   sku            text NOT NULL UNIQUE,
   price_override numeric(12,2),   -- solo si price_varies_by_color = true
-  stock          int NOT NULL DEFAULT 0,
   active         boolean NOT NULL DEFAULT true,
   created_at     timestamptz NOT NULL DEFAULT now(),
   updated_at     timestamptz NOT NULL DEFAULT now(),
@@ -143,7 +160,7 @@ CREATE TABLE IF NOT EXISTS product_variants (
 );
 
 -- ------------------------------------------------------------
--- 11. IMÁGENES POR VARIANTE
+-- 12. IMÁGENES POR VARIANTE
 -- ------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS product_images (
@@ -157,7 +174,7 @@ CREATE TABLE IF NOT EXISTS product_images (
 );
 
 -- ------------------------------------------------------------
--- 12. PEDIDOS
+-- 13. PEDIDOS
 -- ------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS orders (
@@ -179,7 +196,7 @@ CREATE TABLE IF NOT EXISTS orders (
 );
 
 -- ------------------------------------------------------------
--- 13. ÍTEMS DE PEDIDO
+-- 14. ÍTEMS DE PEDIDO
 -- ------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS order_items (
@@ -193,16 +210,18 @@ CREATE TABLE IF NOT EXISTS order_items (
 );
 
 -- ------------------------------------------------------------
--- 14. VISTA DE CATÁLOGO (para tienda)
+-- 15. VISTA DE CATÁLOGO
+--     stock viene de inventory (categoría + tamaño + color)
 -- ------------------------------------------------------------
 
 CREATE OR REPLACE VIEW catalog_view AS
 SELECT
   pv.id              AS variant_id,
   pv.sku,
-  pv.stock,
   pv.active          AS variant_active,
   pv.price_override,
+
+  COALESCE(inv.stock, 0) AS stock,
 
   p.id               AS product_id,
   p.name             AS product_name,
@@ -242,16 +261,20 @@ JOIN product_sizes    ps  ON ps.product_id = p.id AND ps.size_id = pv.size_id
 JOIN sizes            s   ON s.id  = pv.size_id
 JOIN size_types       st  ON st.id = s.size_type_id
 JOIN colors           c   ON c.id  = pv.color_id
-JOIN categories       cat ON cat.id = p.category_id;
+JOIN categories       cat ON cat.id = p.category_id
+LEFT JOIN inventory   inv ON inv.category_id = cat.id
+                          AND inv.size_id    = pv.size_id
+                          AND inv.color_id   = pv.color_id;
 
 -- ------------------------------------------------------------
--- 15. RLS — deshabilitar para todas (service role las bypasa)
+-- 16. RLS — deshabilitar para todas (service role las bypasa)
 -- ------------------------------------------------------------
 
 ALTER TABLE size_types      DISABLE ROW LEVEL SECURITY;
 ALTER TABLE sizes            DISABLE ROW LEVEL SECURITY;
 ALTER TABLE category_colors  DISABLE ROW LEVEL SECURITY;
 ALTER TABLE category_sizes   DISABLE ROW LEVEL SECURITY;
+ALTER TABLE inventory        DISABLE ROW LEVEL SECURITY;
 ALTER TABLE products         DISABLE ROW LEVEL SECURITY;
 ALTER TABLE product_sizes    DISABLE ROW LEVEL SECURITY;
 ALTER TABLE product_colors   DISABLE ROW LEVEL SECURITY;

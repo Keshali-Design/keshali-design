@@ -139,7 +139,6 @@ export function VariantCombobox({
                     </div>
                     <div className="flex-shrink-0 text-right">
                       <p className="text-gold text-xs font-semibold">{formatCOP(price)}</p>
-                      <p className="text-muted text-xs">{v.stock} uds.</p>
                     </div>
                   </button>
                 );
