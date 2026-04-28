@@ -64,7 +64,7 @@ export function CartDrawer() {
                   {item.image ? (
                     <Image
                       src={item.image}
-                      alt={item.title}
+                      alt={item.productName}
                       fill
                       className="object-cover"
                       sizes="64px"
