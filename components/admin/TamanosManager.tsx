@@ -14,7 +14,7 @@ import type { SizeType, Size } from "@/app/admin/tamanos/page";
 const FIELD = "bg-white/5 border border-subtle rounded-lg px-3 py-2 text-sm text-[#e8e8e8] focus:outline-none focus:border-gold/50 transition-colors w-full";
 const LABEL = "text-xs text-muted block mb-1";
 
-export function TamañosManager({
+export function TamanosManager({
   sizeTypes,
   sizes,
 }: {
