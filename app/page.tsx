@@ -33,8 +33,7 @@ export default async function HomePage() {
             <span className="gold-text">cada diseño</span>
           </h1>
           <p className="text-muted text-lg max-w-xl mb-8 leading-relaxed">
-            Creamos productos únicos que reflejan tu identidad. Sublimación,
-            bordado y estampado de alta calidad.
+            Creamos productos únicos que reflejan tu identidad. Sublimación y estampado de alta calidad.
           </p>
           <div className="flex flex-wrap gap-4">
             <Link href="/catalogo" className="btn-gold">
