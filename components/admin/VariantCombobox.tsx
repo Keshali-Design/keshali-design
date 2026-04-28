@@ -4,15 +4,25 @@ import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { ChevronDown, Search } from "lucide-react";
 import { formatCOP } from "@/lib/utils";
+import type { VariantOpt } from "@/app/admin/pedidos/nuevo/page";
 
-type Variant = { id: string; sku: string; title: string; price: number; stock: number };
+function getVariantPrice(v: VariantOpt): number {
+  if (v.price_override != null) return v.price_override;
+  const ps = v.products?.product_sizes?.find((ps) => ps.size_id === v.sizes?.id);
+  return ps?.price ?? 0;
+}
+
+function getVariantLabel(v: VariantOpt): string {
+  const parts = [v.products?.name, v.sizes?.label, v.colors?.name].filter(Boolean);
+  return parts.join(" · ");
+}
 
 export function VariantCombobox({
   variants,
   value,
   onChange,
 }: {
-  variants: Variant[];
+  variants: VariantOpt[];
   value: string;
   onChange: (variantId: string, price: number) => void;
 }) {
@@ -28,8 +38,10 @@ export function VariantCombobox({
   const filtered = query.trim()
     ? variants.filter(
         (v) =>
-          v.title.toLowerCase().includes(query.toLowerCase()) ||
-          v.sku.toLowerCase().includes(query.toLowerCase())
+          getVariantLabel(v).toLowerCase().includes(query.toLowerCase()) ||
+          v.sku.toLowerCase().includes(query.toLowerCase()) ||
+          v.colors?.name.toLowerCase().includes(query.toLowerCase()) ||
+          v.sizes?.label.toLowerCase().includes(query.toLowerCase())
       )
     : variants;
 
@@ -44,7 +56,6 @@ export function VariantCombobox({
     setQuery("");
   }
 
-  // Close when clicking outside both trigger and dropdown
   useEffect(() => {
     if (!open) return;
     function handleMouseDown(e: MouseEvent) {
@@ -57,10 +68,13 @@ export function VariantCombobox({
     return () => document.removeEventListener("mousedown", handleMouseDown);
   }, [open]);
 
-  function select(v: Variant) {
-    onChange(v.id, v.price);
+  function select(v: VariantOpt) {
+    onChange(v.id, getVariantPrice(v));
     close();
   }
+
+  const selectedLabel = selected ? getVariantLabel(selected) : null;
+  const selectedPrice = selected ? getVariantPrice(selected) : null;
 
   return (
     <div className="w-full">
@@ -71,7 +85,9 @@ export function VariantCombobox({
         className="w-full bg-white/5 border border-subtle rounded-lg px-3 py-2.5 text-sm text-left flex items-center justify-between gap-2 focus:outline-none focus:border-gold/50 transition-colors hover:border-gold/30"
       >
         <span className={`truncate ${selected ? "text-[#e8e8e8]" : "text-muted"}`}>
-          {selected ? `${selected.title} — ${formatCOP(selected.price)}` : "Seleccionar producto..."}
+          {selectedLabel
+            ? `${selectedLabel}${selectedPrice != null ? ` — ${formatCOP(selectedPrice)}` : ""}`
+            : "Seleccionar producto..."}
         </span>
         <ChevronDown size={14} className={`text-muted flex-shrink-0 transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
@@ -89,7 +105,7 @@ export function VariantCombobox({
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Buscar por nombre o SKU..."
+              placeholder="Buscar por nombre, talla, color, SKU…"
               className="flex-1 bg-transparent text-sm text-[#e8e8e8] placeholder:text-muted focus:outline-none"
             />
           </div>
@@ -97,25 +113,36 @@ export function VariantCombobox({
             {filtered.length === 0 ? (
               <p className="text-muted text-xs text-center py-4">Sin resultados</p>
             ) : (
-              filtered.map((v) => (
-                <button
-                  key={v.id}
-                  type="button"
-                  onClick={() => select(v)}
-                  className={`w-full text-left px-3 py-2.5 text-sm hover:bg-white/5 transition-colors flex items-center justify-between gap-3 ${
-                    v.id === value ? "bg-white/5 text-gold" : "text-[#e8e8e8]"
-                  }`}
-                >
-                  <div className="min-w-0">
-                    <p className="truncate leading-snug">{v.title}</p>
-                    <p className="text-muted text-xs font-mono">{v.sku}</p>
-                  </div>
-                  <div className="flex-shrink-0 text-right">
-                    <p className="text-gold text-xs font-semibold">{formatCOP(v.price)}</p>
-                    <p className="text-muted text-xs">{v.stock} uds.</p>
-                  </div>
-                </button>
-              ))
+              filtered.map((v) => {
+                const price = getVariantPrice(v);
+                return (
+                  <button
+                    key={v.id}
+                    type="button"
+                    onClick={() => select(v)}
+                    className={`w-full text-left px-3 py-2.5 text-sm hover:bg-white/5 transition-colors flex items-center justify-between gap-3 ${
+                      v.id === value ? "bg-white/5 text-gold" : "text-[#e8e8e8]"
+                    }`}
+                  >
+                    <div className="min-w-0 flex items-center gap-2">
+                      {v.colors?.hex_code && (
+                        <span
+                          className="w-3 h-3 rounded-full border border-white/20 flex-shrink-0"
+                          style={{ background: v.colors.hex_code }}
+                        />
+                      )}
+                      <div>
+                        <p className="truncate leading-snug text-xs font-medium">{v.products?.name}</p>
+                        <p className="text-muted text-xs">{v.sizes?.label} · {v.colors?.name}</p>
+                        <p className="text-muted text-[10px] font-mono">{v.sku}</p>
+                      </div>
+                    </div>
+                    <div className="flex-shrink-0 text-right">
+                      <p className="text-gold text-xs font-semibold">{formatCOP(price)}</p>
+                    </div>
+                  </button>
+                );
+              })
             )}
           </div>
         </div>,

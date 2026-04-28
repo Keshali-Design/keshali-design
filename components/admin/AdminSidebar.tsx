@@ -8,6 +8,9 @@ import {
   ShoppingBag,
   LogOut,
   ExternalLink,
+  Tags,
+  Ruler,
+  Layers,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
@@ -15,6 +18,9 @@ import { cn } from "@/lib/utils";
 const NAV = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/admin/productos", label: "Productos", icon: Package, exact: false },
+  { href: "/admin/stock", label: "Stock", icon: Layers, exact: false },
+  { href: "/admin/categorias", label: "Categorías", icon: Tags, exact: false },
+  { href: "/admin/tamaños", label: "Tamaños", icon: Ruler, exact: false },
   { href: "/admin/pedidos", label: "Pedidos", icon: ShoppingBag, exact: false },
 ];
 

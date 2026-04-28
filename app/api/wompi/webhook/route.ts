@@ -26,6 +26,22 @@ export async function POST(req: NextRequest) {
   const tx = body.data.transaction;
   const supabase = createAdminClient();
 
+  type OrderItemRow = {
+    id: string;
+    quantity: number;
+    unit_price: number;
+    total_price: number;
+    product_variants: {
+      id: string;
+      sku: string;
+      size_id: string;
+      color_id: string;
+      products: { name: string; category_id: string } | null;
+      sizes: { label: string } | null;
+      colors: { name: string } | null;
+    } | null;
+  };
+
   // Find the order by reference (= order_number)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: order, error: orderError } = await (supabase.from("orders") as any)
@@ -34,11 +50,16 @@ export async function POST(req: NextRequest) {
       subtotal, shipping_cost, total, status, shipping_address,
       order_items (
         id, quantity, unit_price, total_price,
-        product_variants ( id, sku, title, stock )
+        product_variants (
+          id, sku, size_id, color_id,
+          products ( name, category_id ),
+          sizes ( label ),
+          colors ( name )
+        )
       )
     `)
     .eq("order_number", tx.reference)
-    .single();
+    .single() as { data: { id: string; order_number: string; customer_name: string; customer_email: string; customer_phone: string | null; subtotal: number; shipping_cost: number; total: number; status: string; shipping_address: { city?: string; address?: string } | null; order_items: OrderItemRow[] } | null; error: unknown };
 
   if (orderError || !order) {
     console.error("Order not found for reference:", tx.reference);
@@ -67,30 +88,12 @@ export async function POST(req: NextRequest) {
     .update({ status: newStatus, updated_at: new Date().toISOString() })
     .eq("id", order.id);
 
-  // On approval: decrement stock + send emails
+  // On approval: send emails (stock was already decremented at checkout time)
   if (tx.status === "APPROVED") {
-    type OrderItemWithVariant = {
-      id: string;
-      quantity: number;
-      unit_price: number;
-      total_price: number;
-      product_variants: { id: string; sku: string; title: string; stock: number } | null;
-    };
+    const items: OrderItemRow[] = order.order_items ?? [];
 
-    const items: OrderItemWithVariant[] = order.order_items ?? [];
-
-    // Decrement stock for each variant
-    for (const item of items) {
-      if (!item.product_variants) continue;
-      const newStock = Math.max(0, item.product_variants.stock - item.quantity);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await (supabase.from("product_variants") as any)
-        .update({ stock: newStock, updated_at: new Date().toISOString() })
-        .eq("id", item.product_variants.id);
-    }
-
-    // Build email data
-    const shippingAddr = order.shipping_address as { city?: string; address?: string } | null;
+    // Build email data — construct variant title from product + size + color
+    const shippingAddr = order.shipping_address;
     const emailData = {
       orderNumber: order.order_number,
       customerName: order.customer_name,
@@ -101,13 +104,19 @@ export async function POST(req: NextRequest) {
       subtotal: order.subtotal,
       shippingCost: order.shipping_cost,
       total: order.total,
-      items: items.map((item) => ({
-        title: item.product_variants?.title ?? "Producto",
-        sku: item.product_variants?.sku ?? "",
-        quantity: item.quantity,
-        unitPrice: item.unit_price,
-        totalPrice: item.total_price,
-      })),
+      items: items.map((item) => {
+        const pv = item.product_variants;
+        const title = pv
+          ? [pv.products?.name, pv.sizes?.label, pv.colors?.name].filter(Boolean).join(" · ")
+          : "Producto";
+        return {
+          title,
+          sku: pv?.sku ?? "",
+          quantity: item.quantity,
+          unitPrice: item.unit_price,
+          totalPrice: item.total_price,
+        };
+      }),
     };
 
     // Send emails in parallel (non-blocking failures)

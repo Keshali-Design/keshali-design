@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { getCategories, getFeaturedCatalogItems } from "@/lib/supabase/queries";
+import { getCategories, getCatalogProducts } from "@/lib/supabase/queries";
 import { ProductCard } from "@/components/store/ProductCard";
 import { CategoryCard } from "@/components/store/CategoryCard";
 
@@ -9,7 +9,7 @@ export const revalidate = 60;
 export default async function HomePage() {
   const [categories, featured] = await Promise.all([
     getCategories(),
-    getFeaturedCatalogItems(12),
+    getCatalogProducts(),
   ]);
 
   return (
@@ -80,8 +80,8 @@ export default async function HomePage() {
               Los productos más populares de nuestra tienda
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {featured.map((item) => (
-                <ProductCard key={item.variant_id} item={item} />
+              {featured.slice(0, 12).map((p) => (
+                <ProductCard key={p.product_id} product={p} />
               ))}
             </div>
             <div className="text-center mt-10">

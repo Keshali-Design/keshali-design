@@ -34,130 +34,46 @@ export type Database = {
           updated_at?: string;
         };
       };
-      products: {
+      size_types: {
         Row: {
           id: string;
-          model_code: string;
           name: string;
-          capacity: string | null;
-          material: string | null;
-          base_cost: number;
-          sale_price: number;
-          stock: number;
+          unit_label: string;
           active: boolean;
-          category_id: string;
           created_at: string;
-          updated_at: string;
         };
-        Insert: {
-          id?: string;
-          model_code: string;
-          name: string;
-          capacity?: string | null;
-          material?: string | null;
-          base_cost: number;
-          sale_price: number;
-          stock?: number;
-          active?: boolean;
-          category_id: string;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          model_code?: string;
-          name?: string;
-          capacity?: string | null;
-          material?: string | null;
-          base_cost?: number;
-          sale_price?: number;
-          stock?: number;
-          active?: boolean;
-          category_id?: string;
-          updated_at?: string;
-        };
+        Insert: { id?: string; name: string; unit_label: string; active?: boolean; created_at?: string };
+        Update: { id?: string; name?: string; unit_label?: string; active?: boolean };
       };
-      product_variants: {
+      sizes: {
         Row: {
           id: string;
-          sku: string;
-          product_id: string;
-          design_id: string | null;
-          color_id: string | null;
-          size_id: string | null;
-          title: string;
-          price: number;
-          stock: number;
+          size_type_id: string;
+          label: string;
+          alt_value: string | null;
+          alt_label: string | null;
+          sort_order: number;
           active: boolean;
           created_at: string;
-          updated_at: string;
         };
         Insert: {
           id?: string;
-          sku: string;
-          product_id: string;
-          design_id?: string | null;
-          color_id?: string | null;
-          size_id?: string | null;
-          title: string;
-          price: number;
-          stock?: number;
+          size_type_id: string;
+          label: string;
+          alt_value?: string | null;
+          alt_label?: string | null;
+          sort_order?: number;
           active?: boolean;
           created_at?: string;
-          updated_at?: string;
         };
         Update: {
           id?: string;
-          sku?: string;
-          product_id?: string;
-          design_id?: string | null;
-          color_id?: string | null;
-          size_id?: string | null;
-          title?: string;
-          price?: number;
-          stock?: number;
+          size_type_id?: string;
+          label?: string;
+          alt_value?: string | null;
+          alt_label?: string | null;
+          sort_order?: number;
           active?: boolean;
-          updated_at?: string;
-        };
-      };
-      designs: {
-        Row: {
-          id: string;
-          design_ref: string;
-          name: string;
-          category: string | null;
-          description: string | null;
-          tags: string[] | null;
-          file_name: string | null;
-          image_url: string | null;
-          active: boolean;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          design_ref: string;
-          name: string;
-          category?: string | null;
-          description?: string | null;
-          tags?: string[] | null;
-          file_name?: string | null;
-          image_url?: string | null;
-          active?: boolean;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          design_ref?: string;
-          name?: string;
-          category?: string | null;
-          description?: string | null;
-          tags?: string[] | null;
-          file_name?: string | null;
-          image_url?: string | null;
-          active?: boolean;
-          updated_at?: string;
         };
       };
       colors: {
@@ -185,32 +101,95 @@ export type Database = {
           active?: boolean;
         };
       };
-      sizes: {
+      products: {
         Row: {
           id: string;
           name: string;
-          abbreviation: string;
           description: string | null;
-          sort_order: number;
+          category_id: string;
+          price_varies_by_color: boolean;
           active: boolean;
           created_at: string;
+          updated_at: string;
         };
         Insert: {
           id?: string;
           name: string;
-          abbreviation: string;
           description?: string | null;
-          sort_order?: number;
+          category_id: string;
+          price_varies_by_color?: boolean;
           active?: boolean;
           created_at?: string;
+          updated_at?: string;
         };
         Update: {
           id?: string;
           name?: string;
-          abbreviation?: string;
           description?: string | null;
-          sort_order?: number;
+          category_id?: string;
+          price_varies_by_color?: boolean;
           active?: boolean;
+          updated_at?: string;
+        };
+      };
+      product_variants: {
+        Row: {
+          id: string;
+          sku: string;
+          product_id: string;
+          color_id: string;
+          size_id: string;
+          price_override: number | null;
+          active: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          sku: string;
+          product_id: string;
+          color_id: string;
+          size_id: string;
+          price_override?: number | null;
+          active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          sku?: string;
+          product_id?: string;
+          color_id?: string;
+          size_id?: string;
+          price_override?: number | null;
+          active?: boolean;
+          updated_at?: string;
+        };
+      };
+      inventory: {
+        Row: {
+          id: string;
+          category_id: string;
+          size_id: string;
+          color_id: string;
+          stock: number;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          category_id: string;
+          size_id: string;
+          color_id: string;
+          stock?: number;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          category_id?: string;
+          size_id?: string;
+          color_id?: string;
+          stock?: number;
+          updated_at?: string;
         };
       };
       product_images: {
@@ -321,23 +300,32 @@ export type Database = {
         Row: {
           variant_id: string | null;
           sku: string | null;
-          title: string | null;
-          price: number | null;
+          variant_active: boolean | null;
+          price_override: number | null;
           stock: number | null;
-          model_code: string | null;
+          product_id: string | null;
           product_name: string | null;
-          material: string | null;
-          capacity: string | null;
+          description: string | null;
+          price_varies_by_color: boolean | null;
+          product_active: boolean | null;
+          base_price: number | null;
+          price: number | null;
+          size_id: string | null;
+          size_label: string | null;
+          alt_value: string | null;
+          alt_label: string | null;
+          size_sort_order: number | null;
+          size_type_name: string | null;
+          unit_label: string | null;
+          color_id: string | null;
+          color_name: string | null;
+          hex_code: string | null;
+          color_code: string | null;
+          category_id: string | null;
           category_name: string | null;
           category_slug: string | null;
-          design_ref: string | null;
-          design_name: string | null;
-          design_image: string | null;
-          design_tags: string[] | null;
-          color_name: string | null;
-          color_hex: string | null;
-          size_abbr: string | null;
-          size_name: string | null;
+          category_active: boolean | null;
+          primary_image_url: string | null;
         };
       };
     };
@@ -346,13 +334,14 @@ export type Database = {
   };
 };
 
-export type CatalogItem = Database["public"]["Views"]["catalog_view"]["Row"];
 export type Category = Database["public"]["Tables"]["categories"]["Row"];
+export type SizeType = Database["public"]["Tables"]["size_types"]["Row"];
+export type Size = Database["public"]["Tables"]["sizes"]["Row"];
+export type Color = Database["public"]["Tables"]["colors"]["Row"];
 export type Product = Database["public"]["Tables"]["products"]["Row"];
 export type ProductVariant = Database["public"]["Tables"]["product_variants"]["Row"];
-export type Design = Database["public"]["Tables"]["designs"]["Row"];
-export type Color = Database["public"]["Tables"]["colors"]["Row"];
-export type Size = Database["public"]["Tables"]["sizes"]["Row"];
+export type Inventory = Database["public"]["Tables"]["inventory"]["Row"];
+export type ProductImage = Database["public"]["Tables"]["product_images"]["Row"];
 export type Order = Database["public"]["Tables"]["orders"]["Row"];
 export type OrderItem = Database["public"]["Tables"]["order_items"]["Row"];
-export type ProductImage = Database["public"]["Tables"]["product_images"]["Row"];
+export type CatalogItem = Database["public"]["Views"]["catalog_view"]["Row"];

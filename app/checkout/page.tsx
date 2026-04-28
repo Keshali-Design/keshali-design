@@ -48,7 +48,7 @@ export default function CheckoutPage() {
       items: items.map((i) => ({
         variantId: i.variantId,
         sku: i.sku,
-        title: i.title,
+        title: `${i.productName} — ${i.sizeLabel} / ${i.colorName}`,
         quantity: i.quantity,
         price: i.price,
       })),
@@ -195,7 +195,7 @@ export default function CheckoutPage() {
                     {item.image ? (
                       <Image
                         src={item.image}
-                        alt={item.title}
+                        alt={item.productName}
                         fill
                         className="object-cover"
                         sizes="48px"
@@ -206,10 +206,10 @@ export default function CheckoutPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-[#e8e8e8] text-xs font-medium leading-snug line-clamp-2">
-                      {item.title}
+                      {item.productName}
                     </p>
                     <p className="text-muted text-xs mt-0.5">
-                      x{item.quantity}
+                      {item.sizeLabel} · {item.colorName} · x{item.quantity}
                     </p>
                   </div>
                   <span className="text-gold text-sm font-semibold whitespace-nowrap">

@@ -13,27 +13,25 @@ const LABEL = "text-xs text-muted block mb-1";
 
 export function EditVariantFullForm({
   id,
-  sku,
-  title: initialTitle,
-  price: initialPrice,
-  stock: initialStock,
+  sku: initialSku,
+  priceOverride: initialPriceOverride,
   active: initialActive,
   images: initialImages,
 }: {
   id: string;
   sku: string;
-  title: string;
-  price: number;
-  stock: number;
+  priceOverride: number | null;
   active: boolean;
   images: Image[];
 }) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [title, setTitle] = useState(initialTitle);
-  const [price, setPrice] = useState(initialPrice);
-  const [stock, setStock] = useState(initialStock);
+  const [sku, setSku] = useState(initialSku);
+  // Store price override as string so the input can be blank (null = use base price)
+  const [priceOverrideStr, setPriceOverrideStr] = useState(
+    initialPriceOverride != null ? String(initialPriceOverride) : ""
+  );
   const [active, setActive] = useState(initialActive);
   const [images, setImages] = useState<Image[]>(initialImages);
 
@@ -43,13 +41,20 @@ export function EditVariantFullForm({
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
 
+  const priceOverride = priceOverrideStr.trim() === "" ? null : Number(priceOverrideStr);
+
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
+    if (!sku.trim()) return;
     setSaving(true);
     setError(null);
     setSaved(false);
 
-    const result = await updateVariantFull(id, { title, price: Number(price), stock: Number(stock), active });
+    const result = await updateVariantFull(id, {
+      sku: sku.trim(),
+      price_override: priceOverride,
+      active,
+    });
 
     if (result?.error) {
       setError(result.error);
@@ -62,7 +67,6 @@ export function EditVariantFullForm({
 
   async function handleDeleteImage(img: Image) {
     setDeletingId(img.id);
-    // Extract fileName from URL (last path segment)
     const fileName = img.url.split("/").pop() ?? "";
     const result = await deleteVariantImage(img.id, fileName);
     if (result?.error) {
@@ -89,7 +93,6 @@ export function EditVariantFullForm({
     if (result?.error) {
       setError(result.error);
     } else {
-      // Reload page to refresh image list
       router.refresh();
     }
 
@@ -101,43 +104,35 @@ export function EditVariantFullForm({
     <form onSubmit={handleSave} className="flex flex-col gap-6">
       {/* Main fields */}
       <div className="glass rounded-card p-5 flex flex-col gap-4">
-        <h2 className="text-[#e8e8e8] font-semibold text-sm border-b border-subtle pb-2">Datos del producto</h2>
+        <h2 className="text-[#e8e8e8] font-semibold text-sm border-b border-subtle pb-2">Datos de la variante</h2>
 
         <div>
-          <label className={LABEL}>Nombre / título</label>
+          <label className={LABEL}>SKU</label>
           <input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            value={sku}
+            onChange={(e) => setSku(e.target.value)}
             required
             className={FIELD}
-            placeholder="Taza mágica negra · diseño floral"
+            placeholder="TAZA11-BLA-11OZ"
           />
         </div>
 
-        <div className="grid sm:grid-cols-2 gap-4">
-          <div>
-            <label className={LABEL}>Precio (COP)</label>
-            <input
-              type="number"
-              min="0"
-              value={price}
-              onChange={(e) => setPrice(Number(e.target.value))}
-              required
-              className={FIELD}
-            />
-            <p className="text-muted text-xs mt-1">{formatCOP(price)}</p>
-          </div>
-          <div>
-            <label className={LABEL}>Stock</label>
-            <input
-              type="number"
-              min="0"
-              value={stock}
-              onChange={(e) => setStock(Number(e.target.value))}
-              required
-              className={FIELD}
-            />
-          </div>
+        <div>
+          <label className={LABEL}>Precio especial (COP) — opcional</label>
+          <input
+            type="number"
+            min="0"
+            value={priceOverrideStr}
+            onChange={(e) => setPriceOverrideStr(e.target.value)}
+            className={FIELD}
+            placeholder="Dejar vacío para usar el precio base por talla"
+          />
+          {priceOverride != null && (
+            <p className="text-muted text-xs mt-1">{formatCOP(priceOverride)}</p>
+          )}
+          <p className="text-muted text-xs mt-1">
+            Si se deja vacío, el precio se toma del configurado por talla en el producto.
+          </p>
         </div>
 
         <label className="flex items-center gap-3 cursor-pointer select-none">
@@ -151,12 +146,8 @@ export function EditVariantFullForm({
             <div className={`w-10 h-5 rounded-full transition-colors ${active ? "bg-gold" : "bg-white/10"}`} />
             <div className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${active ? "translate-x-5" : ""}`} />
           </div>
-          <span className="text-sm text-[#e8e8e8]">Producto activo (visible en tienda)</span>
+          <span className="text-sm text-[#e8e8e8]">Variante activa (visible en tienda)</span>
         </label>
-
-        <p className="text-muted text-xs">
-          El cambio de precio no afecta pedidos anteriores — cada pedido guarda el precio al momento de la compra.
-        </p>
       </div>
 
       {error && (
@@ -208,7 +199,6 @@ export function EditVariantFullForm({
           ))}
         </div>
 
-        {/* Upload new images */}
         <div>
           <input
             ref={fileInputRef}

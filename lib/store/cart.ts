@@ -1,13 +1,12 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { CatalogItem } from "@/lib/supabase/types";
-import { getImageUrl } from "@/lib/utils";
 
 export type CartItem = {
   variantId: string;
   sku: string;
-  title: string;
   productName: string;
+  colorName: string;
+  sizeLabel: string;
   price: number;
   quantity: number;
   image: string | null;
@@ -17,7 +16,7 @@ export type CartItem = {
 type CartStore = {
   items: CartItem[];
   isOpen: boolean;
-  addItem: (item: CatalogItem, quantity?: number) => void;
+  addItem: (item: CartItem) => void;
   removeItem: (variantId: string) => void;
   updateQuantity: (variantId: string, quantity: number) => void;
   clearCart: () => void;
@@ -33,36 +32,21 @@ export const useCart = create<CartStore>()(
       items: [],
       isOpen: false,
 
-      addItem: (catalogItem, quantity = 1) => {
+      addItem: (newItem) => {
         const { items } = get();
-        const existing = items.find((i) => i.variantId === catalogItem.variant_id);
+        const existing = items.find((i) => i.variantId === newItem.variantId);
 
         if (existing) {
           set({
             items: items.map((i) =>
-              i.variantId === catalogItem.variant_id
-                ? { ...i, quantity: i.quantity + quantity }
+              i.variantId === newItem.variantId
+                ? { ...i, quantity: i.quantity + newItem.quantity }
                 : i
             ),
             isOpen: true,
           });
         } else {
-          set({
-            items: [
-              ...items,
-              {
-                variantId: catalogItem.variant_id!,
-                sku: catalogItem.sku!,
-                title: catalogItem.title!,
-                productName: catalogItem.product_name!,
-                price: catalogItem.price!,
-                quantity,
-                image: getImageUrl(catalogItem.sku, catalogItem.design_image),
-                categoryName: catalogItem.category_name ?? null,
-              },
-            ],
-            isOpen: true,
-          });
+          set({ items: [...items, newItem], isOpen: true });
         }
       },
 
@@ -71,26 +55,16 @@ export const useCart = create<CartStore>()(
       },
 
       updateQuantity: (variantId, quantity) => {
-        if (quantity <= 0) {
-          get().removeItem(variantId);
-          return;
-        }
-        set({
-          items: get().items.map((i) =>
-            i.variantId === variantId ? { ...i, quantity } : i
-          ),
-        });
+        if (quantity <= 0) { get().removeItem(variantId); return; }
+        set({ items: get().items.map((i) => i.variantId === variantId ? { ...i, quantity } : i) });
       },
 
       clearCart: () => set({ items: [] }),
       openCart: () => set({ isOpen: true }),
       closeCart: () => set({ isOpen: false }),
 
-      total: () =>
-        get().items.reduce((sum, i) => sum + i.price * i.quantity, 0),
-
-      itemCount: () =>
-        get().items.reduce((sum, i) => sum + i.quantity, 0),
+      total: () => get().items.reduce((sum, i) => sum + i.price * i.quantity, 0),
+      itemCount: () => get().items.reduce((sum, i) => sum + i.quantity, 0),
     }),
     { name: "keshali-cart" }
   )

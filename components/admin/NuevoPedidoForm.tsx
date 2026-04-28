@@ -5,8 +5,8 @@ import { Plus, Trash2 } from "lucide-react";
 import { createManualOrder } from "@/app/admin/pedidos/nuevo/actions";
 import { formatCOP } from "@/lib/utils";
 import { VariantCombobox } from "@/components/admin/VariantCombobox";
+import type { VariantOpt } from "@/app/admin/pedidos/nuevo/page";
 
-type Variant = { id: string; sku: string; title: string; price: number; stock: number };
 type ItemRow = { variantId: string; quantity: number; unitPrice: number };
 
 const FIELD = "bg-white/5 border border-subtle rounded-lg px-3 py-2.5 text-sm text-[#e8e8e8] focus:outline-none focus:border-gold/50 transition-colors w-full";
@@ -20,7 +20,13 @@ const STATUSES = [
   { value: "cancelled", label: "Cancelado" },
 ];
 
-export function NuevoPedidoForm({ variants }: { variants: Variant[] }) {
+function getVariantPrice(v: VariantOpt): number {
+  if (v.price_override != null) return v.price_override;
+  const ps = v.products?.product_sizes?.find((ps) => ps.size_id === v.sizes?.id);
+  return ps?.price ?? 0;
+}
+
+export function NuevoPedidoForm({ variants }: { variants: VariantOpt[] }) {
   const [form, setForm] = useState({
     customerName: "",
     customerEmail: "",
@@ -32,8 +38,9 @@ export function NuevoPedidoForm({ variants }: { variants: Variant[] }) {
     status: "confirmed",
   });
 
+  const firstPrice = variants[0] ? getVariantPrice(variants[0]) : 0;
   const [items, setItems] = useState<ItemRow[]>([
-    { variantId: variants[0]?.id ?? "", quantity: 1, unitPrice: variants[0]?.price ?? 0 },
+    { variantId: variants[0]?.id ?? "", quantity: 1, unitPrice: firstPrice },
   ]);
 
   const [loading, setLoading] = useState(false);
@@ -44,7 +51,7 @@ export function NuevoPedidoForm({ variants }: { variants: Variant[] }) {
   }
 
   function addItem() {
-    setItems([...items, { variantId: variants[0]?.id ?? "", quantity: 1, unitPrice: variants[0]?.price ?? 0 }]);
+    setItems([...items, { variantId: variants[0]?.id ?? "", quantity: 1, unitPrice: firstPrice }]);
   }
 
   function removeItem(i: number) {
@@ -125,7 +132,6 @@ export function NuevoPedidoForm({ variants }: { variants: Variant[] }) {
 
         {items.map((item, i) => (
           <div key={i} className="flex flex-col gap-1.5 pb-3 border-b border-subtle last:border-0 last:pb-0">
-            {/* Row 1: combobox + delete */}
             <div className="flex gap-2 items-center">
               <div className="flex-1">
                 <VariantCombobox
@@ -147,27 +153,14 @@ export function NuevoPedidoForm({ variants }: { variants: Variant[] }) {
                 <Trash2 size={15} />
               </button>
             </div>
-            {/* Row 2: qty + price */}
             <div className="flex gap-2">
               <div className="w-32">
                 <label className={LABEL}>Cantidad</label>
-                <input
-                  type="number"
-                  min="1"
-                  value={item.quantity}
-                  onChange={(e) => updateItem(i, "quantity", e.target.value)}
-                  className={FIELD}
-                />
+                <input type="number" min="1" value={item.quantity} onChange={(e) => updateItem(i, "quantity", e.target.value)} className={FIELD} />
               </div>
               <div className="flex-1">
                 <label className={LABEL}>Precio unitario</label>
-                <input
-                  type="number"
-                  min="0"
-                  value={item.unitPrice}
-                  onChange={(e) => updateItem(i, "unitPrice", e.target.value)}
-                  className={FIELD}
-                />
+                <input type="number" min="0" value={item.unitPrice} onChange={(e) => updateItem(i, "unitPrice", e.target.value)} className={FIELD} />
               </div>
             </div>
           </div>

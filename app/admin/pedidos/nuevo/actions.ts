@@ -71,6 +71,36 @@ export async function createManualOrder(input: ManualOrderInput) {
     }
   }
 
+  // 3. Decrement inventory for each item
+  for (const item of input.items) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: variant } = await (supabase.from("product_variants") as any)
+      .select("size_id, color_id, products ( category_id )")
+      .eq("id", item.variantId)
+      .single() as { data: { size_id: string; color_id: string; products: { category_id: string } | null } | null };
+
+    if (!variant?.products) continue;
+
+    const { size_id, color_id, products: { category_id } } = variant;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: inv } = await (supabase.from("inventory") as any)
+      .select("stock")
+      .eq("category_id", category_id)
+      .eq("size_id", size_id)
+      .eq("color_id", color_id)
+      .single() as { data: { stock: number } | null };
+
+    const newStock = Math.max(0, (inv?.stock ?? 0) - item.quantity);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (supabase.from("inventory") as any)
+      .upsert(
+        { category_id, size_id, color_id, stock: newStock, updated_at: new Date().toISOString() },
+        { onConflict: "category_id,size_id,color_id" }
+      );
+  }
+
   revalidatePath("/admin/pedidos");
   revalidatePath("/admin");
   redirect("/admin/pedidos");

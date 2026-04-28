@@ -64,7 +64,7 @@ export function CartDrawer() {
                   {item.image ? (
                     <Image
                       src={item.image}
-                      alt={item.title}
+                      alt={item.productName}
                       fill
                       className="object-cover"
                       sizes="64px"
@@ -76,7 +76,10 @@ export function CartDrawer() {
 
                 <div className="flex-1 min-w-0">
                   <p className="text-[#e8e8e8] text-sm font-medium leading-snug truncate">
-                    {item.title}
+                    {item.productName}
+                  </p>
+                  <p className="text-muted text-xs truncate">
+                    {item.sizeLabel} · {item.colorName}
                   </p>
                   <p className="text-gold text-sm font-semibold mt-0.5">
                     {formatCOP(item.price * item.quantity)}

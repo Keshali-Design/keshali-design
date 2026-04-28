@@ -6,14 +6,18 @@ import { updateVariant } from "@/app/admin/productos/edit-actions";
 
 type Props = {
   id: string;
-  price: number;
-  stock: number;
+  sku: string;
+  priceOverride: number | null;
   active: boolean;
 };
 
-export function EditVariantForm({ id, price, stock, active }: Props) {
+export function EditVariantForm({ id, sku, priceOverride, active }: Props) {
   const [open, setOpen] = useState(false);
-  const [values, setValues] = useState({ price, stock, active });
+  const [skuVal, setSkuVal] = useState(sku);
+  const [priceOverrideStr, setPriceOverrideStr] = useState(
+    priceOverride != null ? String(priceOverride) : ""
+  );
+  const [activeVal, setActiveVal] = useState(active);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -21,7 +25,13 @@ export function EditVariantForm({ id, price, stock, active }: Props) {
     setSaving(true);
     setError(null);
 
-    const { error: err } = await updateVariant(id, values);
+    const priceOverrideVal = priceOverrideStr.trim() === "" ? null : Number(priceOverrideStr);
+
+    const { error: err } = await updateVariant(id, {
+      sku: skuVal,
+      price_override: priceOverrideVal,
+      active: activeVal,
+    });
 
     if (err) {
       setError("Error al guardar");
@@ -51,30 +61,24 @@ export function EditVariantForm({ id, price, stock, active }: Props) {
         {error && <p className="text-red-400 text-xs">{error}</p>}
         <div className="flex items-center gap-2 flex-wrap">
           <input
-            type="number"
-            value={values.price}
-            onChange={(e) =>
-              setValues({ ...values, price: Number(e.target.value) })
-            }
-            className="w-24 bg-white/5 border border-subtle rounded px-2 py-1 text-xs text-[#e8e8e8] focus:outline-none focus:border-gold/50"
-            placeholder="Precio"
+            type="text"
+            value={skuVal}
+            onChange={(e) => setSkuVal(e.target.value)}
+            className="w-32 bg-white/5 border border-subtle rounded px-2 py-1 text-xs text-[#e8e8e8] focus:outline-none focus:border-gold/50"
+            placeholder="SKU"
           />
           <input
             type="number"
-            value={values.stock}
-            onChange={(e) =>
-              setValues({ ...values, stock: Number(e.target.value) })
-            }
-            className="w-16 bg-white/5 border border-subtle rounded px-2 py-1 text-xs text-[#e8e8e8] focus:outline-none focus:border-gold/50"
-            placeholder="Stock"
+            value={priceOverrideStr}
+            onChange={(e) => setPriceOverrideStr(e.target.value)}
+            className="w-24 bg-white/5 border border-subtle rounded px-2 py-1 text-xs text-[#e8e8e8] focus:outline-none focus:border-gold/50"
+            placeholder="Precio esp."
           />
           <label className="flex items-center gap-1 text-xs text-muted cursor-pointer">
             <input
               type="checkbox"
-              checked={values.active}
-              onChange={(e) =>
-                setValues({ ...values, active: e.target.checked })
-              }
+              checked={activeVal}
+              onChange={(e) => setActiveVal(e.target.checked)}
               className="accent-[#caa45a]"
             />
             Activo
@@ -89,7 +93,9 @@ export function EditVariantForm({ id, price, stock, active }: Props) {
           <button
             onClick={() => {
               setOpen(false);
-              setValues({ price, stock, active });
+              setSkuVal(sku);
+              setPriceOverrideStr(priceOverride != null ? String(priceOverride) : "");
+              setActiveVal(active);
               setError(null);
             }}
             className="p-1.5 rounded hover:bg-white/5 text-muted transition-colors"
