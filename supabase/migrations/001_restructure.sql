@@ -14,6 +14,15 @@ DROP TABLE IF EXISTS product_variants CASCADE;
 DROP TABLE IF EXISTS products CASCADE;
 DROP TABLE IF EXISTS catalog_view CASCADE;
 
+-- Tablas del schema viejo que se reemplazan completamente
+DROP TABLE IF EXISTS sizes CASCADE;
+DROP TABLE IF EXISTS size_types CASCADE;
+DROP TABLE IF EXISTS designs CASCADE;
+DROP TABLE IF EXISTS category_colors CASCADE;
+DROP TABLE IF EXISTS category_sizes CASCADE;
+DROP TABLE IF EXISTS product_sizes CASCADE;
+DROP TABLE IF EXISTS product_colors CASCADE;
+
 -- Limpiar categories pero conservar la tabla (se altera más abajo)
 TRUNCATE TABLE categories CASCADE;
 
