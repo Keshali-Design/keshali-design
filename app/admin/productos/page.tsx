@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import { Plus, Pencil } from "lucide-react";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { formatCOP } from "@/lib/utils";
-import { EditVariantForm } from "@/components/admin/EditVariantForm";
 
 type VariantRow = {
   id: string;
@@ -21,14 +20,11 @@ type VariantRow = {
 export default async function AdminProductosPage() {
   const supabase = createAdminClient();
 
-  const { data: variants } = await supabase
-    .from("product_variants")
-    .select(
-      "id, sku, title, price, stock, active, products ( name, model_code, categories ( name ) )"
-    )
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: variants } = await (supabase.from("product_variants") as any)
+    .select("id, sku, title, price, stock, active, products ( name, model_code, categories ( name ) )")
     .order("active", { ascending: false })
-    .order("title")
-    .returns<VariantRow[]>();
+    .order("title") as { data: VariantRow[] | null };
 
   return (
     <div className="max-w-6xl">
@@ -99,13 +95,14 @@ export default async function AdminProductosPage() {
                     {v.active ? "Activo" : "Inactivo"}
                   </span>
                 </td>
-                <td className="px-4 py-3">
-                  <EditVariantForm
-                    id={v.id}
-                    price={v.price}
-                    stock={v.stock}
-                    active={v.active}
-                  />
+                <td className="px-4 py-3 text-right">
+                  <Link
+                    href={`/admin/productos/${v.id}`}
+                    className="inline-flex items-center gap-1.5 text-xs text-muted hover:text-gold transition-colors px-2 py-1.5 rounded hover:bg-white/5"
+                  >
+                    <Pencil size={13} />
+                    Editar
+                  </Link>
                 </td>
               </tr>
             ))}
