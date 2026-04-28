@@ -280,6 +280,55 @@ function VariantCard({
   );
 }
 
+// ── No-variants warning with delete button ────────────────────
+
+function DeleteAndRecreateHint({ productId, productName }: { productId: string; productName: string }) {
+  const router = useRouter();
+  const [confirming, setConfirming] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  async function handleDelete() {
+    setDeleting(true);
+    const { deleteProduct } = await import("@/app/admin/productos/actions");
+    const res = await deleteProduct(productId);
+    if (res.error) { alert(res.error); setDeleting(false); return; }
+    router.push("/admin/productos/nuevo");
+  }
+
+  if (!confirming) {
+    return (
+      <button
+        type="button"
+        onClick={() => setConfirming(true)}
+        className="btn-ghost text-xs text-red-400 hover:text-red-300 w-fit border-red-400/30 hover:border-red-300/40"
+      >
+        Eliminar y crear de nuevo
+      </button>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-3">
+      <p className="text-muted text-xs">¿Eliminar «{productName}»?</p>
+      <button
+        type="button"
+        onClick={handleDelete}
+        disabled={deleting}
+        className="text-xs px-3 py-1.5 rounded-lg bg-red-500/20 border border-red-500/30 text-red-400 hover:bg-red-500/30 transition-colors disabled:opacity-50"
+      >
+        {deleting ? "Eliminando..." : "Sí, eliminar"}
+      </button>
+      <button
+        type="button"
+        onClick={() => setConfirming(false)}
+        className="text-xs text-muted hover:text-[#e8e8e8] transition-colors"
+      >
+        Cancelar
+      </button>
+    </div>
+  );
+}
+
 // ── Main component ────────────────────────────────────────────
 
 export function EditProductForm({ product }: { product: ProductFull }) {
@@ -303,8 +352,21 @@ export function EditProductForm({ product }: { product: ProductFull }) {
         <h2 className="text-[#e8e8e8] font-semibold text-sm">
           Variantes <span className="text-muted font-normal">({sorted.length})</span>
         </h2>
-        <p className="text-muted text-xs">Clic en una variante para editarla o subir imágenes</p>
+        {sorted.length > 0 && (
+          <p className="text-muted text-xs">Clic en una variante para editarla o subir imágenes</p>
+        )}
       </div>
+
+      {sorted.length === 0 && (
+        <div className="glass rounded-card p-6 border border-yellow-500/20 flex flex-col gap-3">
+          <p className="text-yellow-400 text-sm font-semibold">Este producto no tiene variantes</p>
+          <p className="text-muted text-xs leading-relaxed">
+            Probablemente ocurrió un error al crearlo. Sin variantes no es posible subir imágenes
+            ni gestionar stock. Lo mejor es eliminar este producto y volver a crearlo.
+          </p>
+          <DeleteAndRecreateHint productId={product.id} productName={product.name} />
+        </div>
+      )}
 
       <div className="flex flex-col gap-2">
         {sorted.map((v) => (
