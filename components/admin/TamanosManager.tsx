@@ -8,8 +8,8 @@ import {
   createSize,
   updateSize,
   toggleSize,
-} from "@/app/admin/tamaños/actions";
-import type { SizeType, Size } from "@/app/admin/tamaños/page";
+} from "@/app/admin/tamanos/actions";
+import type { SizeType, Size } from "@/app/admin/tamanos/page";
 
 const FIELD = "bg-white/5 border border-subtle rounded-lg px-3 py-2 text-sm text-[#e8e8e8] focus:outline-none focus:border-gold/50 transition-colors w-full";
 const LABEL = "text-xs text-muted block mb-1";
@@ -175,11 +175,10 @@ export function TamañosManager({
                 <button
                   type="button"
                   onClick={() => toggleSizeType(type.id, !type.active)}
-                  className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
-                    type.active
+                  className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${type.active
                       ? "border-emerald-500/30 text-emerald-400 bg-emerald-400/10 hover:bg-emerald-400/20"
                       : "border-muted/20 text-muted bg-white/5 hover:border-gold/30 hover:text-gold"
-                  }`}
+                    }`}
                 >
                   {type.active ? "Activo" : "Inactivo"}
                 </button>
@@ -271,11 +270,10 @@ export function TamañosManager({
                         <button
                           type="button"
                           onClick={() => toggleSize(s.id, !s.active)}
-                          className={`text-xs px-2 py-0.5 rounded-full border transition-colors ${
-                            s.active
+                          className={`text-xs px-2 py-0.5 rounded-full border transition-colors ${s.active
                               ? "border-emerald-500/30 text-emerald-400 bg-emerald-400/10 hover:bg-emerald-400/20"
                               : "border-muted/20 text-muted bg-white/5 hover:border-gold/30 hover:text-gold"
-                          }`}
+                            }`}
                         >
                           {s.active ? "Activo" : "Inactivo"}
                         </button>
