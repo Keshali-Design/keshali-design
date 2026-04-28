@@ -38,6 +38,7 @@ export default async function StockPage({
     (supabase.from("categories") as any)
       .select("id, name")
       .eq("active", true)
+      .is("parent_id", null)
       .order("name") as Promise<{ data: CategoryOpt[] | null }>,
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

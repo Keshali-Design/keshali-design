@@ -15,6 +15,8 @@ export type Database = {
           name: string;
           slug: string;
           active: boolean;
+          size_type_id: string | null;
+          parent_id: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -23,6 +25,8 @@ export type Database = {
           name: string;
           slug: string;
           active?: boolean;
+          size_type_id?: string | null;
+          parent_id?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -31,6 +35,8 @@ export type Database = {
           name?: string;
           slug?: string;
           active?: boolean;
+          size_type_id?: string | null;
+          parent_id?: string | null;
           updated_at?: string;
         };
       };
@@ -101,12 +107,33 @@ export type Database = {
           active?: boolean;
         };
       };
+      category_colors: {
+        Row: {
+          id: string;
+          category_id: string;
+          color_id: string;
+          active: boolean;
+        };
+        Insert: { id?: string; category_id: string; color_id: string; active?: boolean };
+        Update: { id?: string; category_id?: string; color_id?: string; active?: boolean };
+      };
+      category_sizes: {
+        Row: {
+          id: string;
+          category_id: string;
+          size_id: string;
+          active: boolean;
+        };
+        Insert: { id?: string; category_id: string; size_id: string; active?: boolean };
+        Update: { id?: string; category_id?: string; size_id?: string; active?: boolean };
+      };
       products: {
         Row: {
           id: string;
           name: string;
           description: string | null;
           category_id: string;
+          subcategory_id: string | null;
           price_varies_by_color: boolean;
           active: boolean;
           created_at: string;
@@ -117,6 +144,7 @@ export type Database = {
           name: string;
           description?: string | null;
           category_id: string;
+          subcategory_id?: string | null;
           price_varies_by_color?: boolean;
           active?: boolean;
           created_at?: string;
@@ -127,10 +155,21 @@ export type Database = {
           name?: string;
           description?: string | null;
           category_id?: string;
+          subcategory_id?: string | null;
           price_varies_by_color?: boolean;
           active?: boolean;
           updated_at?: string;
         };
+      };
+      product_sizes: {
+        Row: { id: string; product_id: string; size_id: string; price: number };
+        Insert: { id?: string; product_id: string; size_id: string; price: number };
+        Update: { id?: string; product_id?: string; size_id?: string; price?: number };
+      };
+      product_colors: {
+        Row: { id: string; product_id: string; color_id: string };
+        Insert: { id?: string; product_id: string; color_id: string };
+        Update: { id?: string; product_id?: string; color_id?: string };
       };
       product_variants: {
         Row: {
@@ -166,32 +205,6 @@ export type Database = {
           updated_at?: string;
         };
       };
-      inventory: {
-        Row: {
-          id: string;
-          category_id: string;
-          size_id: string;
-          color_id: string;
-          stock: number;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          category_id: string;
-          size_id: string;
-          color_id: string;
-          stock?: number;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          category_id?: string;
-          size_id?: string;
-          color_id?: string;
-          stock?: number;
-          updated_at?: string;
-        };
-      };
       product_images: {
         Row: {
           id: string;
@@ -220,6 +233,32 @@ export type Database = {
           is_primary?: boolean;
         };
       };
+      inventory: {
+        Row: {
+          id: string;
+          category_id: string;
+          size_id: string;
+          color_id: string;
+          stock: number;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          category_id: string;
+          size_id: string;
+          color_id: string;
+          stock?: number;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          category_id?: string;
+          size_id?: string;
+          color_id?: string;
+          stock?: number;
+          updated_at?: string;
+        };
+      };
       orders: {
         Row: {
           id: string;
@@ -233,6 +272,8 @@ export type Database = {
           total: number;
           status: string;
           notes: string | null;
+          tracking_code: string | null;
+          shipping_company: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -248,6 +289,8 @@ export type Database = {
           total: number;
           status?: string;
           notes?: string | null;
+          tracking_code?: string | null;
+          shipping_company?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -263,6 +306,8 @@ export type Database = {
           total?: number;
           status?: string;
           notes?: string | null;
+          tracking_code?: string | null;
+          shipping_company?: string | null;
           updated_at?: string;
         };
       };
@@ -325,6 +370,9 @@ export type Database = {
           category_name: string | null;
           category_slug: string | null;
           category_active: boolean | null;
+          subcategory_id: string | null;
+          subcategory_name: string | null;
+          subcategory_slug: string | null;
           primary_image_url: string | null;
         };
       };
@@ -338,10 +386,14 @@ export type Category = Database["public"]["Tables"]["categories"]["Row"];
 export type SizeType = Database["public"]["Tables"]["size_types"]["Row"];
 export type Size = Database["public"]["Tables"]["sizes"]["Row"];
 export type Color = Database["public"]["Tables"]["colors"]["Row"];
+export type CategoryColor = Database["public"]["Tables"]["category_colors"]["Row"];
+export type CategorySize = Database["public"]["Tables"]["category_sizes"]["Row"];
 export type Product = Database["public"]["Tables"]["products"]["Row"];
+export type ProductSize = Database["public"]["Tables"]["product_sizes"]["Row"];
+export type ProductColor = Database["public"]["Tables"]["product_colors"]["Row"];
 export type ProductVariant = Database["public"]["Tables"]["product_variants"]["Row"];
-export type Inventory = Database["public"]["Tables"]["inventory"]["Row"];
 export type ProductImage = Database["public"]["Tables"]["product_images"]["Row"];
+export type Inventory = Database["public"]["Tables"]["inventory"]["Row"];
 export type Order = Database["public"]["Tables"]["orders"]["Row"];
 export type OrderItem = Database["public"]["Tables"]["order_items"]["Row"];
 export type CatalogItem = Database["public"]["Views"]["catalog_view"]["Row"];
