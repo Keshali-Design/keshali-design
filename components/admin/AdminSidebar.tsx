@@ -20,7 +20,7 @@ const NAV = [
   { href: "/admin/productos", label: "Productos", icon: Package, exact: false },
   { href: "/admin/stock", label: "Stock", icon: Layers, exact: false },
   { href: "/admin/categorias", label: "Categorías", icon: Tags, exact: false },
-  { href: "/admin/tamaños", label: "Tamaños", icon: Ruler, exact: false },
+  { href: "/admin/tamanos", label: "Tamaños", icon: Ruler, exact: false },
   { href: "/admin/pedidos", label: "Pedidos", icon: ShoppingBag, exact: false },
 ];
 
