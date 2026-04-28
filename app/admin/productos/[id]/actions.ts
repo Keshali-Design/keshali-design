@@ -1,5 +1,6 @@
 "use server";
 
+import sharp from "sharp";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 
@@ -63,11 +64,18 @@ export async function addVariantImages(variantId: string, sku: string, formData:
     const file = valid[i];
     const index = currentCount + i;
     const isPrimary = index === 0;
-    const fileName = isPrimary ? `${sku}.png` : `${sku}-${index + 1}.png`;
+    const fileName = isPrimary ? `${sku}.webp` : `${sku}-${index + 1}.webp`;
+
+    // Convert to WebP: max 1200px wide, quality 82, strip metadata
+    const rawBuffer = Buffer.from(await file.arrayBuffer());
+    const webpBuffer = await sharp(rawBuffer)
+      .resize({ width: 1200, withoutEnlargement: true })
+      .webp({ quality: 82 })
+      .toBuffer();
 
     const { error: uploadError } = await supabase.storage
       .from("product-images")
-      .upload(fileName, file, { contentType: file.type, upsert: true });
+      .upload(fileName, webpBuffer, { contentType: "image/webp", upsert: true });
 
     if (uploadError) {
       console.error("Upload error:", uploadError.message);
