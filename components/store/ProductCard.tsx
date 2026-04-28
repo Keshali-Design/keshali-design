@@ -1,22 +1,24 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { CatalogItem } from "@/lib/supabase/types";
-import { formatCOP, getStockLabel, getImageUrl } from "@/lib/utils";
-import { AddToCartButton } from "./AddToCartButton";
+import type { CatalogProduct } from "@/lib/supabase/queries";
+import { formatCOP } from "@/lib/utils";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 
-export function ProductCard({ item }: { item: CatalogItem }) {
-  const { label: stockLabel, color: stockColor } = getStockLabel(item.stock);
-  const imageUrl = getImageUrl(item.sku, item.design_image);
+export function ProductCard({ product }: { product: CatalogProduct }) {
+  const inStock = product.total_stock > 0;
+  const priceLabel =
+    product.min_price === product.max_price
+      ? formatCOP(product.min_price)
+      : `${formatCOP(product.min_price)} – ${formatCOP(product.max_price)}`;
 
   return (
     <div className="card-product flex flex-col">
-      <Link href={`/producto/${item.sku}`} className="block">
+      <Link href={`/producto/${product.product_id}`} className="block">
         <div className="relative aspect-square overflow-hidden bg-white/5">
-          {imageUrl ? (
+          {product.primary_image_url ? (
             <Image
-              src={imageUrl}
-              alt={item.title ?? "Producto"}
+              src={product.primary_image_url}
+              alt={product.product_name}
               fill
               className="object-cover transition-transform duration-300 hover:scale-105"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
@@ -28,48 +30,35 @@ export function ProductCard({ item }: { item: CatalogItem }) {
       </Link>
 
       <div className="flex flex-col flex-1 p-4 gap-2">
-        {item.category_name && (
-          <span className="text-gold text-xs uppercase tracking-widest font-medium">
-            {item.category_name}
-          </span>
-        )}
+        <span className="text-gold text-xs uppercase tracking-widest font-medium">
+          {product.category_name}
+        </span>
 
-        <Link href={`/producto/${item.sku}`}>
+        <Link href={`/producto/${product.product_id}`}>
           <h3 className="text-[#e8e8e8] font-semibold text-sm leading-snug hover:text-gold transition-colors line-clamp-2">
-            {item.title}
+            {product.product_name}
           </h3>
         </Link>
 
-        {/* Options */}
-        <div className="flex flex-wrap gap-1">
-          {item.size_abbr && (
-            <span className="px-2 py-0.5 rounded text-xs border border-subtle text-muted">
-              {item.size_abbr}
-            </span>
-          )}
-          {item.color_name && (
-            <span className="flex items-center gap-1 px-2 py-0.5 rounded text-xs border border-subtle text-muted">
-              {item.color_hex && (
-                <span
-                  className="w-2.5 h-2.5 rounded-full border border-white/20"
-                  style={{ background: item.color_hex }}
-                />
-              )}
-              {item.color_name}
-            </span>
-          )}
-        </div>
+        {product.description && (
+          <p className="text-muted text-xs line-clamp-2">{product.description}</p>
+        )}
 
         <div className="flex items-center justify-between mt-auto pt-2">
           <div>
-            <span className="text-gold font-bold text-base">
-              {formatCOP(item.price ?? 0)}
-            </span>
-            <p className={`text-xs mt-0.5 ${stockColor}`}>{stockLabel}</p>
+            <span className="text-gold font-bold text-base">{priceLabel}</span>
+            <p className={`text-xs mt-0.5 ${inStock ? "text-emerald-400" : "text-red-400"}`}>
+              {inStock ? "Disponible" : "Sin stock"}
+            </p>
           </div>
         </div>
 
-        <AddToCartButton item={item} disabled={(item.stock ?? 0) === 0} size="sm" />
+        <Link
+          href={`/producto/${product.product_id}`}
+          className="btn-gold text-sm py-2 text-center mt-1"
+        >
+          Ver opciones
+        </Link>
       </div>
     </div>
   );

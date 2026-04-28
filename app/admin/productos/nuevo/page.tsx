@@ -1,27 +1,38 @@
-import { createAdminClient } from "@/lib/supabase/admin";
-import { NuevoProductoForm } from "@/components/admin/NuevoProductoForm";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
-import type { Category, Product, Design, Color, Size } from "@/lib/supabase/types";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { NuevoProductoForm } from "@/components/admin/NuevoProductoForm";
 
 export const metadata = { title: "Nuevo producto — Admin" };
 
 export default async function NuevoProductoPage() {
   const supabase = createAdminClient();
 
-  const [
-    { data: categories },
-    { data: products },
-    { data: designs },
-    { data: colors },
-    { data: sizes },
-  ] = await Promise.all([
-    supabase.from("categories").select("*").eq("active", true).order("name").returns<Category[]>(),
-    supabase.from("products").select("id, model_code, name, category_id").order("name").returns<Pick<Product, "id" | "model_code" | "name" | "category_id">[]>(),
-    supabase.from("designs").select("id, design_ref, name").eq("active", true).order("name").returns<Pick<Design, "id" | "design_ref" | "name">[]>(),
-    supabase.from("colors").select("id, name, hex_code").eq("active", true).order("name").returns<Pick<Color, "id" | "name" | "hex_code">[]>(),
-    supabase.from("sizes").select("id, name, abbreviation").eq("active", true).order("sort_order").returns<Pick<Size, "id" | "name" | "abbreviation">[]>(),
-  ]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: categories } = await (supabase.from("categories") as any)
+    .select("id, name, size_type_id, size_types ( name, unit_label )")
+    .eq("active", true)
+    .order("name") as { data: CategoryOpt[] | null };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: allColors } = await (supabase.from("colors") as any)
+    .select("id, name, hex_code, color_code")
+    .eq("active", true)
+    .order("name") as { data: ColorOpt[] | null };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: allSizes } = await (supabase.from("sizes") as any)
+    .select("id, size_type_id, label, alt_label, sort_order")
+    .eq("active", true)
+    .order("sort_order") as { data: SizeOpt[] | null };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: categoryColors } = await (supabase.from("category_colors") as any)
+    .select("category_id, color_id, active") as { data: { category_id: string; color_id: string; active: boolean }[] | null };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: categorySizes } = await (supabase.from("category_sizes") as any)
+    .select("category_id, size_id, active") as { data: { category_id: string; size_id: string; active: boolean }[] | null };
 
   return (
     <div className="max-w-2xl">
@@ -35,16 +46,25 @@ export default async function NuevoProductoPage() {
 
       <h1 className="text-2xl font-bold text-[#e8e8e8] mb-1">Nuevo producto</h1>
       <p className="text-muted text-sm mb-8">
-        Crea una nueva variante de producto en el catálogo.
+        Las variantes (color × tamaño) se generan automáticamente.
       </p>
 
       <NuevoProductoForm
         categories={categories ?? []}
-        products={products ?? []}
-        designs={designs ?? []}
-        colors={colors ?? []}
-        sizes={sizes ?? []}
+        allColors={allColors ?? []}
+        allSizes={allSizes ?? []}
+        categoryColors={categoryColors ?? []}
+        categorySizes={categorySizes ?? []}
       />
     </div>
   );
 }
+
+export type CategoryOpt = {
+  id: string;
+  name: string;
+  size_type_id: string | null;
+  size_types: { name: string; unit_label: string } | null;
+};
+export type ColorOpt = { id: string; name: string; hex_code: string; color_code: string };
+export type SizeOpt = { id: string; size_type_id: string; label: string; alt_label: string | null; sort_order: number };

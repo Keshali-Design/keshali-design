@@ -1,30 +1,38 @@
 import Link from "next/link";
-import { Plus, Pencil } from "lucide-react";
+import { Plus, Pencil, Trash2 } from "lucide-react";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { formatCOP } from "@/lib/utils";
+import { DeleteProductButton } from "@/components/admin/DeleteProductButton";
 
-type VariantRow = {
+type ProductRow = {
   id: string;
-  sku: string;
-  title: string;
-  price: number;
-  stock: number;
+  name: string;
   active: boolean;
-  products: {
-    name: string;
-    model_code: string;
-    categories: { name: string } | null;
-  } | null;
+  description: string | null;
+  price_varies_by_color: boolean;
+  categories: { name: string } | null;
+  product_sizes: { price: number }[];
+  product_variants: { id: string }[];
 };
 
 export default async function AdminProductosPage() {
   const supabase = createAdminClient();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: variants } = await (supabase.from("product_variants") as any)
-    .select("id, sku, title, price, stock, active, products ( name, model_code, categories ( name ) )")
+  const { data: products } = await (supabase.from("products") as any)
+    .select(`
+      id, name, active, description, price_varies_by_color,
+      categories ( name ),
+      product_sizes ( price ),
+      product_variants ( id )
+    `)
     .order("active", { ascending: false })
-    .order("title") as { data: VariantRow[] | null };
+    .order("name") as { data: ProductRow[] | null };
+
+  const minPrice = (sizes: { price: number }[]) =>
+    sizes.length ? Math.min(...sizes.map((s) => s.price)) : 0;
+  const maxPrice = (sizes: { price: number }[]) =>
+    sizes.length ? Math.max(...sizes.map((s) => s.price)) : 0;
 
   return (
     <div className="max-w-6xl">
@@ -36,7 +44,7 @@ export default async function AdminProductosPage() {
         </Link>
       </div>
       <p className="text-muted text-sm mb-8">
-        Gestiona stock y precios de variantes
+        Cada producto agrupa variantes por color y tamaño. El stock se gestiona en la sección Stock.
       </p>
 
       <div className="glass rounded-card overflow-hidden">
@@ -44,74 +52,69 @@ export default async function AdminProductosPage() {
           <thead>
             <tr className="border-b border-subtle text-muted text-xs uppercase tracking-wide">
               <th className="text-left px-4 py-3">Producto</th>
-              <th className="text-left px-4 py-3 hidden md:table-cell">SKU</th>
+              <th className="text-left px-4 py-3 hidden md:table-cell">Categoría</th>
               <th className="text-right px-4 py-3">Precio</th>
-              <th className="text-right px-4 py-3">Stock</th>
+              <th className="text-center px-4 py-3">Variantes</th>
               <th className="text-center px-4 py-3">Estado</th>
               <th className="px-4 py-3" />
             </tr>
           </thead>
           <tbody>
-            {variants?.map((v) => (
-              <tr
-                key={v.id}
-                className="border-b border-subtle last:border-0 hover:bg-white/[0.03] transition-colors"
-              >
-                <td className="px-4 py-3">
-                  <p className="text-[#e8e8e8] font-medium line-clamp-1">
-                    {v.title}
-                  </p>
-                  <p className="text-muted text-xs mt-0.5">
-                    {v.products?.categories?.name} · {v.products?.name}
-                  </p>
-                </td>
-                <td className="px-4 py-3 text-muted font-mono text-xs hidden md:table-cell">
-                  {v.sku}
-                </td>
-                <td className="px-4 py-3 text-right text-gold font-semibold">
-                  {formatCOP(v.price)}
-                </td>
-                <td className="px-4 py-3 text-right">
-                  <span
-                    className={
-                      v.stock === 0
-                        ? "text-red-400"
-                        : v.stock <= 5
-                          ? "text-yellow-400"
-                          : "text-emerald-400"
-                    }
-                  >
-                    {v.stock}
-                  </span>
-                </td>
-                <td className="px-4 py-3 text-center">
-                  <span
-                    className={`text-xs px-2 py-0.5 rounded-full border ${
-                      v.active
+            {products?.map((p) => {
+              const min = minPrice(p.product_sizes);
+              const max = maxPrice(p.product_sizes);
+              const priceLabel = min === max ? formatCOP(min) : `${formatCOP(min)} – ${formatCOP(max)}`;
+
+              return (
+                <tr key={p.id} className="border-b border-subtle last:border-0 hover:bg-white/[0.03] transition-colors">
+                  <td className="px-4 py-3">
+                    <p className="text-[#e8e8e8] font-medium line-clamp-1">{p.name}</p>
+                    {p.description && (
+                      <p className="text-muted text-xs mt-0.5 line-clamp-1">{p.description}</p>
+                    )}
+                  </td>
+                  <td className="px-4 py-3 text-muted text-xs hidden md:table-cell">
+                    {p.categories?.name ?? "—"}
+                  </td>
+                  <td className="px-4 py-3 text-right text-gold font-semibold text-xs">
+                    {p.product_sizes.length ? priceLabel : "—"}
+                    {p.price_varies_by_color && (
+                      <span className="text-muted font-normal ml-1 text-[10px]">+color</span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3 text-center text-muted text-xs">
+                    {p.product_variants.length}
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    <span className={`text-xs px-2 py-0.5 rounded-full border ${
+                      p.active
                         ? "border-emerald-500/30 text-emerald-400 bg-emerald-400/10"
                         : "border-muted/20 text-muted bg-white/5"
-                    }`}
-                  >
-                    {v.active ? "Activo" : "Inactivo"}
-                  </span>
-                </td>
-                <td className="px-4 py-3 text-right">
-                  <Link
-                    href={`/admin/productos/${v.id}`}
-                    className="inline-flex items-center gap-1.5 text-xs text-muted hover:text-gold transition-colors px-2 py-1.5 rounded hover:bg-white/5"
-                  >
-                    <Pencil size={13} />
-                    Editar
-                  </Link>
-                </td>
-              </tr>
-            ))}
+                    }`}>
+                      {p.active ? "Activo" : "Inactivo"}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center justify-end gap-1">
+                      <Link
+                        href={`/admin/productos/${p.id}`}
+                        className="inline-flex items-center gap-1 text-xs text-muted hover:text-gold transition-colors px-2 py-1.5 rounded hover:bg-white/5"
+                      >
+                        <Pencil size={12} />
+                        Editar
+                      </Link>
+                      <DeleteProductButton id={p.id} name={p.name} />
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
 
-        {(!variants || variants.length === 0) && (
+        {(!products || products.length === 0) && (
           <p className="text-muted text-sm text-center py-10">
-            No hay variantes. Agrega productos desde Supabase.
+            Sin productos. <Link href="/admin/productos/nuevo" className="text-gold hover:underline">Crea el primero.</Link>
           </p>
         )}
       </div>

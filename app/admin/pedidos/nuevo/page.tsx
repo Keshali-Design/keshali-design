@@ -10,9 +10,14 @@ export default async function NuevoPedidoPage() {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: variants } = await (supabase.from("product_variants") as any)
-    .select("id, sku, title, price, stock")
+    .select(`
+      id, sku, stock, price_override,
+      products ( name, price_varies_by_color, product_sizes ( size_id, price ) ),
+      colors ( id, name, hex_code ),
+      sizes ( id, label, alt_label )
+    `)
     .eq("active", true)
-    .order("title");
+    .order("sku") as { data: VariantOpt[] | null };
 
   return (
     <div className="max-w-3xl">
@@ -31,3 +36,17 @@ export default async function NuevoPedidoPage() {
     </div>
   );
 }
+
+export type VariantOpt = {
+  id: string;
+  sku: string;
+  stock: number;
+  price_override: number | null;
+  products: {
+    name: string;
+    price_varies_by_color: boolean;
+    product_sizes: { size_id: string; price: number }[];
+  } | null;
+  colors: { id: string; name: string; hex_code: string } | null;
+  sizes: { id: string; label: string; alt_label: string | null } | null;
+};
