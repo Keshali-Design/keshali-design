@@ -22,7 +22,7 @@ export default async function AdminProductosPage() {
   const { data: products } = await (supabase.from("products") as any)
     .select(`
       id, name, active, description, price_varies_by_color,
-      categories ( name ),
+      categories!category_id ( name ),
       product_sizes ( price ),
       product_variants ( id )
     `)
