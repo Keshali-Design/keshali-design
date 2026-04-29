@@ -52,10 +52,11 @@ export type Category = { id: string; name: string; slug: string; active: boolean
 
 export async function getCategories(): Promise<Category[]> {
   const supabase = await createClient();
-  const { data } = await supabase
-    .from("categories")
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data } = await (supabase.from("categories") as any)
     .select("id, name, slug, active")
     .eq("active", true)
+    .is("parent_id", null)
     .order("name");
   return (data as Category[]) ?? [];
 }
