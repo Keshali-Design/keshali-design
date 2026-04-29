@@ -7,14 +7,21 @@ export const revalidate = 60;
 
 export const metadata = { title: "Catálogo — Keshali Design" };
 
-type Props = { searchParams: Promise<{ categoria?: string }> };
+type Props = {
+  searchParams: Promise<{
+    categoria?: string;
+    subcategoria?: string;
+  }>;
+};
 
 export default async function CatalogoPage({ searchParams }: Props) {
-  const { categoria } = await searchParams;
+  const { categoria, subcategoria } = await searchParams;
   const [categories, products] = await Promise.all([
     getCategories(),
-    getCatalogProducts({ categorySlug: categoria }),
-  ]);
+    getCatalogProducts({
+  categorySlug: categoria,
+  subcategorySlug: subcategoria,
+}),
 
   return (
     <div className="section">
