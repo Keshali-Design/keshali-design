@@ -9,6 +9,9 @@ export type CatalogProduct = {
   category_id: string;
   category_name: string;
   category_slug: string;
+  subcategory_id: string | null;
+  subcategory_name: string | null;
+  subcategory_slug: string | null;
   price_varies_by_color: boolean;
   min_price: number;
   max_price: number;
@@ -47,6 +50,7 @@ export type ProductDetail = {
 };
 
 export type Category = { id: string; name: string; slug: string; active: boolean };
+export type Subcategory = { id: string; name: string; slug: string; parent_id: string };
 
 // ── Categories ────────────────────────────────────────────────
 
@@ -61,20 +65,35 @@ export async function getCategories(): Promise<Category[]> {
   return (data as Category[]) ?? [];
 }
 
+export async function getSubcategories(): Promise<Subcategory[]> {
+  const supabase = await createClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data } = await (supabase.from("categories") as any)
+    .select("id, name, slug, parent_id")
+    .eq("active", true)
+    .not("parent_id", "is", null)
+    .order("name");
+  return (data as Subcategory[]) ?? [];
+}
+
 // ── Catalog listing (one card per product) ────────────────────
 
 export async function getCatalogProducts(options?: {
   categorySlug?: string;
+  subcategorySlug?: string;
 }): Promise<CatalogProduct[]> {
   const supabase = await createClient();
 
   // Use catalog_view, group by product
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let query = (supabase.from("catalog_view") as any)
-    .select("product_id, product_name, description, category_id, category_name, category_slug, price_varies_by_color, price, stock, primary_image_url, variant_active, product_active, category_active");
+    .select("product_id, product_name, description, category_id, category_name, category_slug, subcategory_id, subcategory_name, subcategory_slug, price_varies_by_color, price, stock, primary_image_url, variant_active, product_active, category_active");
 
   if (options?.categorySlug) {
     query = query.eq("category_slug", options.categorySlug);
+  }
+  if (options?.subcategorySlug) {
+    query = query.eq("subcategory_slug", options.subcategorySlug);
   }
 
   const { data } = await query as { data: {
@@ -84,6 +103,9 @@ export async function getCatalogProducts(options?: {
     category_id: string;
     category_name: string;
     category_slug: string;
+    subcategory_id: string | null;
+    subcategory_name: string | null;
+    subcategory_slug: string | null;
     price_varies_by_color: boolean;
     price: number;
     stock: number;
@@ -109,6 +131,9 @@ export async function getCatalogProducts(options?: {
         category_id: row.category_id,
         category_name: row.category_name,
         category_slug: row.category_slug,
+        subcategory_id: row.subcategory_id,
+        subcategory_name: row.subcategory_name,
+        subcategory_slug: row.subcategory_slug,
         price_varies_by_color: row.price_varies_by_color,
         min_price: row.price,
         max_price: row.price,
