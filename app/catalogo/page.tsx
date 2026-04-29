@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { getCatalogProducts, getCategories, getSubcategories } from "@/lib/supabase/queries";
 import { ProductCard } from "@/components/store/ProductCard";
+import { SubcategorySelect } from "./SubcategorySelect";
 
 export const revalidate = 60;
 
@@ -37,50 +38,31 @@ export default async function CatalogoPage({ searchParams }: Props) {
         {products.length} producto{products.length !== 1 ? "s" : ""} encontrado{products.length !== 1 ? "s" : ""}
       </p>
 
-      {/* ── Category filter ── */}
-      <div className="flex flex-wrap gap-2 mb-3">
-        <Link
-          href="/catalogo"
-          className={`${PILL} ${!categoria ? PILL_ACTIVE : PILL_IDLE}`}
-        >
-          Todos
-        </Link>
-        {categories.map((cat) => (
-          <Link
-            key={cat.id}
-            href={`/catalogo?categoria=${cat.slug}`}
-            className={`${PILL} ${categoria === cat.slug ? PILL_ACTIVE : PILL_IDLE}`}
-          >
-            {cat.name}
+      {/* ── Category filter + subcategory select ── */}
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-10">
+        <div className="flex flex-wrap gap-2">
+          <Link href="/catalogo" className={`${PILL} ${!categoria ? PILL_ACTIVE : PILL_IDLE}`}>
+            Todos
           </Link>
-        ))}
-      </div>
-
-      {/* ── Subcategory filter (only shown when subcategories exist) ── */}
-      {visibleSubcategories.length > 0 && (
-        <div className="flex flex-wrap gap-2 mb-10 pl-1 border-l-2 border-gold/20 ml-1">
-          <Link
-            href={categoria ? `/catalogo?categoria=${categoria}` : "/catalogo"}
-            className={`${PILL} text-xs py-1.5 ${!subcategoria ? PILL_ACTIVE : PILL_IDLE}`}
-          >
-            Todas
-          </Link>
-          {visibleSubcategories.map((sub) => {
-            const href = categoria
-              ? `/catalogo?categoria=${categoria}&subcategoria=${sub.slug}`
-              : `/catalogo?subcategoria=${sub.slug}`;
-            return (
-              <Link
-                key={sub.id}
-                href={href}
-                className={`${PILL} text-xs py-1.5 ${subcategoria === sub.slug ? PILL_ACTIVE : PILL_IDLE}`}
-              >
-                {sub.name}
-              </Link>
-            );
-          })}
+          {categories.map((cat) => (
+            <Link
+              key={cat.id}
+              href={`/catalogo?categoria=${cat.slug}`}
+              className={`${PILL} ${categoria === cat.slug ? PILL_ACTIVE : PILL_IDLE}`}
+            >
+              {cat.name}
+            </Link>
+          ))}
         </div>
-      )}
+
+        {visibleSubcategories.length > 0 && (
+          <SubcategorySelect
+            subcategories={visibleSubcategories}
+            current={subcategoria}
+            categoria={categoria}
+          />
+        )}
+      </div>
 
       {/* ── Product grid ── */}
       <Suspense fallback={
