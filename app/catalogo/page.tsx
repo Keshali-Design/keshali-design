@@ -7,21 +7,14 @@ export const revalidate = 60;
 
 export const metadata = { title: "Catálogo — Keshali Design" };
 
-type Props = {
-  searchParams: Promise<{
-    categoria?: string;
-    subcategoria?: string;
-  }>;
-};
+type Props = { searchParams: Promise<{ categoria?: string }> };
 
 export default async function CatalogoPage({ searchParams }: Props) {
-  const { categoria, subcategoria } = await searchParams;
+  const { categoria } = await searchParams;
   const [categories, products] = await Promise.all([
     getCategories(),
-    getCatalogProducts({
-  categorySlug: categoria,
-  subcategorySlug: subcategoria,
-}),
+    getCatalogProducts({ categorySlug: categoria }),
+  ]);
 
   return (
     <div className="section">
@@ -34,9 +27,8 @@ export default async function CatalogoPage({ searchParams }: Props) {
       <div className="flex flex-wrap gap-2 mb-10">
         <Link
           href="/catalogo"
-          className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-150 border ${
-            !categoria ? "bg-gold text-bg border-gold" : "border-subtle text-muted hover:border-gold/40 hover:text-[#e8e8e8]"
-          }`}
+          className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-150 border ${!categoria ? "bg-gold text-bg border-gold" : "border-subtle text-muted hover:border-gold/40 hover:text-[#e8e8e8]"
+            }`}
         >
           Todos
         </Link>
@@ -44,9 +36,8 @@ export default async function CatalogoPage({ searchParams }: Props) {
           <Link
             key={cat.id}
             href={`/catalogo?categoria=${cat.slug}`}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-150 border ${
-              categoria === cat.slug ? "bg-gold text-bg border-gold" : "border-subtle text-muted hover:border-gold/40 hover:text-[#e8e8e8]"
-            }`}
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-150 border ${categoria === cat.slug ? "bg-gold text-bg border-gold" : "border-subtle text-muted hover:border-gold/40 hover:text-[#e8e8e8]"
+              }`}
           >
             {cat.name}
           </Link>
