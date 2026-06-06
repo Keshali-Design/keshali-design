@@ -9,7 +9,7 @@ export default async function CategoriasPage() {
   // Load all categories (main + sub) with parent info
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: categories } = await (supabase.from("categories") as any)
-    .select("id, name, slug, active, size_type_id, parent_id, size_types ( name, unit_label )")
+    .select("id, name, slug, active, size_type_id, parent_id, image_url, size_types ( name, unit_label )")
     .order("name") as { data: Category[] | null };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -62,6 +62,7 @@ export type Category = {
   active: boolean;
   size_type_id: string | null;
   parent_id: string | null;
+  image_url: string | null;
   size_types: { name: string; unit_label: string } | null;
 };
 export type SizeTypeOption = { id: string; name: string; unit_label: string };

@@ -17,6 +17,7 @@ export type Database = {
           active: boolean;
           size_type_id: string | null;
           parent_id: string | null;
+          image_url: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -27,6 +28,7 @@ export type Database = {
           active?: boolean;
           size_type_id?: string | null;
           parent_id?: string | null;
+          image_url?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -37,6 +39,7 @@ export type Database = {
           active?: boolean;
           size_type_id?: string | null;
           parent_id?: string | null;
+          image_url?: string | null;
           updated_at?: string;
         };
       };

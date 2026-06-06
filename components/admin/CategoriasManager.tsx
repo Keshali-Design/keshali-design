@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { Plus, ChevronDown, ChevronRight, FolderOpen } from "lucide-react";
+import { useRef, useState } from "react";
+import { Plus, ChevronDown, ChevronRight, FolderOpen, ImagePlus, Trash2 } from "lucide-react";
+import Image from "next/image";
 import {
   createCategory,
   createSubcategory,
@@ -11,6 +12,8 @@ import {
   toggleCategorySize,
   setCategoryColors,
   setCategorySizes,
+  setCategoryImage,
+  deleteCategoryImage,
 } from "@/app/admin/categorias/actions";
 import type {
   Category,
@@ -56,6 +59,11 @@ export function CategoriasManager({
   const [pendingColors, setPendingColors] = useState<Record<string, Set<string>>>({});
   const [pendingSizes, setPendingSizes] = useState<Record<string, Set<string>>>({});
   const [savingConfig, setSavingConfig] = useState<string | null>(null);
+
+  // Image upload state
+  const [uploadingImg, setUploadingImg] = useState<string | null>(null);
+  const [imgError, setImgError] = useState<Record<string, string>>({});
+  const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
   function getColorIds(catId: string): Set<string> {
     if (pendingColors[catId]) return pendingColors[catId];
@@ -199,6 +207,11 @@ export function CategoriasManager({
                     ? <ChevronDown size={15} className="text-muted flex-shrink-0" />
                     : <ChevronRight size={15} className="text-muted flex-shrink-0" />
                   }
+                  {cat.image_url && (
+                    <div className="w-8 h-8 rounded overflow-hidden flex-shrink-0 border border-subtle">
+                      <Image src={cat.image_url} alt={cat.name} width={32} height={32} className="object-cover w-full h-full" />
+                    </div>
+                  )}
                   <span className="text-[#e8e8e8] font-bold text-sm">{cat.name}</span>
                   {cat.size_types && (
                     <span className="text-muted text-xs font-mono bg-white/5 px-1.5 py-0.5 rounded">
@@ -321,6 +334,70 @@ export function CategoriasManager({
                       {savingConfig === cat.id ? "Guardando..." : "Guardar cambios"}
                     </button>
                   )}
+
+                  {/* Category image */}
+                  <div className="border-t border-subtle pt-5">
+                    <p className="text-xs font-semibold text-muted uppercase tracking-wide mb-3">Imagen de portada</p>
+                    <div className="flex items-start gap-4">
+                      {cat.image_url ? (
+                        <div className="relative w-28 h-28 rounded-lg overflow-hidden border border-subtle flex-shrink-0">
+                          <Image src={cat.image_url} alt={cat.name} fill className="object-cover" sizes="112px" />
+                        </div>
+                      ) : (
+                        <div className="w-28 h-28 rounded-lg border border-dashed border-subtle flex items-center justify-center flex-shrink-0">
+                          <ImagePlus size={24} className="text-muted" />
+                        </div>
+                      )}
+                      <div className="flex flex-col gap-2">
+                        <input
+                          ref={(el) => { fileInputRefs.current[cat.id] = el; }}
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (!file) return;
+                            setUploadingImg(cat.id);
+                            setImgError((prev) => { const n = { ...prev }; delete n[cat.id]; return n; });
+                            const fd = new FormData();
+                            fd.append("image", file);
+                            const res = await setCategoryImage(cat.id, cat.slug, fd);
+                            if (res.error) setImgError((prev) => ({ ...prev, [cat.id]: res.error! }));
+                            setUploadingImg(null);
+                            e.target.value = "";
+                          }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => fileInputRefs.current[cat.id]?.click()}
+                          disabled={uploadingImg === cat.id}
+                          className="btn-ghost text-xs flex items-center gap-1.5 py-1.5 px-3 disabled:opacity-60"
+                        >
+                          <ImagePlus size={13} />
+                          {uploadingImg === cat.id ? "Subiendo..." : cat.image_url ? "Cambiar imagen" : "Subir imagen"}
+                        </button>
+                        {cat.image_url && (
+                          <button
+                            type="button"
+                            onClick={async () => {
+                              setUploadingImg(cat.id);
+                              await deleteCategoryImage(cat.id, cat.slug);
+                              setUploadingImg(null);
+                            }}
+                            disabled={uploadingImg === cat.id}
+                            className="text-xs text-red-400 hover:text-red-300 flex items-center gap-1.5 py-1 disabled:opacity-60 transition-colors"
+                          >
+                            <Trash2 size={12} />
+                            Eliminar imagen
+                          </button>
+                        )}
+                        {imgError[cat.id] && (
+                          <p className="text-red-400 text-xs">{imgError[cat.id]}</p>
+                        )}
+                        <p className="text-muted text-xs">Recomendado: 800×600 px. Se convierte a WebP automáticamente.</p>
+                      </div>
+                    </div>
+                  </div>
 
                   {/* Subcategories */}
                   <div className="border-t border-subtle pt-5">
