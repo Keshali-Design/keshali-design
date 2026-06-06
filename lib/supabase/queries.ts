@@ -49,7 +49,7 @@ export type ProductDetail = {
   variants: ProductVariantDetail[];
 };
 
-export type Category = { id: string; name: string; slug: string; active: boolean };
+export type Category = { id: string; name: string; slug: string; active: boolean; image_url: string | null };
 export type Subcategory = { id: string; name: string; slug: string; parent_id: string };
 
 // ── Categories ────────────────────────────────────────────────
@@ -58,7 +58,7 @@ export async function getCategories(): Promise<Category[]> {
   const supabase = await createClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data } = await (supabase.from("categories") as any)
-    .select("id, name, slug, active")
+    .select("id, name, slug, active, image_url")
     .eq("active", true)
     .is("parent_id", null)
     .order("name");
