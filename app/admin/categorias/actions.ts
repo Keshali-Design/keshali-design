@@ -1,5 +1,6 @@
 "use server";
 
+import sharp from "sharp";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 
@@ -164,5 +165,54 @@ export async function toggleCategorySize(id: string, active: boolean) {
   if (error) return { error: error.message };
   revalidatePath("/admin/categorias");
   revalidatePath("/catalogo");
+  return { error: null };
+}
+
+// ── Category image ────────────────────────────────────────────
+
+export async function setCategoryImage(categoryId: string, slug: string, formData: FormData) {
+  const supabase = createAdminClient();
+  const file = formData.get("image") as File | null;
+  if (!file || file.size === 0) return { error: "No se seleccionó ningún archivo." };
+
+  const rawBuffer = Buffer.from(await file.arrayBuffer());
+  const webpBuffer = await sharp(rawBuffer)
+    .resize({ width: 800, withoutEnlargement: true })
+    .webp({ quality: 85 })
+    .toBuffer();
+
+  const fileName = `${slug}.webp`;
+  const { error: uploadError } = await supabase.storage
+    .from("category-images")
+    .upload(fileName, webpBuffer, { contentType: "image/webp", upsert: true });
+
+  if (uploadError) return { error: uploadError.message };
+
+  const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/category-images/${fileName}`;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase.from("categories") as any)
+    .update({ image_url: url })
+    .eq("id", categoryId);
+
+  if (error) return { error: error.message };
+
+  revalidatePath("/admin/categorias");
+  revalidatePath("/catalogo");
+  revalidatePath("/");
+  return { error: null, url };
+}
+
+export async function deleteCategoryImage(categoryId: string, slug: string) {
+  const supabase = createAdminClient();
+  await supabase.storage.from("category-images").remove([`${slug}.webp`]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase.from("categories") as any)
+    .update({ image_url: null })
+    .eq("id", categoryId);
+  if (error) return { error: error.message };
+  revalidatePath("/admin/categorias");
+  revalidatePath("/catalogo");
+  revalidatePath("/");
   return { error: null };
 }
