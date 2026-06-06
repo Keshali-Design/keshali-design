@@ -1,0 +1,367 @@
+{
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\next.config.ts": {
+    "mtime": 1777430752.9437423,
+    "ast_hash": "2639c7987fa5a65070a4dd3c201903e7",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\package.json": {
+    "mtime": 1777431331.4326003,
+    "ast_hash": "00c5766f936f1610766277ac6d63ba94",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\postcss.config.mjs": {
+    "mtime": 1777430752.945743,
+    "ast_hash": "c0c313a495c36c02be449fd09aa4478e",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\proxy.ts": {
+    "mtime": 1777430752.945743,
+    "ast_hash": "43b47660a61ec49e6b903ac86fcd5b1e",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\tailwind.config.ts": {
+    "mtime": 1777430752.9707582,
+    "ast_hash": "4c1a50fd4333e248d15bbd741702e69b",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\tsconfig.json": {
+    "mtime": 1777430752.9717577,
+    "ast_hash": "b745c336dca6f06fbc8a35126f38e3c0",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\app\\layout.tsx": {
+    "mtime": 1777430752.9327445,
+    "ast_hash": "929d49b607d13f93ae81c52bbcb56d42",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\app\\page.tsx": {
+    "mtime": 1777430752.9327445,
+    "ast_hash": "c2da594005e04fa1e3fed09d0aa0c4b0",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\app\\admin\\layout.tsx": {
+    "mtime": 1777430752.9207423,
+    "ast_hash": "06e88aed74da2bcc52425b34383dcd42",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\app\\admin\\page.tsx": {
+    "mtime": 1777430752.922743,
+    "ast_hash": "1582f7751c7b325092bdd07b20e9a6e4",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\app\\admin\\categorias\\actions.ts": {
+    "mtime": 1777430752.9207423,
+    "ast_hash": "0b6ca4b3cb1e4f2e40b76eee653d2ce4",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\app\\admin\\categorias\\page.tsx": {
+    "mtime": 1777430752.9207423,
+    "ast_hash": "f2a42706c76abdea7dc71fdaaf706aff",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\app\\admin\\login\\layout.tsx": {
+    "mtime": 1777430752.9217422,
+    "ast_hash": "f7eb3846b3e7da3cefe6cefa62817c57",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\app\\admin\\login\\page.tsx": {
+    "mtime": 1777430752.9217422,
+    "ast_hash": "dda3072bc18d148681a4b5acc55f3915",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\app\\admin\\pedidos\\actions.ts": {
+    "mtime": 1777430752.922743,
+    "ast_hash": "f207ce387f76a2a501f07d27f2e4d8ab",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\app\\admin\\pedidos\\page.tsx": {
+    "mtime": 1777430752.9247427,
+    "ast_hash": "07b680f80112d35b1e06c46577737731",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\app\\admin\\pedidos\\nuevo\\actions.ts": {
+    "mtime": 1777430752.9237432,
+    "ast_hash": "d831ef66fa611bafae67bba7575093a2",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\app\\admin\\pedidos\\nuevo\\page.tsx": {
+    "mtime": 1777430752.9237432,
+    "ast_hash": "fa8a874c879c6116cc11d5548cc3c3bf",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\app\\admin\\productos\\actions.ts": {
+    "mtime": 1777430752.9257426,
+    "ast_hash": "28e4b558e9f23e08068732f5e5bff552",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\app\\admin\\productos\\edit-actions.ts": {
+    "mtime": 1777430752.9257426,
+    "ast_hash": "056d7f8f91784776926a411a8228eee7",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\app\\admin\\productos\\page.tsx": {
+    "mtime": 1777430752.9267426,
+    "ast_hash": "8724fbeabda4fdf5ca3f1b1393689edf",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\app\\admin\\productos\\nuevo\\page.tsx": {
+    "mtime": 1777430752.9267426,
+    "ast_hash": "46ff9b098b3f8ece854924a38af3d2fe",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\app\\admin\\productos\\[id]\\actions.ts": {
+    "mtime": 1777430752.9247427,
+    "ast_hash": "bbf0891957cb03e5031d6939836d0ec9",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\app\\admin\\productos\\[id]\\page.tsx": {
+    "mtime": 1777430752.9257426,
+    "ast_hash": "0aab6de795def4ac5ee7ca6d8a5c1b60",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\app\\admin\\stock\\actions.ts": {
+    "mtime": 1777430752.927742,
+    "ast_hash": "5ff80452360775a60a6bdf4693f23819",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\app\\admin\\stock\\page.tsx": {
+    "mtime": 1777430752.927742,
+    "ast_hash": "b23f824250ef1bff4619d6a6180378b4",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\app\\admin\\tamanos\\actions.ts": {
+    "mtime": 1777430752.927742,
+    "ast_hash": "0dda9a789259f9995e60797801686b35",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\app\\admin\\tamanos\\error.tsx": {
+    "mtime": 1777430752.9287424,
+    "ast_hash": "663bb8ec7f3b7087a1b29e5e95ea1805",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\app\\admin\\tamanos\\page.tsx": {
+    "mtime": 1777430752.9287424,
+    "ast_hash": "56c72baef54ae0026edbac3134a1be1e",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\app\\api\\wompi\\webhook\\route.ts": {
+    "mtime": 1777430752.9297426,
+    "ast_hash": "8b7e8d1bd82a8f550e7711c576e64784",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\app\\catalogo\\page.tsx": {
+    "mtime": 1777431951.2334516,
+    "ast_hash": "c9c75377831b3766c5b8f41ce9700280",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\app\\catalogo\\SubcategorySelect.tsx": {
+    "mtime": 1777431956.8552995,
+    "ast_hash": "2a2010168043b8748f1e22cc9683c71c",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\app\\checkout\\actions.ts": {
+    "mtime": 1777430752.9297426,
+    "ast_hash": "ea041157bc5a3e2d0a769e1e050ec496",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\app\\checkout\\page.tsx": {
+    "mtime": 1777430752.9307427,
+    "ast_hash": "24f9129055e37a631531e8253146ade9",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\app\\checkout\\resultado\\page.tsx": {
+    "mtime": 1777430752.9307427,
+    "ast_hash": "30443183cc878bfb28ac7174eeb02abf",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\app\\contacto\\page.tsx": {
+    "mtime": 1777430752.9317422,
+    "ast_hash": "d48dbdf222768730f033411d690e27c0",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\app\\nosotros\\page.tsx": {
+    "mtime": 1777430752.9327445,
+    "ast_hash": "cfd14d892c3f01a49a7c54caf43f863c",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\app\\producto\\[sku]\\page.tsx": {
+    "mtime": 1777430752.9337444,
+    "ast_hash": "8f9866e4a58c2443cf380c09a6d8b3d1",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\components\\admin\\AdminSidebar.tsx": {
+    "mtime": 1777430752.9337444,
+    "ast_hash": "2535d347361c7db08a9a907cd67086d3",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\components\\admin\\CategoriasManager.tsx": {
+    "mtime": 1777430752.9347427,
+    "ast_hash": "dd7556db1527f2247bbe9c88834210d3",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\components\\admin\\DeleteProductButton.tsx": {
+    "mtime": 1777430752.9347427,
+    "ast_hash": "b8fd22f276dd31426cfc76a32c0b1721",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\components\\admin\\EditProductForm.tsx": {
+    "mtime": 1777430752.935743,
+    "ast_hash": "35d5e86200daeec50af839a86708d3ea",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\components\\admin\\EditVariantForm.tsx": {
+    "mtime": 1777430752.935743,
+    "ast_hash": "3c84c7d2f070e31b5876d9296fb6348c",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\components\\admin\\EditVariantFullForm.tsx": {
+    "mtime": 1777430752.935743,
+    "ast_hash": "6d6846dfd0765ea80ed7fdb2e48cf498",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\components\\admin\\NuevoPedidoForm.tsx": {
+    "mtime": 1777430752.935743,
+    "ast_hash": "cdf95f550946ad94b956664279d83ce3",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\components\\admin\\NuevoProductoForm.tsx": {
+    "mtime": 1777430752.9367435,
+    "ast_hash": "36badd61d341858904a65798a9b2b8b4",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\components\\admin\\OrderStatusSelect.tsx": {
+    "mtime": 1777430752.9367435,
+    "ast_hash": "090eaac57353d9374d7a333e71903e5f",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\components\\admin\\StockManager.tsx": {
+    "mtime": 1777430752.9367435,
+    "ast_hash": "2e953e495ebc8c71a58a4ed13d83948a",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\components\\admin\\TamanosManager.tsx": {
+    "mtime": 1777430752.9367435,
+    "ast_hash": "43750149caca1726d0febc966a8d5980",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\components\\admin\\VariantCombobox.tsx": {
+    "mtime": 1777430752.937742,
+    "ast_hash": "364c8537071460c56c6b22952d0e70cc",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\components\\layout\\Footer.tsx": {
+    "mtime": 1777430752.937742,
+    "ast_hash": "0a7a08bdaf27102c1ef4beae252e84f4",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\components\\layout\\Header.tsx": {
+    "mtime": 1777430752.9387472,
+    "ast_hash": "50e2fc7f8dbc0cbd98272c9a8e6b54de",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\components\\store\\CartDrawer.tsx": {
+    "mtime": 1777430752.9387472,
+    "ast_hash": "984a980fbb62a1f3b11dd589ee872441",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\components\\store\\CategoryCard.tsx": {
+    "mtime": 1777430752.9387472,
+    "ast_hash": "16bcdef0cf6d5299b98972b494a69830",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\components\\store\\ProductCard.tsx": {
+    "mtime": 1777430752.939744,
+    "ast_hash": "256eaa07e84146800ee339306826e41c",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\components\\store\\ProductSelector.tsx": {
+    "mtime": 1777430752.939744,
+    "ast_hash": "5cf78960d5b01bba1ddc88d2c219262f",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\components\\ui\\CategoryIcon.tsx": {
+    "mtime": 1777430752.939744,
+    "ast_hash": "0601a842e8af6fa8e8340a5a4a9af1ed",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\components\\ui\\ImagePlaceholder.tsx": {
+    "mtime": 1777430752.9407456,
+    "ast_hash": "60b43658b9fffbabfd5b68b0278dc91d",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\lib\\email.ts": {
+    "mtime": 1777430752.9407456,
+    "ast_hash": "67812dd18a39bfe7e529058ab25d899d",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\lib\\utils.ts": {
+    "mtime": 1777430752.9437423,
+    "ast_hash": "e0b7512dae8da3057fe84e488b546b64",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\lib\\wompi.ts": {
+    "mtime": 1777430752.9437423,
+    "ast_hash": "7d4fc3309fb74ff8ac9bd76883bcd20e",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\lib\\store\\cart.ts": {
+    "mtime": 1777430752.9417431,
+    "ast_hash": "0a58e0e4e017babc3263cef44f7406a1",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\lib\\supabase\\admin.ts": {
+    "mtime": 1777430752.9417431,
+    "ast_hash": "116e3083d763e4dd5faf853511e19637",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\lib\\supabase\\client.ts": {
+    "mtime": 1777430752.942742,
+    "ast_hash": "95ffef2277e9c708186533dda7c5dfa5",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\lib\\supabase\\queries.ts": {
+    "mtime": 1777431868.9415777,
+    "ast_hash": "d7b64c6d41d47a60a98b86b4d5475e7b",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\lib\\supabase\\server.ts": {
+    "mtime": 1777430752.942742,
+    "ast_hash": "5cb4367f69d1442789aa640d8af21e6b",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\lib\\supabase\\types.ts": {
+    "mtime": 1777430752.942742,
+    "ast_hash": "bdf1079b2c297fc218dc5d96a09c709e",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\supabase\\migrations\\001_restructure.sql": {
+    "mtime": 1777430752.9697578,
+    "ast_hash": "6afbf77639e651883221636df8ec7db4",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\supabase\\migrations\\002_inventory.sql": {
+    "mtime": 1777430752.9707582,
+    "ast_hash": "c3e471083eee9636eba590da55340cdb",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\supabase\\migrations\\003_seed_sizes.sql": {
+    "mtime": 1777430752.9707582,
+    "ast_hash": "e859ffc4f101dfee5e39201f9de98d6c",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\CLAUDE.md": {
+    "mtime": 1779691637.9297981,
+    "ast_hash": "8a6643a420fdad6bfb583523bc6cef16",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\public\\hero-banner.png": {
+    "mtime": 1777430752.966759,
+    "ast_hash": "e74acbecbb618cae725f6d464af542a1",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\keann\\OneDrive\\Documentos\\Repos Extra\\keshali-design\\public\\logo.png": {
+    "mtime": 1777430752.9687574,
+    "ast_hash": "a8339fe923f0d067a102b734a21ed279",
+    "semantic_hash": ""
+  }
+}
