@@ -64,6 +64,7 @@ export default async function HomePage() {
                 key={cat.id}
                 name={cat.name}
                 slug={cat.slug}
+                image={cat.image_url}
                 index={i}
               />
             ))}
