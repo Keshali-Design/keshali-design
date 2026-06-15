@@ -3,6 +3,7 @@
 import sharp from "sharp";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
+import { s3Upload, s3Delete } from "@/lib/aws/s3";
 
 export async function updateVariantFull(
   id: string,
@@ -28,13 +29,15 @@ export async function updateVariantFull(
   return { error: null };
 }
 
-export async function deleteVariantImage(imageId: string, fileName: string) {
+export async function deleteVariantImage(imageId: string, s3Key: string) {
   const supabase = createAdminClient();
 
-  // Remove from storage
-  await supabase.storage.from("product-images").remove([fileName]);
+  try {
+    await s3Delete(s3Key);
+  } catch {
+    // continue even if the file was already gone
+  }
 
-  // Remove from DB
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { error } = await (supabase.from("product_images") as any)
     .delete()
@@ -49,7 +52,6 @@ export async function deleteVariantImage(imageId: string, fileName: string) {
 export async function addVariantImages(variantId: string, sku: string, formData: FormData) {
   const supabase = createAdminClient();
 
-  // Get current image count to name extras correctly
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: existing } = await (supabase.from("product_images") as any)
     .select("id")
@@ -63,25 +65,23 @@ export async function addVariantImages(variantId: string, sku: string, formData:
     const file = valid[i];
     const index = currentCount + i;
     const isPrimary = index === 0;
-    const fileName = isPrimary ? `${sku}.webp` : `${sku}-${index + 1}.webp`;
+    const key = isPrimary
+      ? `product-images/${sku}.webp`
+      : `product-images/${sku}-${index + 1}.webp`;
 
-    // Convert to WebP: max 1200px wide, quality 82, strip metadata
     const rawBuffer = Buffer.from(await file.arrayBuffer());
     const webpBuffer = await sharp(rawBuffer)
       .resize({ width: 1200, withoutEnlargement: true })
       .webp({ quality: 82 })
       .toBuffer();
 
-    const { error: uploadError } = await supabase.storage
-      .from("product-images")
-      .upload(fileName, webpBuffer, { contentType: "image/webp", upsert: true });
-
-    if (uploadError) {
-      console.error("Upload error:", uploadError.message);
+    let url: string;
+    try {
+      url = await s3Upload(key, webpBuffer, "image/webp");
+    } catch (e) {
+      console.error("Upload error:", (e as Error).message);
       continue;
     }
-
-    const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/product-images/${fileName}`;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await (supabase.from("product_images") as any).insert({
