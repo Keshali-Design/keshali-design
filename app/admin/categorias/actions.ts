@@ -3,6 +3,7 @@
 import sharp from "sharp";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
+import { s3Upload, s3Delete } from "@/lib/aws/s3";
 
 function toSlug(name: string) {
   return name
@@ -181,14 +182,12 @@ export async function setCategoryImage(categoryId: string, slug: string, formDat
     .webp({ quality: 85 })
     .toBuffer();
 
-  const fileName = `${slug}.webp`;
-  const { error: uploadError } = await supabase.storage
-    .from("category-images")
-    .upload(fileName, webpBuffer, { contentType: "image/webp", upsert: true });
-
-  if (uploadError) return { error: uploadError.message };
-
-  const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/category-images/${fileName}`;
+  let url: string;
+  try {
+    url = await s3Upload(`category-images/${slug}.webp`, webpBuffer, "image/webp");
+  } catch (e) {
+    return { error: (e as Error).message };
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { error } = await (supabase.from("categories") as any)
@@ -205,7 +204,11 @@ export async function setCategoryImage(categoryId: string, slug: string, formDat
 
 export async function deleteCategoryImage(categoryId: string, slug: string) {
   const supabase = createAdminClient();
-  await supabase.storage.from("category-images").remove([`${slug}.webp`]);
+  try {
+    await s3Delete(`category-images/${slug}.webp`);
+  } catch {
+    // continue even if the file was already gone
+  }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { error } = await (supabase.from("categories") as any)
     .update({ image_url: null })

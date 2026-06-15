@@ -67,8 +67,9 @@ export function EditVariantFullForm({
 
   async function handleDeleteImage(img: Image) {
     setDeletingId(img.id);
-    const fileName = img.url.split("/").pop() ?? "";
-    const result = await deleteVariantImage(img.id, fileName);
+    // Extract the S3 key (everything after the bucket hostname)
+    const s3Key = new URL(img.url).pathname.slice(1);
+    const result = await deleteVariantImage(img.id, s3Key);
     if (result?.error) {
       setError(result.error);
     } else {
