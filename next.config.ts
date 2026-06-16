@@ -10,17 +10,7 @@ const nextConfig: NextConfig = {
     },
   },
   images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "hbtgzrkeyjapzpqocpzv.supabase.co",
-        pathname: "/storage/v1/object/public/**",
-      },
-      {
-        protocol: "https",
-        hostname: "keshali-design-943865899316-us-east-2-an.s3.us-east-2.amazonaws.com",
-      },
-    ],
+    unoptimized: true,
   },
 };
 
