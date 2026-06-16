@@ -54,20 +54,24 @@ export async function addVariantImages(variantId: string, sku: string, formData:
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: existing } = await (supabase.from("product_images") as any)
-    .select("id")
-    .eq("variant_id", variantId);
+    .select("id, is_primary, sort_order")
+    .eq("variant_id", variantId)
+    .order("sort_order");
 
   const currentCount = existing?.length ?? 0;
+  const hasPrimary = (existing ?? []).some((img: { is_primary: boolean }) => img.is_primary);
+
   const files = formData.getAll("images") as File[];
   const valid = files.filter((f) => f.size > 0);
+  const base = Date.now();
 
   for (let i = 0; i < valid.length; i++) {
     const file = valid[i];
-    const index = currentCount + i;
-    const isPrimary = index === 0;
-    const key = isPrimary
-      ? `product-images/${sku}.webp`
-      : `product-images/${sku}-${index + 1}.webp`;
+    const sortOrder = currentCount + i;
+    // Mark as primary only if no existing primary and this is the first new file
+    const isPrimary = !hasPrimary && i === 0;
+    // Unique key per upload avoids stale cache when re-uploading after delete
+    const key = `product-images/${sku}-${base + i}.webp`;
 
     const rawBuffer = Buffer.from(await file.arrayBuffer());
     const webpBuffer = await sharp(rawBuffer)
@@ -88,7 +92,7 @@ export async function addVariantImages(variantId: string, sku: string, formData:
       variant_id: variantId,
       url,
       is_primary: isPrimary,
-      sort_order: index,
+      sort_order: sortOrder,
     });
   }
 
