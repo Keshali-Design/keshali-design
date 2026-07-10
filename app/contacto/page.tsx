@@ -17,7 +17,7 @@ export default function ContactoPage() {
     e.preventDefault();
     const text = `Hola! Me llamo ${form.name} (${form.email}).\n\n${form.message}`;
     window.open(
-      `https://wa.me/573177301489?text=${encodeURIComponent(text)}`,
+      `https://wa.me/573159635343?text=${encodeURIComponent(text)}`,
       "_blank"
     );
     setSent(true);
