@@ -39,7 +39,7 @@ export default function ContactoPage() {
             menos de 24 horas.
           </p>
           <a
-            href="https://wa.me/573177301489"
+            href="https://wa.me/573159635343"
             target="_blank"
             rel="noopener noreferrer"
             className="btn-gold flex items-center justify-center gap-2 mt-2"
