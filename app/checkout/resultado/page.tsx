@@ -128,7 +128,7 @@ function ResultadoContent() {
         <p className="text-xs text-muted">
           ¿Dudas? Escríbenos por{" "}
           <a
-            href="https://wa.me/573177301489"
+            href="https://wa.me/573159635343"
             target="_blank"
             rel="noopener noreferrer"
             className="text-gold hover:underline"

@@ -179,7 +179,7 @@ export async function sendOrderShippedEmail({
     ${trackingHtml}
     <div style="text-align:center;padding:16px;">
       <p style="color:#9a9a9a;font-size:12px;margin:0 0 8px;">¿Dudas? Escríbenos por WhatsApp</p>
-      <a href="https://wa.me/573177301489" style="color:#caa45a;font-size:12px;">+57 317 730 1489</a>
+      <a href="https://wa.me/573159635343" style="color:#caa45a;font-size:12px;">+57 317 730 1489</a>
     </div>
     <div style="text-align:center;padding:8px;">
       <p style="color:#9a9a9a;font-size:12px;margin:0;">© ${new Date().getFullYear()} Keshali Design</p>
@@ -221,7 +221,7 @@ export async function sendOrderDeliveredEmail({
       <p style="margin:0;color:#9a9a9a;font-size:13px;">Esperamos que estés encantada con tu pedido 🌟<br/>Si tienes alguna duda no dudes en escribirnos.</p>
     </div>
     <div style="text-align:center;padding:16px;">
-      <a href="https://wa.me/573177301489" style="color:#caa45a;font-size:12px;">Contáctanos por WhatsApp</a>
+      <a href="https://wa.me/573159635343" style="color:#caa45a;font-size:12px;">Contáctanos por WhatsApp</a>
     </div>
     <div style="text-align:center;padding:8px;">
       <p style="color:#9a9a9a;font-size:12px;margin:0;">© ${new Date().getFullYear()} Keshali Design</p>

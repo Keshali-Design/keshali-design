@@ -245,7 +245,7 @@ export function ProductSelector({
 
         {/* WhatsApp */}
         <a
-          href={`https://wa.me/573177301489?text=${encodeURIComponent(
+          href={`https://wa.me/573159635343?text=${encodeURIComponent(
             `Hola, quiero pedir: ${product.product_name}${selectedVariant ? ` (Ref: ${selectedVariant.sku})` : ""} — ${selectedVariant ? formatCOP(selectedVariant.price) : ""}`
           )}`}
           target="_blank"

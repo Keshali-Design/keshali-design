@@ -40,7 +40,7 @@ export default async function HomePage() {
               Ver catálogo
             </Link>
             <a
-              href="https://wa.me/573177301489"
+              href="https://wa.me/573159635343"
               target="_blank"
               rel="noopener noreferrer"
               className="btn-ghost"
