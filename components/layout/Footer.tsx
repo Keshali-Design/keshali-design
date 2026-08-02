@@ -45,7 +45,27 @@ export function Footer() {
                   rel="noopener noreferrer"
                   className="hover:text-gold transition-colors"
                 >
-                  WhatsApp: +57 317 7301489
+                  WhatsApp: +57 315 9635343
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.instagram.com/keshaliwear/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-gold transition-colors"
+                >
+                  Instagram: @keshaliwear
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.tiktok.com/@keshali_design"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-gold transition-colors"
+                >
+                  Tiktok: @keshali_design
                 </a>
               </li>
             </ul>
