@@ -50,22 +50,22 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="https://www.instagram.com/keshaliwear/"
+                  href="https://www.instagram.com/keshalidesign/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-gold transition-colors"
                 >
-                  Instagram: @keshaliwear
+                  Instagram: @keshalidesign
                 </a>
               </li>
               <li>
                 <a
-                  href="https://www.tiktok.com/@keshali_design"
+                  href="https://www.tiktok.com/@keshalidesign"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-gold transition-colors"
                 >
-                  Tiktok: @keshali_design
+                  Tiktok: @keshalidesign
                 </a>
               </li>
             </ul>
