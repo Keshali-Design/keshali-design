@@ -23,14 +23,14 @@ export default async function NuevoPedidoPage() {
     <div className="max-w-3xl">
       <Link
         href="/admin/pedidos"
-        className="inline-flex items-center gap-1 text-muted hover:text-gold transition-colors text-sm mb-6"
+        className="inline-flex items-center gap-1 text-muted hover:text-gold-700 transition-colors text-sm mb-6"
       >
         <ChevronLeft size={16} />
         Volver a pedidos
       </Link>
 
-      <h1 className="text-2xl font-bold text-[#e8e8e8] mb-1">Nuevo pedido manual</h1>
-      <p className="text-muted text-sm mb-8">Para pedidos recibidos por WhatsApp u otros canales.</p>
+      <h1 className="text-2xl font-bold text-ink mb-1">Nuevo pedido manual</h1>
+      <p className="text-body text-sm mb-8">Para pedidos recibidos por WhatsApp u otros canales.</p>
 
       <NuevoPedidoForm variants={variants ?? []} />
     </div>

@@ -1,27 +1,44 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { getCatalogProducts, getCategories, getSubcategories } from "@/lib/supabase/queries";
+import { getCatalogProducts, getCategories, getSubcategories, getPriceRange } from "@/lib/supabase/queries";
 import { ProductCard } from "@/components/store/ProductCard";
 import { SubcategorySelect } from "./SubcategorySelect";
+import { CatalogFilters } from "./CatalogFilters";
 
 export const revalidate = 60;
 
 export const metadata = { title: "Catálogo — Keshali Design" };
 
-type Props = { searchParams: Promise<{ categoria?: string; subcategoria?: string }> };
+type Props = {
+  searchParams: Promise<{
+    categoria?: string;
+    subcategoria?: string;
+    tecnica?: string;
+    precioMax?: string;
+  }>;
+};
 
 const PILL =
-  "px-4 py-2 rounded-full text-sm font-medium transition-all duration-150 border";
-const PILL_ACTIVE = "bg-gold text-bg border-gold";
-const PILL_IDLE = "border-subtle text-muted hover:border-gold/40 hover:text-[#e8e8e8]";
+  "px-4 py-2.5 text-xs font-bold uppercase tracking-wide transition-colors duration-150 border";
+const PILL_ACTIVE = "bg-gold text-white border-gold";
+const PILL_IDLE = "bg-white border-subtle text-body hover:border-gold";
+
+const TECHNIQUES = ["DTF", "Sublimación"];
 
 export default async function CatalogoPage({ searchParams }: Props) {
-  const { categoria, subcategoria } = await searchParams;
+  const { categoria, subcategoria, tecnica, precioMax } = await searchParams;
+  const maxPrice = precioMax ? Number(precioMax) : undefined;
 
-  const [categories, allSubcategories, products] = await Promise.all([
+  const [categories, allSubcategories, priceRange, products] = await Promise.all([
     getCategories(),
     getSubcategories(),
-    getCatalogProducts({ categorySlug: categoria, subcategorySlug: subcategoria }),
+    getPriceRange(),
+    getCatalogProducts({
+      categorySlug: categoria,
+      subcategorySlug: subcategoria,
+      technique: tecnica,
+      maxPrice,
+    }),
   ]);
 
   // When a category is selected, only show its subcategories.
@@ -39,9 +56,12 @@ export default async function CatalogoPage({ searchParams }: Props) {
       </p>
 
       {/* ── Category filter + subcategory select ── */}
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-10">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <div className="flex flex-wrap gap-2">
-          <Link href="/catalogo" className={`${PILL} ${!categoria ? PILL_ACTIVE : PILL_IDLE}`}>
+          <Link
+            href="/catalogo"
+            className={`${PILL} ${!categoria ? PILL_ACTIVE : PILL_IDLE}`}
+          >
             Todos
           </Link>
           {categories.map((cat) => (
@@ -64,27 +84,39 @@ export default async function CatalogoPage({ searchParams }: Props) {
         )}
       </div>
 
-      {/* ── Product grid ── */}
-      <Suspense fallback={
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="glass rounded-card h-72 animate-pulse" />
-          ))}
-        </div>
-      }>
-        {products.length === 0 ? (
-          <div className="text-center py-20 text-muted">
-            <p className="text-lg mb-2">No hay productos en esta categoría.</p>
-            <Link href="/catalogo" className="text-gold hover:underline">Ver todo el catálogo</Link>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {products.map((p) => (
-              <ProductCard key={p.product_id} product={p} />
+      <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-8 items-start">
+        {/* ── Sidebar: technique + price filters ── */}
+        <CatalogFilters
+          techniques={TECHNIQUES}
+          currentTechnique={tecnica}
+          priceRange={priceRange}
+          currentMaxPrice={maxPrice}
+          categoria={categoria}
+          subcategoria={subcategoria}
+        />
+
+        {/* ── Product grid ── */}
+        <Suspense fallback={
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="bg-white border border-subtle h-72 animate-pulse" />
             ))}
           </div>
-        )}
-      </Suspense>
+        }>
+          {products.length === 0 ? (
+            <div className="text-center py-20 text-muted">
+              <p className="text-lg mb-2">No hay productos con esos filtros.</p>
+              <Link href="/catalogo" className="text-gold-700 hover:underline">Ver todo el catálogo</Link>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              {products.map((p) => (
+                <ProductCard key={p.product_id} product={p} />
+              ))}
+            </div>
+          )}
+        </Suspense>
+      </div>
     </div>
   );
 }

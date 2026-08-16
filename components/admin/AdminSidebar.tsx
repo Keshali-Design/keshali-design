@@ -36,13 +36,17 @@ export function AdminSidebar() {
   }
 
   return (
-    <aside className="w-56 flex-shrink-0 glass border-r border-subtle flex flex-col min-h-screen">
-      <div className="p-5 border-b border-subtle">
-        <span className="font-bold gold-text text-base">Keshali</span>
-        <p className="text-muted text-xs mt-0.5">Panel Admin</p>
+    <aside className="w-56 flex-shrink-0 bg-sidebar text-sidebarText border-r border-[rgba(192,148,73,.25)] flex flex-col min-h-screen">
+      <div className="px-5 py-[18px] border-b-2 border-[rgba(192,148,73,.45)]">
+        <div className="text-[9px] tracking-[0.22em] uppercase text-gold">Panel</div>
+        <span className="font-extrabold text-[19px] tracking-tight block mt-[5px]">Keshali</span>
+        <p className="text-sidebarText/55 text-[11px] mt-0.5">Panel Admin</p>
       </div>
 
-      <nav className="flex-1 p-3 flex flex-col gap-1">
+      <div className="px-5 pt-4 pb-1.5 text-[9px] tracking-[0.2em] uppercase text-sidebarText/50">
+        Administración
+      </div>
+      <nav className="flex flex-col">
         {NAV.map(({ href, label, icon: Icon, exact }) => {
           const active = exact ? pathname === href : pathname.startsWith(href);
           return (
@@ -50,10 +54,10 @@ export function AdminSidebar() {
               key={href}
               href={href}
               className={cn(
-                "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                "flex items-center gap-3 px-5 py-2 text-[12.5px] border-l-[3px] transition-colors",
                 active
-                  ? "bg-gold/10 text-gold"
-                  : "text-muted hover:text-[#e8e8e8] hover:bg-white/5"
+                  ? "font-extrabold bg-[rgba(192,148,73,.18)] text-gold-200 border-gold"
+                  : "font-normal text-sidebarText/70 border-transparent hover:bg-white/5 hover:text-sidebarText"
               )}
             >
               <Icon size={16} />
@@ -63,18 +67,18 @@ export function AdminSidebar() {
         })}
       </nav>
 
-      <div className="p-3 border-t border-subtle flex flex-col gap-1">
+      <div className="mt-auto px-3 pb-6 pt-4 border-t border-white/10 flex flex-col gap-1">
         <Link
           href="/"
           target="_blank"
-          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-muted hover:text-[#e8e8e8] hover:bg-white/5 transition-colors"
+          className="flex items-center gap-3 px-3 py-2.5 text-[12.5px] text-sidebarText/70 border-l-[3px] border-transparent hover:text-sidebarText hover:bg-white/5 transition-colors"
         >
           <ExternalLink size={16} />
           Ver tienda
         </Link>
         <button
           onClick={handleLogout}
-          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-muted hover:text-red-400 hover:bg-white/5 transition-colors w-full text-left"
+          className="flex items-center gap-3 px-3 py-2.5 text-[12.5px] text-sidebarText/70 border-l-[3px] border-transparent hover:text-red-300 hover:bg-white/5 transition-colors w-full text-left"
         >
           <LogOut size={16} />
           Cerrar sesión

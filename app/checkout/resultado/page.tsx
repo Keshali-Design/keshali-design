@@ -99,7 +99,7 @@ function ResultadoContent() {
 
   return (
     <div className="section max-w-md text-center py-16">
-      <div className="glass rounded-card p-10 flex flex-col items-center gap-5">
+      <div className="bg-surface border border-subtle p-10 flex flex-col items-center gap-5">
         {config.icon}
 
         <div>
@@ -107,7 +107,7 @@ function ResultadoContent() {
             {config.title}
           </h1>
           {orderNumber && (
-            <p className="text-gold text-sm font-mono mb-3">
+            <p className="text-gold-700 text-sm font-mono mb-3">
               Pedido: {orderNumber}
             </p>
           )}
@@ -131,7 +131,7 @@ function ResultadoContent() {
             href="https://wa.me/573159635343"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-gold hover:underline"
+            className="text-gold-700 hover:underline"
           >
             WhatsApp
           </a>

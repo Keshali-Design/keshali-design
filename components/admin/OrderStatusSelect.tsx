@@ -4,11 +4,11 @@ import { useState } from "react";
 import { updateOrderStatus } from "@/app/admin/pedidos/actions";
 
 const STATUSES = [
-  { value: "pending",   label: "Pendiente",  color: "text-yellow-400" },
-  { value: "confirmed", label: "Confirmado", color: "text-blue-400" },
-  { value: "shipped",   label: "Enviado",    color: "text-purple-400" },
-  { value: "delivered", label: "Entregado",  color: "text-emerald-400" },
-  { value: "cancelled", label: "Cancelado",  color: "text-red-400" },
+  { value: "pending",   label: "Pendiente",  className: "bg-gold-50 text-gold-700" },
+  { value: "confirmed", label: "Confirmado", className: "bg-gold-100 text-gold-800" },
+  { value: "shipped",   label: "Enviado",    className: "bg-emerald-50 text-emerald-700" },
+  { value: "delivered", label: "Entregado",  className: "bg-subtle2 text-body" },
+  { value: "cancelled", label: "Cancelado",  className: "bg-red-50 text-red-700" },
 ];
 
 export function OrderStatusSelect({
@@ -67,10 +67,10 @@ export function OrderStatusSelect({
         value={status}
         onChange={handleChange}
         disabled={saving}
-        className={`bg-white/5 border border-subtle rounded-lg px-2.5 py-1.5 text-xs font-medium focus:outline-none focus:border-gold/50 transition-colors disabled:opacity-50 cursor-pointer ${current?.color ?? "text-muted"}`}
+        className={`border border-subtle px-2.5 py-1.5 text-[11px] font-bold uppercase tracking-wide focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors disabled:opacity-50 cursor-pointer ${current?.className ?? "text-muted bg-white"}`}
       >
         {STATUSES.map((s) => (
-          <option key={s.value} value={s.value} className="bg-[#0f0f10] text-[#e8e8e8]">
+          <option key={s.value} value={s.value}>
             {s.label}
           </option>
         ))}
@@ -78,15 +78,15 @@ export function OrderStatusSelect({
 
       {/* Tracking form — shown when changing to "shipped" */}
       {pending === "shipped" && (
-        <div className="bg-white/5 border border-subtle rounded-lg p-3 flex flex-col gap-2 w-64">
-          <p className="text-xs text-muted">Datos de envío (opcional)</p>
+        <div className="bg-white border border-subtle p-3 flex flex-col gap-2 w-64">
+          <p className="label-sm">Datos de envío (opcional)</p>
           <input
             type="text"
             list="companies-list"
             placeholder="Transportadora (ej. Servientrega)"
             value={shippingCompany}
             onChange={(e) => setShippingCompany(e.target.value)}
-            className="bg-white/5 border border-subtle rounded px-2 py-1.5 text-xs text-[#e8e8e8] focus:outline-none focus:border-gold/50 w-full"
+            className="bg-white border border-subtle px-2 py-1.5 text-xs text-ink focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold w-full"
           />
           {knownCompanies.length > 0 && (
             <datalist id="companies-list">
@@ -100,9 +100,9 @@ export function OrderStatusSelect({
             placeholder="Código de rastreo"
             value={trackingCode}
             onChange={(e) => setTrackingCode(e.target.value)}
-            className="bg-white/5 border border-subtle rounded px-2 py-1.5 text-xs text-[#e8e8e8] focus:outline-none focus:border-gold/50 w-full"
+            className="bg-white border border-subtle px-2 py-1.5 text-xs text-ink focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold w-full"
           />
-          {error && <p className="text-red-400 text-xs">{error}</p>}
+          {error && <p className="text-red-600 text-xs">{error}</p>}
           <div className="flex gap-2">
             <button
               onClick={confirmShipping}
@@ -113,7 +113,7 @@ export function OrderStatusSelect({
             </button>
             <button
               onClick={() => setPending(null)}
-              className="px-3 py-1.5 rounded-lg text-xs text-muted hover:text-[#e8e8e8] border border-subtle hover:border-gold/30 transition-colors"
+              className="px-3 py-1.5 text-xs text-muted hover:text-ink border border-subtle hover:border-gold transition-colors"
             >
               Cancelar
             </button>

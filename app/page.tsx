@@ -53,9 +53,9 @@ export default async function HomePage() {
 
       {/* Categories */}
       {categories.length > 0 && (
-        <section className="section">
+        <section className="section bg-white border-b border-subtle">
           <h2 className="section-title">Categorías</h2>
-          <p className="text-muted mb-8">
+          <p className="text-body mb-8">
             Explora nuestra colección de productos personalizables
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
@@ -74,18 +74,25 @@ export default async function HomePage() {
 
       {/* Featured products */}
       {featured.length > 0 && (
-        <section className="bg-[#0a0a0b] py-16">
+        <section className="bg-section border-b border-subtle">
           <div className="section">
-            <h2 className="section-title">Catálogo destacado</h2>
-            <p className="text-muted mb-8">
-              Los productos más populares de nuestra tienda
-            </p>
+            <div className="flex items-baseline justify-between gap-4 flex-wrap mb-8">
+              <div>
+                <h2 className="section-title">Catálogo destacado</h2>
+                <p className="text-body">
+                  Los productos más populares de nuestra tienda
+                </p>
+              </div>
+              <Link href="/catalogo" className="btn-ghost hidden sm:inline-flex">
+                Ver todo
+              </Link>
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {featured.slice(0, 12).map((p) => (
                 <ProductCard key={p.product_id} product={p} />
               ))}
             </div>
-            <div className="text-center mt-10">
+            <div className="text-center mt-10 sm:hidden">
               <Link href="/catalogo" className="btn-ghost">
                 Ver todos los productos
               </Link>
@@ -95,7 +102,7 @@ export default async function HomePage() {
       )}
 
       {/* About teaser */}
-      <section className="section">
+      <section className="section bg-white">
         <div className="grid md:grid-cols-3 gap-6">
           {[
             {
@@ -111,11 +118,12 @@ export default async function HomePage() {
               text: "Creatividad, calidad, puntualidad y compromiso con cada pedido que realizamos.",
             },
           ].map((item) => (
-            <div key={item.title} className="glass rounded-card p-6">
-              <h3 className="text-gold font-semibold text-lg mb-3">
+            <div key={item.title}>
+              <div className="w-6 h-0.5 bg-gold mb-3" />
+              <h3 className="text-ink font-semibold text-base mb-1.5">
                 {item.title}
               </h3>
-              <p className="text-muted text-sm leading-relaxed">{item.text}</p>
+              <p className="text-body text-sm leading-relaxed">{item.text}</p>
             </div>
           ))}
         </div>

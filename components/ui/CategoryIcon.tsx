@@ -131,20 +131,12 @@ const DEFAULT_ICON = (
   </svg>
 );
 
-const GRADIENTS = [
-  "from-amber-950/80 to-stone-900/80",
-  "from-yellow-950/80 to-zinc-900/80",
-  "from-orange-950/80 to-stone-900/80",
-  "from-amber-900/60 to-neutral-900/80",
-];
-
-export function CategoryIcon({ slug, index = 0 }: { slug: string; index?: number }) {
+export function CategoryIcon({ slug }: { slug: string; index?: number }) {
   const icon = ICONS[slug] ?? DEFAULT_ICON;
-  const gradient = GRADIENTS[index % GRADIENTS.length];
 
   return (
-    <div className={`w-full h-full flex items-center justify-center bg-gradient-to-br ${gradient}`}>
-      <div className="text-gold/60 w-12 h-12">{icon}</div>
+    <div className="w-full h-full flex items-center justify-center bg-[#F3EDE1]">
+      <div className="text-gold-300 w-12 h-12">{icon}</div>
     </div>
   );
 }

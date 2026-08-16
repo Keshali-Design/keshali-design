@@ -6,9 +6,9 @@ export const metadata = { title: "Tamaños — Admin" };
 function ErrorCard({ message }: { message: string }) {
   return (
     <div className="max-w-3xl">
-      <h1 className="text-2xl font-bold text-[#e8e8e8] mb-4">Tipos de tamaño</h1>
-      <div className="glass rounded-card p-6 border border-red-400/20">
-        <p className="text-red-400 text-sm font-semibold mb-1">Error al cargar</p>
+      <h1 className="text-2xl font-bold text-ink mb-4">Tipos de tamaño</h1>
+      <div className="glass p-6 border border-red-400/40">
+        <p className="text-red-600 text-sm font-semibold mb-1">Error al cargar</p>
         <p className="text-muted text-xs font-mono break-all">{message}</p>
         <p className="text-muted text-xs mt-3">
           Asegúrate de haber ejecutado las migraciones SQL en el editor de Supabase

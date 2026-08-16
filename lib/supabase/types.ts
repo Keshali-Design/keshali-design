@@ -137,6 +137,7 @@ export type Database = {
           description: string | null;
           category_id: string;
           subcategory_id: string | null;
+          technique: string | null;
           price_varies_by_color: boolean;
           active: boolean;
           created_at: string;
@@ -148,6 +149,7 @@ export type Database = {
           description?: string | null;
           category_id: string;
           subcategory_id?: string | null;
+          technique?: string | null;
           price_varies_by_color?: boolean;
           active?: boolean;
           created_at?: string;
@@ -159,6 +161,7 @@ export type Database = {
           description?: string | null;
           category_id?: string;
           subcategory_id?: string | null;
+          technique?: string | null;
           price_varies_by_color?: boolean;
           active?: boolean;
           updated_at?: string;
@@ -376,6 +379,7 @@ export type Database = {
           subcategory_id: string | null;
           subcategory_name: string | null;
           subcategory_slug: string | null;
+          technique: string | null;
           primary_image_url: string | null;
         };
       };

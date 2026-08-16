@@ -4,9 +4,10 @@ export default function NosotrosPage() {
   return (
     <div className="section max-w-4xl">
       <h1 className="section-title text-3xl mb-2">Nosotros</h1>
-      <p className="text-muted mb-12 text-lg">
+      <p className="text-muted mb-6 text-lg">
         Conoce la historia y los valores detrás de Keshali Design.
       </p>
+      <div className="divider mb-12" />
 
       <div className="grid md:grid-cols-3 gap-6 mb-12">
         {[
@@ -23,20 +24,18 @@ export default function NosotrosPage() {
             text: "Creatividad, calidad, puntualidad y compromiso absoluto con cada pedido. Cada producto es único y especial para nosotros.",
           },
         ].map((item) => (
-          <div key={item.title} className="glass rounded-card p-6">
-            <h3 className="text-gold font-semibold text-lg mb-3">
-              {item.title}
-            </h3>
-            <p className="text-muted text-sm leading-relaxed">{item.text}</p>
+          <div key={item.title} className="bg-surface border border-subtle p-6">
+            <div className="eyebrow mb-3">{item.title}</div>
+            <p className="text-body text-sm leading-relaxed">{item.text}</p>
           </div>
         ))}
       </div>
 
-      <div className="glass rounded-card p-8">
-        <h2 className="text-[#e8e8e8] font-bold text-xl mb-4">
+      <div className="bg-surface border border-subtle p-8">
+        <h2 className="section-title text-xl mb-4">
           ¿Por qué elegir Keshali Design?
         </h2>
-        <ul className="space-y-3 text-muted text-sm leading-relaxed">
+        <ul className="space-y-3 text-body text-sm leading-relaxed">
           {[
             "Más de 15 categorías de productos personalizables",
             "Tecnología de sublimación de alta calidad para colores vibrantes y duraderos",
@@ -46,7 +45,7 @@ export default function NosotrosPage() {
             "Precios accesibles sin sacrificar calidad",
           ].map((item) => (
             <li key={item} className="flex items-start gap-2">
-              <span className="text-gold mt-0.5">✦</span>
+              <span className="text-gold-600 mt-0.5">✦</span>
               {item}
             </li>
           ))}

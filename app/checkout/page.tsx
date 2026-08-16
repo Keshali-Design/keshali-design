@@ -12,8 +12,7 @@ import Image from "next/image";
 const SHIPPING_COST = 0; // Por coordinar con el cliente
 
 const FIELD =
-  "bg-white/5 border border-subtle rounded-lg px-3 py-2.5 text-sm text-[#e8e8e8] focus:outline-none focus:border-gold/50 transition-colors w-full";
-const LABEL = "text-xs text-muted block mb-1";
+  "block w-full mt-1 border border-subtle bg-[#FDFBF7] px-3 py-2.5 text-sm text-ink placeholder:text-muted focus:outline-none focus:border-gold transition-colors";
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -89,18 +88,17 @@ export default function CheckoutPage() {
         Seguir comprando
       </Link>
 
-      <h1 className="section-title text-2xl mb-8">Finalizar pedido</h1>
+      <h1 className="section-title text-2xl mb-2">Finalizar pedido</h1>
+      <div className="divider mb-8" />
 
       <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-8">
         {/* ── Datos del cliente ── */}
-        <div className="flex flex-col gap-5">
-          <div className="glass rounded-card p-5 flex flex-col gap-4">
-            <h2 className="text-[#e8e8e8] font-semibold text-sm border-b border-subtle pb-2">
-              Datos de contacto
-            </h2>
+        <div className="flex flex-col gap-4">
+          <div className="bg-surface border border-subtle p-5 flex flex-col gap-4">
+            <h2 className="label-sm">Datos de contacto</h2>
 
             <div>
-              <label className={LABEL}>Nombre completo *</label>
+              <label className="label-sm block mb-1">Nombre completo *</label>
               <input
                 name="customerName"
                 value={form.customerName}
@@ -112,7 +110,7 @@ export default function CheckoutPage() {
             </div>
 
             <div>
-              <label className={LABEL}>Email *</label>
+              <label className="label-sm block mb-1">Email *</label>
               <input
                 name="customerEmail"
                 type="email"
@@ -125,7 +123,7 @@ export default function CheckoutPage() {
             </div>
 
             <div>
-              <label className={LABEL}>Teléfono / WhatsApp *</label>
+              <label className="label-sm block mb-1">Teléfono / WhatsApp *</label>
               <input
                 name="customerPhone"
                 type="tel"
@@ -138,13 +136,11 @@ export default function CheckoutPage() {
             </div>
           </div>
 
-          <div className="glass rounded-card p-5 flex flex-col gap-4">
-            <h2 className="text-[#e8e8e8] font-semibold text-sm border-b border-subtle pb-2">
-              Dirección de envío
-            </h2>
+          <div className="bg-surface border border-subtle p-5 flex flex-col gap-4">
+            <h2 className="label-sm">Dirección de envío</h2>
 
             <div>
-              <label className={LABEL}>Ciudad *</label>
+              <label className="label-sm block mb-1">Ciudad *</label>
               <input
                 name="city"
                 value={form.city}
@@ -156,7 +152,7 @@ export default function CheckoutPage() {
             </div>
 
             <div>
-              <label className={LABEL}>Dirección *</label>
+              <label className="label-sm block mb-1">Dirección *</label>
               <input
                 name="address"
                 value={form.address}
@@ -168,7 +164,7 @@ export default function CheckoutPage() {
             </div>
 
             <div>
-              <label className={LABEL}>Notas adicionales</label>
+              <label className="label-sm block mb-1">Notas adicionales</label>
               <textarea
                 name="notes"
                 value={form.notes}
@@ -183,15 +179,13 @@ export default function CheckoutPage() {
 
         {/* ── Resumen del pedido ── */}
         <div className="flex flex-col gap-4">
-          <div className="glass rounded-card p-5">
-            <h2 className="text-[#e8e8e8] font-semibold text-sm border-b border-subtle pb-2 mb-4">
-              Resumen del pedido
-            </h2>
+          <div className="bg-surface border border-subtle p-5">
+            <h2 className="label-sm mb-4">Resumen del pedido</h2>
 
             <div className="flex flex-col gap-3 mb-4">
               {items.map((item) => (
                 <div key={item.variantId} className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-lg overflow-hidden bg-white/5 flex-shrink-0 relative">
+                  <div className="w-12 h-12 overflow-hidden bg-[#F3EDE1] flex-shrink-0 relative">
                     {item.image ? (
                       <Image
                         src={item.image}
@@ -201,42 +195,45 @@ export default function CheckoutPage() {
                         sizes="48px"
                       />
                     ) : (
-                      <div className="w-full h-full bg-white/5" />
+                      <div className="w-full h-full bg-[#F3EDE1]" />
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[#e8e8e8] text-xs font-medium leading-snug line-clamp-2">
+                    <p className="text-ink text-xs font-medium leading-snug line-clamp-2">
                       {item.productName}
                     </p>
                     <p className="text-muted text-xs mt-0.5">
                       {item.sizeLabel} · {item.colorName} · x{item.quantity}
                     </p>
                   </div>
-                  <span className="text-gold text-sm font-semibold whitespace-nowrap">
+                  <span className="text-gold-700 text-sm font-bold whitespace-nowrap">
                     {formatCOP(item.price * item.quantity)}
                   </span>
                 </div>
               ))}
             </div>
 
-            <div className="border-t border-subtle pt-4 flex flex-col gap-2">
+            <div className="border-t border-subtle2 pt-4 flex flex-col gap-2">
               <div className="flex justify-between text-sm">
                 <span className="text-muted">Subtotal</span>
-                <span className="text-[#e8e8e8]">{formatCOP(cartTotal)}</span>
+                <span className="text-ink">{formatCOP(cartTotal)}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted">Envío</span>
                 <span className="text-muted text-xs">Por coordinar</span>
               </div>
-              <div className="flex justify-between font-bold mt-1">
-                <span className="text-[#e8e8e8]">Total</span>
-                <span className="text-gold text-xl">{formatCOP(cartTotal)}</span>
+              <div className="divider my-3" />
+              <div className="flex justify-between items-baseline">
+                <span className="font-semibold text-ink">Total</span>
+                <span className="text-gold-700 font-extrabold text-2xl">
+                  {formatCOP(cartTotal)}
+                </span>
               </div>
             </div>
           </div>
 
           {error && (
-            <div className="bg-red-400/10 border border-red-400/20 rounded-lg px-4 py-3 text-red-400 text-sm">
+            <div className="bg-red-50 border border-red-300 px-4 py-3 text-red-700 text-sm">
               {error}
             </div>
           )}

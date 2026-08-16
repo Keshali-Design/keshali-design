@@ -31,11 +31,11 @@ export function SubcategorySelect({
     <select
       value={current ?? ""}
       onChange={handleChange}
-      className="bg-white/5 border border-subtle rounded-lg px-3 py-2 text-sm text-[#e8e8e8] focus:outline-none focus:border-gold/50 transition-colors"
+      className="bg-white border border-subtle px-3 py-2.5 text-sm text-ink focus:outline-none focus:border-gold transition-colors"
     >
-      <option value="" className="bg-[#0f0f10]">Todas las subcategorías</option>
+      <option value="" className="bg-white">Todas las subcategorías</option>
       {subcategories.map((s) => (
-        <option key={s.id} value={s.slug} className="bg-[#0f0f10]">
+        <option key={s.id} value={s.slug} className="bg-white">
           {s.name}
         </option>
       ))}

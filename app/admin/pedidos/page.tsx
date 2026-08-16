@@ -70,21 +70,21 @@ export default async function AdminPedidosPage() {
   return (
     <div className="max-w-6xl">
       <div className="flex items-center justify-between mb-1">
-        <h1 className="text-2xl font-bold text-[#e8e8e8]">Pedidos</h1>
+        <h1 className="text-2xl font-bold text-ink">Pedidos</h1>
         <Link href="/admin/pedidos/nuevo" className="btn-gold flex items-center gap-2 text-sm">
           <Plus size={16} /> Nuevo pedido
         </Link>
       </div>
-      <p className="text-muted text-sm mb-8">
+      <p className="text-body text-sm mb-8">
         {orders?.length ?? 0} pedido{(orders?.length ?? 0) !== 1 ? "s" : ""} en total
       </p>
 
       <div className="flex flex-col gap-4">
         {orders?.map((order) => (
-          <div key={order.id} className="glass rounded-card p-5">
+          <div key={order.id} className="glass p-5">
             <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
               <div>
-                <p className="text-[#e8e8e8] font-bold">
+                <p className="text-ink font-bold">
                   #{order.order_number}
                 </p>
                 <p className="text-muted text-xs mt-0.5">
@@ -99,7 +99,7 @@ export default async function AdminPedidosPage() {
               </div>
 
               <div className="flex items-center gap-3">
-                <span className="text-gold font-bold text-lg">
+                <span className="text-gold-700 font-bold text-lg">
                   {formatCOP(order.total)}
                 </span>
                 <OrderStatusSelect
@@ -116,11 +116,11 @@ export default async function AdminPedidosPage() {
             <div className="flex flex-wrap gap-4 text-sm mb-3 pb-3 border-b border-subtle">
               <div>
                 <p className="text-muted text-xs">Cliente</p>
-                <p className="text-[#e8e8e8]">{order.customer_name}</p>
+                <p className="text-ink">{order.customer_name}</p>
               </div>
               <div>
                 <p className="text-muted text-xs">Email</p>
-                <p className="text-[#e8e8e8]">{order.customer_email}</p>
+                <p className="text-ink">{order.customer_email}</p>
               </div>
               {order.customer_phone && (
                 <div>
@@ -129,7 +129,7 @@ export default async function AdminPedidosPage() {
                     href={`https://wa.me/${order.customer_phone.replace(/\D/g, "")}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gold hover:underline"
+                    className="text-gold-700 hover:underline"
                   >
                     {order.customer_phone}
                   </a>
@@ -144,7 +144,7 @@ export default async function AdminPedidosPage() {
                   key={item.id}
                   className="flex items-center justify-between text-sm"
                 >
-                  <p className="text-[#e8e8e8] text-xs leading-snug">
+                  <p className="text-ink text-xs leading-snug">
                     <span className="text-muted mr-1">x{item.quantity}</span>
                     {variantLabel(item.product_variants)}
                   </p>
@@ -160,13 +160,13 @@ export default async function AdminPedidosPage() {
                 {order.shipping_company && (
                   <div>
                     <p className="text-muted">Transportadora</p>
-                    <p className="text-[#e8e8e8]">{order.shipping_company}</p>
+                    <p className="text-ink">{order.shipping_company}</p>
                   </div>
                 )}
                 {order.tracking_code && (
                   <div>
                     <p className="text-muted">Rastreo</p>
-                    <p className="text-gold font-mono">{order.tracking_code}</p>
+                    <p className="text-gold-700 font-mono">{order.tracking_code}</p>
                   </div>
                 )}
               </div>
@@ -174,7 +174,7 @@ export default async function AdminPedidosPage() {
 
             {order.notes && (
               <p className="mt-3 text-xs text-muted border-t border-subtle pt-3">
-                <span className="text-[#e8e8e8]">Nota: </span>
+                <span className="text-ink">Nota: </span>
                 {order.notes}
               </p>
             )}
@@ -182,7 +182,7 @@ export default async function AdminPedidosPage() {
         ))}
 
         {(!orders || orders.length === 0) && (
-          <div className="glass rounded-card p-10 text-center text-muted text-sm">
+          <div className="glass p-10 text-center text-muted text-sm">
             No hay pedidos aún.
           </div>
         )}

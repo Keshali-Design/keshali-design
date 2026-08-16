@@ -21,11 +21,14 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 glass border-b border-subtle">
-      <div className="max-w-7xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <span className="text-xl font-bold gold-text tracking-wide">
-            Keshali Design
+    <header className="sticky top-0 z-50 bg-nav border-b border-subtle">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between gap-4">
+        <Link href="/" className="flex flex-col leading-none">
+          <span className="text-lg font-extrabold tracking-tight text-gold-700">
+            KESHALI
+          </span>
+          <span className="text-[9.5px] font-normal uppercase tracking-[0.34em] text-label mt-1">
+            Design
           </span>
         </Link>
 
@@ -36,10 +39,10 @@ export function Header() {
               key={link.href}
               href={link.href}
               className={cn(
-                "px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150",
+                "px-4 py-2 text-sm font-medium transition-colors duration-150",
                 pathname === link.href
-                  ? "text-gold bg-gold/10"
-                  : "text-muted hover:text-[#e8e8e8] hover:bg-white/5"
+                  ? "text-gold-700 bg-gold-50"
+                  : "text-body hover:text-ink"
               )}
             >
               {link.label}
@@ -50,19 +53,19 @@ export function Header() {
         <div className="flex items-center gap-2">
           <button
             onClick={openCart}
-            className="relative p-2 rounded-lg hover:bg-white/5 transition-colors text-muted hover:text-[#e8e8e8]"
+            className="relative p-2.5 text-ink hover:text-gold-700 transition-colors"
             aria-label="Abrir carrito"
           >
-            <ShoppingCart size={22} />
+            <ShoppingCart size={20} />
             {count > 0 && (
-              <span className="absolute -top-1 -right-1 bg-gold text-bg text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 bg-gold text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center">
                 {count > 9 ? "9+" : count}
               </span>
             )}
           </button>
 
           <button
-            className="md:hidden p-2 rounded-lg hover:bg-white/5 transition-colors text-muted"
+            className="md:hidden p-2 text-ink hover:text-gold-700 transition-colors"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Menú"
           >
@@ -80,10 +83,10 @@ export function Header() {
               href={link.href}
               onClick={() => setMenuOpen(false)}
               className={cn(
-                "px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-150",
+                "px-4 py-3 text-sm font-medium transition-colors duration-150",
                 pathname === link.href
-                  ? "text-gold bg-gold/10"
-                  : "text-muted hover:text-[#e8e8e8] hover:bg-white/5"
+                  ? "text-gold-700 bg-gold-50"
+                  : "text-body hover:text-ink"
               )}
             >
               {link.label}

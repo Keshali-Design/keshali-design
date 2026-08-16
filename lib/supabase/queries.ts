@@ -12,6 +12,7 @@ export type CatalogProduct = {
   subcategory_id: string | null;
   subcategory_name: string | null;
   subcategory_slug: string | null;
+  technique: string | null;
   price_varies_by_color: boolean;
   min_price: number;
   max_price: number;
@@ -81,19 +82,24 @@ export async function getSubcategories(): Promise<Subcategory[]> {
 export async function getCatalogProducts(options?: {
   categorySlug?: string;
   subcategorySlug?: string;
+  technique?: string;
+  maxPrice?: number;
 }): Promise<CatalogProduct[]> {
   const supabase = await createClient();
 
   // Use catalog_view, group by product
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let query = (supabase.from("catalog_view") as any)
-    .select("product_id, product_name, description, category_id, category_name, category_slug, subcategory_id, subcategory_name, subcategory_slug, price_varies_by_color, price, stock, primary_image_url, variant_active, product_active, category_active");
+    .select("product_id, product_name, description, category_id, category_name, category_slug, subcategory_id, subcategory_name, subcategory_slug, technique, price_varies_by_color, price, stock, primary_image_url, variant_active, product_active, category_active");
 
   if (options?.categorySlug) {
     query = query.eq("category_slug", options.categorySlug);
   }
   if (options?.subcategorySlug) {
     query = query.eq("subcategory_slug", options.subcategorySlug);
+  }
+  if (options?.technique) {
+    query = query.eq("technique", options.technique);
   }
 
   const { data } = await query as { data: {
@@ -106,6 +112,7 @@ export async function getCatalogProducts(options?: {
     subcategory_id: string | null;
     subcategory_name: string | null;
     subcategory_slug: string | null;
+    technique: string | null;
     price_varies_by_color: boolean;
     price: number;
     stock: number;
@@ -134,6 +141,7 @@ export async function getCatalogProducts(options?: {
         subcategory_id: row.subcategory_id,
         subcategory_name: row.subcategory_name,
         subcategory_slug: row.subcategory_slug,
+        technique: row.technique,
         price_varies_by_color: row.price_varies_by_color,
         min_price: row.price,
         max_price: row.price,
@@ -150,7 +158,30 @@ export async function getCatalogProducts(options?: {
     }
   }
 
-  return Array.from(map.values());
+  let results = Array.from(map.values());
+
+  if (options?.maxPrice != null) {
+    results = results.filter((p) => p.min_price <= options.maxPrice!);
+  }
+
+  return results;
+}
+
+// ── Price range (for the catalog price slider) ────────────────
+
+export async function getPriceRange(): Promise<{ min: number; max: number }> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("catalog_view")
+    .select("price")
+    .eq("variant_active", true)
+    .eq("product_active", true)
+    .eq("category_active", true) as { data: { price: number }[] | null };
+
+  if (!data || data.length === 0) return { min: 0, max: 200000 };
+
+  const prices = data.map((r) => r.price);
+  return { min: Math.min(...prices), max: Math.max(...prices) };
 }
 
 // ── Product detail (all variants) ────────────────────────────
