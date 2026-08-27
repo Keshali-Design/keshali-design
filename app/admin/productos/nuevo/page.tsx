@@ -48,14 +48,14 @@ export default async function NuevoProductoPage() {
     <div className="max-w-2xl">
       <Link
         href="/admin/productos"
-        className="inline-flex items-center gap-1 text-muted hover:text-gold transition-colors text-sm mb-6"
+        className="inline-flex items-center gap-1 text-muted hover:text-gold-700 transition-colors text-sm mb-6"
       >
         <ChevronLeft size={16} />
         Volver a productos
       </Link>
 
-      <h1 className="text-2xl font-bold text-[#e8e8e8] mb-1">Nuevo producto</h1>
-      <p className="text-muted text-sm mb-8">
+      <h1 className="text-2xl font-bold text-ink mb-1">Nuevo producto</h1>
+      <p className="text-body text-sm mb-8">
         Las variantes (color × tamaño) se generan automáticamente.
       </p>
 

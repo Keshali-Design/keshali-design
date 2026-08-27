@@ -33,6 +33,7 @@ export async function createProduct(data: {
   subcategory_id?: string;
   name: string;
   description?: string;
+  technique?: string;
   price_varies_by_color: boolean;
   sizes: ProductSizeInput[];
   colors: ProductColorInput[];
@@ -48,6 +49,7 @@ export async function createProduct(data: {
       subcategory_id: data.subcategory_id || null,
       name: data.name.trim(),
       description: data.description?.trim() || null,
+      technique: data.technique || null,
       price_varies_by_color: data.price_varies_by_color,
       active: true,
     })
@@ -122,7 +124,7 @@ export async function createProduct(data: {
 
 export async function updateProduct(
   id: string,
-  data: { name: string; description?: string; active: boolean }
+  data: { name: string; description?: string; technique?: string; active: boolean }
 ) {
   const supabase = createAdminClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -130,6 +132,7 @@ export async function updateProduct(
     .update({
       name: data.name.trim(),
       description: data.description?.trim() || null,
+      technique: data.technique || null,
       active: data.active,
       updated_at: new Date().toISOString(),
     })

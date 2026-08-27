@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { MessageCircle } from "lucide-react";
 
+const FIELD =
+  "block w-full mt-1 border border-subtle bg-[#FDFBF7] px-3 py-2.5 text-sm text-ink placeholder:text-muted focus:outline-none focus:border-gold transition-colors";
+
 export default function ContactoPage() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [sent, setSent] = useState(false);
@@ -27,14 +30,15 @@ export default function ContactoPage() {
   return (
     <div className="section max-w-3xl">
       <h1 className="section-title text-3xl mb-2">Contacto</h1>
-      <p className="text-muted mb-10">
+      <p className="text-muted mb-6">
         ¿Tienes preguntas o quieres hacer un pedido especial? Escríbenos.
       </p>
+      <div className="divider mb-10" />
 
       <div className="grid md:grid-cols-2 gap-8">
-        <div className="glass rounded-card p-6 flex flex-col gap-4">
-          <h2 className="text-[#e8e8e8] font-semibold">WhatsApp directo</h2>
-          <p className="text-muted text-sm leading-relaxed">
+        <div className="bg-surface border border-subtle p-6 flex flex-col gap-4">
+          <h2 className="label-sm">WhatsApp directo</h2>
+          <p className="text-body text-sm leading-relaxed">
             La forma más rápida de contactarnos es por WhatsApp. Respondemos en
             menos de 24 horas.
           </p>
@@ -49,47 +53,47 @@ export default function ContactoPage() {
           </a>
         </div>
 
-        <form onSubmit={handleSubmit} className="glass rounded-card p-6 flex flex-col gap-4">
-          <h2 className="text-[#e8e8e8] font-semibold">Enviar mensaje</h2>
+        <form onSubmit={handleSubmit} className="bg-surface border border-subtle p-6 flex flex-col gap-4">
+          <h2 className="label-sm">Enviar mensaje</h2>
 
           {sent && (
-            <p className="text-emerald-400 text-sm">
+            <p className="text-gold-700 text-sm font-semibold">
               ¡Mensaje enviado! Te redirigimos a WhatsApp.
             </p>
           )}
 
           <div className="flex flex-col gap-1">
-            <label className="text-xs text-muted">Nombre</label>
+            <label className="label-sm">Nombre</label>
             <input
               name="name"
               value={form.name}
               onChange={handleChange}
               required
-              className="bg-white/5 border border-subtle rounded-lg px-3 py-2 text-sm text-[#e8e8e8] focus:outline-none focus:border-gold/50 transition-colors"
+              className={FIELD}
             />
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-xs text-muted">Email</label>
+            <label className="label-sm">Email</label>
             <input
               name="email"
               type="email"
               value={form.email}
               onChange={handleChange}
               required
-              className="bg-white/5 border border-subtle rounded-lg px-3 py-2 text-sm text-[#e8e8e8] focus:outline-none focus:border-gold/50 transition-colors"
+              className={FIELD}
             />
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-xs text-muted">Mensaje</label>
+            <label className="label-sm">Mensaje</label>
             <textarea
               name="message"
               value={form.message}
               onChange={handleChange}
               required
               rows={4}
-              className="bg-white/5 border border-subtle rounded-lg px-3 py-2 text-sm text-[#e8e8e8] focus:outline-none focus:border-gold/50 transition-colors resize-none"
+              className={`${FIELD} resize-none`}
             />
           </div>
 

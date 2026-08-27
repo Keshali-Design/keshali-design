@@ -20,6 +20,7 @@ export type ProductFull = {
   id: string;
   name: string;
   description: string | null;
+  technique: string | null;
   active: boolean;
   price_varies_by_color: boolean;
   categories: { name: string } | null;
@@ -35,7 +36,7 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: product } = await (supabase.from("products") as any)
     .select(`
-      id, name, description, active, price_varies_by_color,
+      id, name, description, technique, active, price_varies_by_color,
       categories!category_id ( name ),
       product_sizes ( size_id, price ),
       product_variants (
@@ -76,6 +77,7 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
     id: product.id,
     name: product.name,
     description: product.description,
+    technique: product.technique,
     active: product.active,
     price_varies_by_color: product.price_varies_by_color,
     categories: product.categories,
@@ -87,14 +89,14 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
     <div className="max-w-4xl">
       <Link
         href="/admin/productos"
-        className="inline-flex items-center gap-1 text-muted hover:text-gold transition-colors text-sm mb-6"
+        className="inline-flex items-center gap-1 text-muted hover:text-gold-700 transition-colors text-sm mb-6"
       >
         <ChevronLeft size={16} />
         Volver a productos
       </Link>
 
-      <h1 className="text-2xl font-bold text-[#e8e8e8] mb-1">{product.name}</h1>
-      <p className="text-muted text-xs mb-8">
+      <h1 className="text-2xl font-bold text-ink mb-1">{product.name}</h1>
+      <p className="text-body text-xs mb-8">
         {product.categories?.name} · {variants.length} variant{variants.length !== 1 ? "es" : "e"}
       </p>
 

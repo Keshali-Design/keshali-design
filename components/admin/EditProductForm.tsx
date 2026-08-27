@@ -8,14 +8,15 @@ import { updateVariantFull, deleteVariantImage, addVariantImages } from "@/app/a
 import { formatCOP } from "@/lib/utils";
 import type { ProductFull, VariantWithImages } from "@/app/admin/productos/[id]/page";
 
-const FIELD = "bg-white/5 border border-subtle rounded-lg px-3 py-2.5 text-sm text-[#e8e8e8] focus:outline-none focus:border-gold/50 transition-colors w-full";
-const LABEL = "text-xs text-muted block mb-1";
+const FIELD = "bg-white border border-subtle px-3 py-2.5 text-sm text-ink focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors w-full";
+const LABEL = "label-sm block mb-1.5";
 
 // ── Product header (name / description / active) ──────────────
 
 function ProductHeader({ product }: { product: ProductFull }) {
   const [name, setName] = useState(product.name);
   const [description, setDescription] = useState(product.description ?? "");
+  const [technique, setTechnique] = useState(product.technique ?? "");
   const [active, setActive] = useState(product.active);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -25,15 +26,15 @@ function ProductHeader({ product }: { product: ProductFull }) {
     e.preventDefault();
     setSaving(true);
     setError(null);
-    const res = await updateProduct(product.id, { name, description, active });
+    const res = await updateProduct(product.id, { name, description, technique, active });
     if (res.error) { setError(res.error); }
     else { setSaved(true); setTimeout(() => setSaved(false), 2500); }
     setSaving(false);
   }
 
   return (
-    <form onSubmit={handleSave} className="glass rounded-card p-5 flex flex-col gap-4 mb-6">
-      <h2 className="text-[#e8e8e8] font-semibold text-sm border-b border-subtle pb-2">Info del producto</h2>
+    <form onSubmit={handleSave} className="bg-surface border border-subtle p-5 flex flex-col gap-4 mb-6">
+      <h2 className="text-ink font-bold text-sm border-b border-subtle pb-2">Info del producto</h2>
 
       <div>
         <label className={LABEL}>Nombre *</label>
@@ -50,16 +51,25 @@ function ProductHeader({ product }: { product: ProductFull }) {
         />
       </div>
 
+      <div>
+        <label className={LABEL}>Técnica <span className="text-muted normal-case font-normal">(opcional)</span></label>
+        <select value={technique} onChange={(e) => setTechnique(e.target.value)} className={FIELD}>
+          <option value="">— Sin especificar —</option>
+          <option value="DTF">DTF</option>
+          <option value="Sublimación">Sublimación</option>
+        </select>
+      </div>
+
       <label className="flex items-center gap-3 cursor-pointer select-none">
         <div className="relative">
           <input type="checkbox" className="sr-only" checked={active} onChange={(e) => setActive(e.target.checked)} />
-          <div className={`w-10 h-5 rounded-full transition-colors ${active ? "bg-gold" : "bg-white/10"}`} />
-          <div className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${active ? "translate-x-5" : ""}`} />
+          <div className={`w-10 h-5 transition-colors ${active ? "bg-gold" : "bg-subtle2"}`} />
+          <div className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white transition-transform ${active ? "translate-x-5" : ""}`} />
         </div>
-        <span className="text-sm text-[#e8e8e8]">Producto activo</span>
+        <span className="text-sm text-ink">Producto activo</span>
       </label>
 
-      {error && <p className="text-red-400 text-xs">{error}</p>}
+      {error && <p className="text-red-600 text-xs">{error}</p>}
 
       <button type="submit" disabled={saving} className="btn-gold text-sm py-2 px-4 w-fit disabled:opacity-60">
         {saving ? "Guardando..." : saved ? "¡Guardado!" : "Guardar cambios"}
@@ -112,8 +122,8 @@ function VariantCard({
 
   async function handleDeleteImage(img: VariantWithImages["images"][0]) {
     setDeletingId(img.id);
-    const fileName = img.url.split("/").pop() ?? "";
-    const res = await deleteVariantImage(img.id, fileName);
+    const s3Key = new URL(img.url).pathname.slice(1);
+    const res = await deleteVariantImage(img.id, s3Key);
     if (res?.error) { setError(res.error); }
     else { setImages((prev) => prev.filter((i) => i.id !== img.id)); }
     setDeletingId(null);
@@ -137,12 +147,12 @@ function VariantCard({
   const sizeLabel = [variant.sizes?.label, variant.sizes?.alt_label].filter(Boolean).join(" / ");
 
   return (
-    <div className="glass rounded-card overflow-hidden">
+    <div className="bg-surface border border-subtle overflow-hidden">
       {/* Header row — always visible */}
       <button
         type="button"
         onClick={() => setExpanded((v) => !v)}
-        className="w-full flex items-center gap-3 px-4 py-3 hover:bg-white/[0.03] transition-colors text-left"
+        className="w-full flex items-center gap-3 px-4 py-3 hover:bg-subtle2 transition-colors text-left"
       >
         {expanded
           ? <ChevronDown size={14} className="text-muted flex-shrink-0" />
@@ -151,20 +161,20 @@ function VariantCard({
 
         {colorDot && (
           <span
-            className="w-3.5 h-3.5 rounded-full border border-white/20 flex-shrink-0"
+            className="w-3.5 h-3.5 border border-subtle flex-shrink-0"
             style={{ background: colorDot }}
           />
         )}
 
-        <span className="text-sm text-[#e8e8e8] font-medium">{variant.colors?.name}</span>
+        <span className="text-sm text-ink font-medium">{variant.colors?.name}</span>
         <span className="text-muted text-xs">{sizeLabel}</span>
         <span className="text-muted text-xs font-mono ml-auto mr-2">{variant.sku}</span>
-        <span className="text-gold text-xs font-semibold">{formatCOP(displayPrice)}</span>
+        <span className="text-gold-700 text-xs font-bold">{formatCOP(displayPrice)}</span>
 
-        <span className={`text-[10px] px-2 py-0.5 rounded-full border ml-2 flex-shrink-0 ${
+        <span className={`text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 border ml-2 flex-shrink-0 ${
           variant.active
-            ? "border-emerald-500/30 text-emerald-400 bg-emerald-400/10"
-            : "border-muted/20 text-muted bg-white/5"
+            ? "border-gold-300 text-gold-700 bg-gold-100"
+            : "border-subtle text-muted bg-subtle2"
         }`}>
           {variant.active ? "Activo" : "Inactivo"}
         </span>
@@ -211,13 +221,13 @@ function VariantCard({
             <label className="flex items-center gap-3 cursor-pointer select-none w-fit">
               <div className="relative">
                 <input type="checkbox" className="sr-only" checked={active} onChange={(e) => setActive(e.target.checked)} />
-                <div className={`w-9 h-5 rounded-full transition-colors ${active ? "bg-gold" : "bg-white/10"}`} />
-                <div className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${active ? "translate-x-4" : ""}`} />
+                <div className={`w-9 h-5 transition-colors ${active ? "bg-gold" : "bg-subtle2"}`} />
+                <div className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white transition-transform ${active ? "translate-x-4" : ""}`} />
               </div>
-              <span className="text-sm text-[#e8e8e8]">Variante activa</span>
+              <span className="text-sm text-ink">Variante activa</span>
             </label>
 
-            {error && <p className="text-red-400 text-xs">{error}</p>}
+            {error && <p className="text-red-600 text-xs">{error}</p>}
 
             <button type="submit" disabled={saving} className="btn-gold text-sm py-2 px-4 w-fit disabled:opacity-60">
               {saving ? "Guardando..." : saved ? "¡Guardado!" : "Guardar variante"}
@@ -226,25 +236,25 @@ function VariantCard({
 
           {/* Images */}
           <div className="flex flex-col gap-3">
-            <p className="text-muted text-xs font-semibold uppercase tracking-wide">Imágenes</p>
+            <p className="label-sm">Imágenes</p>
 
             {images.length > 0 ? (
               <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
                 {images.map((img) => (
-                  <div key={img.id} className="relative group rounded-lg overflow-hidden border border-subtle bg-white/5 aspect-square">
+                  <div key={img.id} className="relative group overflow-hidden border border-subtle bg-subtle2 aspect-square">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={img.url} alt={img.alt_text ?? ""} className="w-full h-full object-cover" />
                     {img.is_primary && (
-                      <div className="absolute top-1 left-1 bg-gold/90 rounded px-1 py-0.5 flex items-center gap-0.5">
-                        <Star size={9} className="text-black" />
-                        <span className="text-black text-[9px] font-semibold">Principal</span>
+                      <div className="absolute top-1 left-1 bg-gold px-1 py-0.5 flex items-center gap-0.5">
+                        <Star size={9} className="text-white" />
+                        <span className="text-white text-[9px] font-bold">Principal</span>
                       </div>
                     )}
                     <button
                       type="button"
                       onClick={() => handleDeleteImage(img)}
                       disabled={deletingId === img.id}
-                      className="absolute top-1 right-1 bg-black/70 hover:bg-red-500/80 text-white rounded p-1 opacity-0 group-hover:opacity-100 transition-all disabled:opacity-50"
+                      className="absolute top-1 right-1 bg-ink/80 hover:bg-red-600 text-white p-1 opacity-0 group-hover:opacity-100 transition-all disabled:opacity-50"
                     >
                       <Trash2 size={11} />
                     </button>
@@ -300,7 +310,7 @@ function DeleteAndRecreateHint({ productId, productName }: { productId: string; 
       <button
         type="button"
         onClick={() => setConfirming(true)}
-        className="btn-ghost text-xs text-red-400 hover:text-red-300 w-fit border-red-400/30 hover:border-red-300/40"
+        className="btn-ghost text-xs text-red-700 hover:text-red-800 w-fit border-red-300 hover:border-red-400"
       >
         Eliminar y crear de nuevo
       </button>
@@ -314,14 +324,14 @@ function DeleteAndRecreateHint({ productId, productName }: { productId: string; 
         type="button"
         onClick={handleDelete}
         disabled={deleting}
-        className="text-xs px-3 py-1.5 rounded-lg bg-red-500/20 border border-red-500/30 text-red-400 hover:bg-red-500/30 transition-colors disabled:opacity-50"
+        className="text-xs px-3 py-1.5 bg-red-50 border border-red-200 text-red-700 hover:bg-red-100 transition-colors disabled:opacity-50"
       >
         {deleting ? "Eliminando..." : "Sí, eliminar"}
       </button>
       <button
         type="button"
         onClick={() => setConfirming(false)}
-        className="text-xs text-muted hover:text-[#e8e8e8] transition-colors"
+        className="text-xs text-muted hover:text-ink transition-colors"
       >
         Cancelar
       </button>
@@ -349,7 +359,7 @@ export function EditProductForm({ product }: { product: ProductFull }) {
       <ProductHeader product={product} />
 
       <div className="flex items-center justify-between">
-        <h2 className="text-[#e8e8e8] font-semibold text-sm">
+        <h2 className="text-ink font-bold text-sm">
           Variantes <span className="text-muted font-normal">({sorted.length})</span>
         </h2>
         {sorted.length > 0 && (
@@ -358,8 +368,8 @@ export function EditProductForm({ product }: { product: ProductFull }) {
       </div>
 
       {sorted.length === 0 && (
-        <div className="glass rounded-card p-6 border border-yellow-500/20 flex flex-col gap-3">
-          <p className="text-yellow-400 text-sm font-semibold">Este producto no tiene variantes</p>
+        <div className="bg-surface border border-gold-300 p-6 flex flex-col gap-3">
+          <p className="text-gold-700 text-sm font-bold">Este producto no tiene variantes</p>
           <p className="text-muted text-xs leading-relaxed">
             Probablemente ocurrió un error al crearlo. Sin variantes no es posible subir imágenes
             ni gestionar stock. Lo mejor es eliminar este producto y volver a crearlo.

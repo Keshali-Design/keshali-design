@@ -11,8 +11,8 @@ import {
 } from "@/app/admin/tamanos/actions";
 import type { SizeType, Size } from "@/app/admin/tamanos/page";
 
-const FIELD = "bg-white/5 border border-subtle rounded-lg px-3 py-2 text-sm text-[#e8e8e8] focus:outline-none focus:border-gold/50 transition-colors w-full";
-const LABEL = "text-xs text-muted block mb-1";
+const FIELD = "bg-white border border-subtle px-3 py-2 text-sm text-ink focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors w-full";
+const LABEL = "label-sm block mb-1.5";
 
 export function TamanosManager({
   sizeTypes,
@@ -88,7 +88,7 @@ export function TamanosManager({
   return (
     <div className="max-w-3xl">
       <div className="flex items-center justify-between mb-1">
-        <h1 className="text-2xl font-bold text-[#e8e8e8]">Tipos de tamaño</h1>
+        <h1 className="text-2xl font-bold text-ink">Tipos de tamaño</h1>
         <button
           onClick={() => setShowNewType((v) => !v)}
           className="btn-gold flex items-center gap-2 text-sm py-2 px-4"
@@ -97,14 +97,14 @@ export function TamanosManager({
           Nuevo tipo
         </button>
       </div>
-      <p className="text-muted text-sm mb-8">
+      <p className="text-body text-sm mb-8">
         Define los sistemas de medida (Onzas, Tallas, ML…) y sus valores disponibles.
       </p>
 
       {/* New type form */}
       {showNewType && (
-        <form onSubmit={handleCreateType} className="glass rounded-card p-5 mb-6 flex flex-col gap-4">
-          <h2 className="text-[#e8e8e8] font-semibold text-sm">Nuevo tipo de tamaño</h2>
+        <form onSubmit={handleCreateType} className="bg-surface border border-subtle p-5 mb-6 flex flex-col gap-4">
+          <h2 className="text-ink font-bold text-sm border-b border-subtle pb-2">Nuevo tipo de tamaño</h2>
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
               <label className={LABEL}>Nombre *</label>
@@ -149,7 +149,7 @@ export function TamanosManager({
           const isExpanded = expanded === type.id;
 
           return (
-            <div key={type.id} className="glass rounded-card overflow-hidden">
+            <div key={type.id} className="bg-surface border border-subtle overflow-hidden">
               {/* Header */}
               <div className="flex items-center gap-3 px-4 py-3 border-b border-subtle">
                 <button
@@ -162,8 +162,8 @@ export function TamanosManager({
                   ) : (
                     <ChevronRight size={15} className="text-muted flex-shrink-0" />
                   )}
-                  <span className="text-[#e8e8e8] font-semibold text-sm">{type.name}</span>
-                  <span className="text-muted text-xs font-mono bg-white/5 px-1.5 py-0.5 rounded">
+                  <span className="text-ink font-bold text-sm">{type.name}</span>
+                  <span className="text-muted text-[10px] font-bold uppercase tracking-wide bg-gold-50 px-1.5 py-0.5">
                     {type.unit_label}
                   </span>
                   <span className="text-muted text-xs ml-1">
@@ -175,9 +175,9 @@ export function TamanosManager({
                 <button
                   type="button"
                   onClick={() => toggleSizeType(type.id, !type.active)}
-                  className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${type.active
-                      ? "border-emerald-500/30 text-emerald-400 bg-emerald-400/10 hover:bg-emerald-400/20"
-                      : "border-muted/20 text-muted bg-white/5 hover:border-gold/30 hover:text-gold"
+                  className={`text-[10px] font-bold uppercase tracking-wide px-2.5 py-1 border transition-colors ${type.active
+                      ? "border-gold-300 text-gold-700 bg-gold-100 hover:bg-gold-200"
+                      : "border-subtle text-muted bg-subtle2 hover:border-gold hover:text-gold-700"
                     }`}
                 >
                   {type.active ? "Activo" : "Inactivo"}
@@ -194,7 +194,7 @@ export function TamanosManager({
                   {typeSizes.map((s) =>
                     editingSize === s.id ? (
                       /* Inline edit row */
-                      <div key={s.id} className="flex flex-wrap gap-2 items-end bg-white/5 rounded-lg p-3">
+                      <div key={s.id} className="flex flex-wrap gap-2 items-end bg-[#FDFBF7] border border-subtle p-3">
                         <div className="flex-1 min-w-[120px]">
                           <label className={LABEL}>Etiqueta</label>
                           <input
@@ -234,14 +234,14 @@ export function TamanosManager({
                           <button
                             type="button"
                             onClick={() => handleUpdateSize(s.id)}
-                            className="p-2 text-emerald-400 hover:text-emerald-300 transition-colors"
+                            className="p-2 text-emerald-700 hover:text-emerald-800 transition-colors"
                           >
                             <Check size={15} />
                           </button>
                           <button
                             type="button"
                             onClick={() => setEditingSize(null)}
-                            className="p-2 text-muted hover:text-[#e8e8e8] transition-colors"
+                            className="p-2 text-muted hover:text-ink transition-colors"
                           >
                             <X size={15} />
                           </button>
@@ -251,9 +251,9 @@ export function TamanosManager({
                       /* Normal row */
                       <div
                         key={s.id}
-                        className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/[0.03] transition-colors"
+                        className="flex items-center gap-3 px-3 py-2 hover:bg-subtle2 transition-colors"
                       >
-                        <span className={`text-sm font-medium ${s.active ? "text-[#e8e8e8]" : "text-muted line-through"}`}>
+                        <span className={`text-sm font-medium ${s.active ? "text-ink" : "text-muted line-through"}`}>
                           {s.label}
                         </span>
                         {s.alt_label && (
@@ -263,16 +263,16 @@ export function TamanosManager({
                         <button
                           type="button"
                           onClick={() => startEdit(s)}
-                          className="p-1.5 text-muted hover:text-gold transition-colors"
+                          className="p-1.5 text-muted hover:text-gold-700 transition-colors"
                         >
                           <Pencil size={12} />
                         </button>
                         <button
                           type="button"
                           onClick={() => toggleSize(s.id, !s.active)}
-                          className={`text-xs px-2 py-0.5 rounded-full border transition-colors ${s.active
-                              ? "border-emerald-500/30 text-emerald-400 bg-emerald-400/10 hover:bg-emerald-400/20"
-                              : "border-muted/20 text-muted bg-white/5 hover:border-gold/30 hover:text-gold"
+                          className={`text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 border transition-colors ${s.active
+                              ? "border-gold-300 text-gold-700 bg-gold-100 hover:bg-gold-200"
+                              : "border-subtle text-muted bg-subtle2 hover:border-gold hover:text-gold-700"
                             }`}
                         >
                           {s.active ? "Activo" : "Inactivo"}
@@ -285,7 +285,7 @@ export function TamanosManager({
                   {showNewSize === type.id ? (
                     <form
                       onSubmit={(e) => handleCreateSize(type.id, e)}
-                      className="flex flex-wrap gap-2 items-end bg-white/5 rounded-lg p-3 mt-1"
+                      className="flex flex-wrap gap-2 items-end bg-[#FDFBF7] border border-subtle p-3 mt-1"
                     >
                       <div className="flex-1 min-w-[120px]">
                         <label className={LABEL}>Etiqueta *</label>
@@ -328,14 +328,14 @@ export function TamanosManager({
                         <button
                           type="submit"
                           disabled={savingSize}
-                          className="p-2 text-emerald-400 hover:text-emerald-300 transition-colors disabled:opacity-50"
+                          className="p-2 text-emerald-700 hover:text-emerald-800 transition-colors disabled:opacity-50"
                         >
                           <Check size={15} />
                         </button>
                         <button
                           type="button"
                           onClick={() => setShowNewSize(null)}
-                          className="p-2 text-muted hover:text-[#e8e8e8] transition-colors"
+                          className="p-2 text-muted hover:text-ink transition-colors"
                         >
                           <X size={15} />
                         </button>

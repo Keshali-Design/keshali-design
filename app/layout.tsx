@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
+import { Archivo } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { CartDrawer } from "@/components/store/CartDrawer";
+
+const archivo = Archivo({
+  subsets: ["latin"],
+  variable: "--font-archivo",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Keshali Design — Tu esencia en cada diseño",
@@ -16,8 +23,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es">
-      <body className="bg-bg text-[#e8e8e8] antialiased">
+    <html lang="es" className={archivo.variable}>
+      <body className="bg-bg text-ink antialiased">
         <Header />
         <main>{children}</main>
         <Footer />

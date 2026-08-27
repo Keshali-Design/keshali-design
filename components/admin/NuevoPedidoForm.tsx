@@ -9,8 +9,8 @@ import type { VariantOpt } from "@/app/admin/pedidos/nuevo/page";
 
 type ItemRow = { variantId: string; quantity: number; unitPrice: number };
 
-const FIELD = "bg-white/5 border border-subtle rounded-lg px-3 py-2.5 text-sm text-[#e8e8e8] focus:outline-none focus:border-gold/50 transition-colors w-full";
-const LABEL = "text-xs text-muted block mb-1";
+const FIELD = "bg-white border border-subtle px-3 py-2.5 text-sm text-ink focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors w-full";
+const LABEL = "label-sm block mb-1.5";
 
 const STATUSES = [
   { value: "pending",   label: "Pendiente" },
@@ -89,8 +89,8 @@ export function NuevoPedidoForm({ variants }: { variants: VariantOpt[] }) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
       {/* Customer */}
-      <div className="glass rounded-card p-5 flex flex-col gap-4">
-        <h2 className="text-[#e8e8e8] font-semibold text-sm border-b border-subtle pb-2">Cliente</h2>
+      <div className="bg-surface border border-subtle p-5 flex flex-col gap-4">
+        <h2 className="text-ink font-bold text-sm border-b border-subtle pb-2">Cliente</h2>
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
             <label className={LABEL}>Nombre completo *</label>
@@ -108,8 +108,8 @@ export function NuevoPedidoForm({ variants }: { variants: VariantOpt[] }) {
       </div>
 
       {/* Shipping */}
-      <div className="glass rounded-card p-5 flex flex-col gap-4">
-        <h2 className="text-[#e8e8e8] font-semibold text-sm border-b border-subtle pb-2">Envío</h2>
+      <div className="bg-surface border border-subtle p-5 flex flex-col gap-4">
+        <h2 className="text-ink font-bold text-sm border-b border-subtle pb-2">Envío</h2>
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
             <label className={LABEL}>Ciudad</label>
@@ -127,11 +127,11 @@ export function NuevoPedidoForm({ variants }: { variants: VariantOpt[] }) {
       </div>
 
       {/* Items */}
-      <div className="glass rounded-card p-5 flex flex-col gap-3">
-        <h2 className="text-[#e8e8e8] font-semibold text-sm border-b border-subtle pb-2">Productos</h2>
+      <div className="bg-surface border border-subtle p-5 flex flex-col gap-3">
+        <h2 className="text-ink font-bold text-sm border-b border-subtle pb-2">Productos</h2>
 
         {items.map((item, i) => (
-          <div key={i} className="flex flex-col gap-1.5 pb-3 border-b border-subtle last:border-0 last:pb-0">
+          <div key={i} className="flex flex-col gap-1.5 pb-3 border-b border-subtle2 last:border-0 last:pb-0">
             <div className="flex gap-2 items-center">
               <div className="flex-1">
                 <VariantCombobox
@@ -148,7 +148,7 @@ export function NuevoPedidoForm({ variants }: { variants: VariantOpt[] }) {
                 type="button"
                 onClick={() => removeItem(i)}
                 disabled={items.length === 1}
-                className="p-2 text-muted hover:text-red-400 transition-colors disabled:opacity-30 flex-shrink-0"
+                className="p-2 text-muted hover:text-red-600 transition-colors disabled:opacity-30 flex-shrink-0"
               >
                 <Trash2 size={15} />
               </button>
@@ -172,13 +172,13 @@ export function NuevoPedidoForm({ variants }: { variants: VariantOpt[] }) {
       </div>
 
       {/* Notes + status + totals */}
-      <div className="glass rounded-card p-5 flex flex-col gap-4">
+      <div className="bg-surface border border-subtle p-5 flex flex-col gap-4">
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
             <label className={LABEL}>Estado del pedido</label>
             <select name="status" value={form.status} onChange={handleField} className={FIELD}>
               {STATUSES.map((s) => (
-                <option key={s.value} value={s.value} className="bg-[#0f0f10]">{s.label}</option>
+                <option key={s.value} value={s.value}>{s.label}</option>
               ))}
             </select>
           </div>
@@ -191,21 +191,21 @@ export function NuevoPedidoForm({ variants }: { variants: VariantOpt[] }) {
         <div className="border-t border-subtle pt-4 flex flex-col gap-1 text-sm">
           <div className="flex justify-between">
             <span className="text-muted">Subtotal</span>
-            <span className="text-[#e8e8e8]">{formatCOP(subtotal)}</span>
+            <span className="text-ink">{formatCOP(subtotal)}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-muted">Envío</span>
-            <span className="text-[#e8e8e8]">{formatCOP(Number(form.shippingCost))}</span>
+            <span className="text-ink">{formatCOP(Number(form.shippingCost))}</span>
           </div>
           <div className="flex justify-between font-bold mt-1">
-            <span className="text-[#e8e8e8]">Total</span>
-            <span className="text-gold text-lg">{formatCOP(total)}</span>
+            <span className="text-ink">Total</span>
+            <span className="text-gold-700 text-lg">{formatCOP(total)}</span>
           </div>
         </div>
       </div>
 
       {error && (
-        <div className="bg-red-400/10 border border-red-400/20 rounded-lg px-4 py-3 text-red-400 text-sm">
+        <div className="bg-red-50 border border-red-200 px-4 py-3 text-red-700 text-sm">
           {error}
         </div>
       )}

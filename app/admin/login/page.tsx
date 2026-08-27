@@ -33,39 +33,46 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-bg flex items-center justify-center px-4">
-      <div className="w-full max-w-sm glass rounded-card p-8">
-        <h1 className="text-xl font-bold gold-text mb-1">Keshali Admin</h1>
-        <p className="text-muted text-sm mb-8">Panel de administración</p>
+    <div className="min-h-screen bg-section flex items-center justify-center px-4">
+      <div className="w-full max-w-sm bg-surface border border-subtle p-8">
+        <div className="font-extrabold text-xl tracking-tight text-gold-700 leading-tight">
+          KESHALI
+        </div>
+        <div className="text-[10px] font-normal tracking-[0.34em] uppercase text-label mb-6">
+          Design
+        </div>
+
+        <h1 className="text-lg font-bold text-ink mb-1">Panel de administración</h1>
+        <p className="text-body text-sm mb-8">Ingresa con tu cuenta de administrador</p>
 
         <form onSubmit={handleLogin} className="flex flex-col gap-4">
           {error && (
-            <p className="text-red-400 text-sm bg-red-400/10 border border-red-400/20 rounded-lg px-3 py-2">
+            <p className="text-red-700 text-sm bg-red-50 border border-red-200 px-3 py-2">
               {error}
             </p>
           )}
 
           <div className="flex flex-col gap-1">
-            <label className="text-xs text-muted">Email</label>
+            <label className="label-sm">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
               autoComplete="email"
-              className="bg-white/5 border border-subtle rounded-lg px-3 py-2.5 text-sm text-[#e8e8e8] focus:outline-none focus:border-gold/50 transition-colors"
+              className="bg-[#FDFBF7] border border-subtle px-3 py-3 text-sm text-ink focus:outline-none focus:border-gold transition-colors"
             />
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-xs text-muted">Contraseña</label>
+            <label className="label-sm">Contraseña</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               autoComplete="current-password"
-              className="bg-white/5 border border-subtle rounded-lg px-3 py-2.5 text-sm text-[#e8e8e8] focus:outline-none focus:border-gold/50 transition-colors"
+              className="bg-[#FDFBF7] border border-subtle px-3 py-3 text-sm text-ink focus:outline-none focus:border-gold transition-colors"
             />
           </div>
 

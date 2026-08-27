@@ -47,7 +47,7 @@ export function EditVariantForm({ id, sku, priceOverride, active }: Props) {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="p-1.5 rounded hover:bg-white/5 text-muted hover:text-gold transition-colors"
+        className="p-1.5 hover:bg-subtle2 text-muted hover:text-gold-700 transition-colors"
         title="Editar"
       >
         <Pencil size={14} />
@@ -58,20 +58,20 @@ export function EditVariantForm({ id, sku, priceOverride, active }: Props) {
   return (
     <div className="flex items-center gap-2">
       <div className="flex flex-col gap-1">
-        {error && <p className="text-red-400 text-xs">{error}</p>}
+        {error && <p className="text-red-600 text-xs">{error}</p>}
         <div className="flex items-center gap-2 flex-wrap">
           <input
             type="text"
             value={skuVal}
             onChange={(e) => setSkuVal(e.target.value)}
-            className="w-32 bg-white/5 border border-subtle rounded px-2 py-1 text-xs text-[#e8e8e8] focus:outline-none focus:border-gold/50"
+            className="w-32 bg-white border border-subtle px-2 py-1 text-xs text-ink focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold"
             placeholder="SKU"
           />
           <input
             type="number"
             value={priceOverrideStr}
             onChange={(e) => setPriceOverrideStr(e.target.value)}
-            className="w-24 bg-white/5 border border-subtle rounded px-2 py-1 text-xs text-[#e8e8e8] focus:outline-none focus:border-gold/50"
+            className="w-24 bg-white border border-subtle px-2 py-1 text-xs text-ink focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold"
             placeholder="Precio esp."
           />
           <label className="flex items-center gap-1 text-xs text-muted cursor-pointer">
@@ -79,14 +79,14 @@ export function EditVariantForm({ id, sku, priceOverride, active }: Props) {
               type="checkbox"
               checked={activeVal}
               onChange={(e) => setActiveVal(e.target.checked)}
-              className="accent-[#caa45a]"
+              className="accent-gold"
             />
             Activo
           </label>
           <button
             onClick={handleSave}
             disabled={saving}
-            className="p-1.5 rounded hover:bg-emerald-400/10 text-emerald-400 transition-colors disabled:opacity-50"
+            className="p-1.5 hover:bg-emerald-50 text-emerald-700 transition-colors disabled:opacity-50"
           >
             <Check size={14} />
           </button>
@@ -98,7 +98,7 @@ export function EditVariantForm({ id, sku, priceOverride, active }: Props) {
               setActiveVal(active);
               setError(null);
             }}
-            className="p-1.5 rounded hover:bg-white/5 text-muted transition-colors"
+            className="p-1.5 hover:bg-subtle2 text-muted transition-colors"
           >
             <X size={14} />
           </button>

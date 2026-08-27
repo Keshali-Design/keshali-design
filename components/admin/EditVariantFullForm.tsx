@@ -8,8 +8,8 @@ import { formatCOP } from "@/lib/utils";
 
 type Image = { id: string; url: string; alt_text?: string; sort_order: number; is_primary: boolean };
 
-const FIELD = "bg-white/5 border border-subtle rounded-lg px-3 py-2.5 text-sm text-[#e8e8e8] focus:outline-none focus:border-gold/50 transition-colors w-full";
-const LABEL = "text-xs text-muted block mb-1";
+const FIELD = "bg-white border border-subtle px-3 py-2.5 text-sm text-ink focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors w-full";
+const LABEL = "label-sm block mb-1.5";
 
 export function EditVariantFullForm({
   id,
@@ -104,8 +104,8 @@ export function EditVariantFullForm({
   return (
     <form onSubmit={handleSave} className="flex flex-col gap-6">
       {/* Main fields */}
-      <div className="glass rounded-card p-5 flex flex-col gap-4">
-        <h2 className="text-[#e8e8e8] font-semibold text-sm border-b border-subtle pb-2">Datos de la variante</h2>
+      <div className="bg-surface border border-subtle p-5 flex flex-col gap-4">
+        <h2 className="text-ink font-bold text-sm border-b border-subtle pb-2">Datos de la variante</h2>
 
         <div>
           <label className={LABEL}>SKU</label>
@@ -144,15 +144,15 @@ export function EditVariantFullForm({
               checked={active}
               onChange={(e) => setActive(e.target.checked)}
             />
-            <div className={`w-10 h-5 rounded-full transition-colors ${active ? "bg-gold" : "bg-white/10"}`} />
-            <div className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${active ? "translate-x-5" : ""}`} />
+            <div className={`w-10 h-5 transition-colors ${active ? "bg-gold" : "bg-subtle2"}`} />
+            <div className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white transition-transform ${active ? "translate-x-5" : ""}`} />
           </div>
-          <span className="text-sm text-[#e8e8e8]">Variante activa (visible en tienda)</span>
+          <span className="text-sm text-ink">Variante activa (visible en tienda)</span>
         </label>
       </div>
 
       {error && (
-        <div className="bg-red-400/10 border border-red-400/20 rounded-lg px-4 py-3 text-red-400 text-sm">
+        <div className="bg-red-50 border border-red-200 px-4 py-3 text-red-700 text-sm">
           {error}
         </div>
       )}
@@ -166,8 +166,8 @@ export function EditVariantFullForm({
       </button>
 
       {/* Images */}
-      <div className="glass rounded-card p-5 flex flex-col gap-4">
-        <h2 className="text-[#e8e8e8] font-semibold text-sm border-b border-subtle pb-2">Imágenes</h2>
+      <div className="bg-surface border border-subtle p-5 flex flex-col gap-4">
+        <h2 className="text-ink font-bold text-sm border-b border-subtle pb-2">Imágenes</h2>
 
         {images.length === 0 && (
           <p className="text-muted text-sm text-center py-4">Sin imágenes aún.</p>
@@ -175,7 +175,7 @@ export function EditVariantFullForm({
 
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {images.map((img) => (
-            <div key={img.id} className="relative group rounded-lg overflow-hidden border border-subtle bg-white/5">
+            <div key={img.id} className="relative group overflow-hidden border border-subtle bg-subtle2">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={img.url}
@@ -183,16 +183,16 @@ export function EditVariantFullForm({
                 className="w-full aspect-square object-cover"
               />
               {img.is_primary && (
-                <div className="absolute top-1 left-1 bg-gold/90 rounded px-1.5 py-0.5 flex items-center gap-1">
-                  <Star size={10} className="text-black" />
-                  <span className="text-black text-[10px] font-semibold">Principal</span>
+                <div className="absolute top-1 left-1 bg-gold px-1.5 py-0.5 flex items-center gap-1">
+                  <Star size={10} className="text-white" />
+                  <span className="text-white text-[10px] font-bold">Principal</span>
                 </div>
               )}
               <button
                 type="button"
                 onClick={() => handleDeleteImage(img)}
                 disabled={deletingId === img.id}
-                className="absolute top-1 right-1 bg-black/70 hover:bg-red-500/80 text-white rounded p-1 opacity-0 group-hover:opacity-100 transition-all disabled:opacity-50"
+                className="absolute top-1 right-1 bg-ink/80 hover:bg-red-600 text-white p-1 opacity-0 group-hover:opacity-100 transition-all disabled:opacity-50"
               >
                 <Trash2 size={13} />
               </button>

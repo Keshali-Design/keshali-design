@@ -28,20 +28,20 @@ export function CartDrawer() {
       />
 
       {/* Drawer */}
-      <div className="fixed right-0 top-0 h-full w-full max-w-md z-50 flex flex-col glass border-l border-subtle shadow-card">
+      <div className="fixed right-0 top-0 h-full w-full max-w-md z-50 flex flex-col bg-surface border-l border-subtle">
         {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-subtle">
-          <h2 className="font-bold text-[#e8e8e8] text-lg">
+          <h2 className="font-bold text-ink text-lg">
             Carrito{" "}
             {items.length > 0 && (
-              <span className="text-gold text-sm font-normal ml-1">
+              <span className="text-gold-700 text-sm font-normal ml-1">
                 ({items.length} {items.length === 1 ? "producto" : "productos"})
               </span>
             )}
           </h2>
           <button
             onClick={closeCart}
-            className="p-1.5 rounded-lg hover:bg-white/5 text-muted hover:text-[#e8e8e8] transition-colors"
+            className="p-1.5 hover:bg-subtle2 text-muted hover:text-ink transition-colors"
           >
             <X size={20} />
           </button>
@@ -58,9 +58,9 @@ export function CartDrawer() {
             items.map((item) => (
               <div
                 key={item.variantId}
-                className="glass rounded-card p-3 flex gap-3"
+                className="bg-white border border-subtle p-3 flex gap-3"
               >
-                <div className="w-16 h-16 rounded-lg overflow-hidden bg-white/5 flex-shrink-0 relative">
+                <div className="w-16 h-16 overflow-hidden bg-subtle2 flex-shrink-0 relative">
                   {item.image ? (
                     <Image
                       src={item.image}
@@ -70,18 +70,18 @@ export function CartDrawer() {
                       sizes="64px"
                     />
                   ) : (
-                    <div className="w-full h-full bg-white/5" />
+                    <div className="w-full h-full bg-subtle2" />
                   )}
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <p className="text-[#e8e8e8] text-sm font-medium leading-snug truncate">
+                  <p className="text-ink text-sm font-medium leading-snug truncate">
                     {item.productName}
                   </p>
                   <p className="text-muted text-xs truncate">
                     {item.sizeLabel} · {item.colorName}
                   </p>
-                  <p className="text-gold text-sm font-semibold mt-0.5">
+                  <p className="text-gold-700 text-sm font-bold mt-0.5">
                     {formatCOP(item.price * item.quantity)}
                   </p>
 
@@ -90,18 +90,18 @@ export function CartDrawer() {
                       onClick={() =>
                         updateQuantity(item.variantId, item.quantity - 1)
                       }
-                      className="w-6 h-6 rounded border border-subtle flex items-center justify-center text-muted hover:text-[#e8e8e8] hover:border-gold/40 transition-colors"
+                      className="w-6 h-6 border border-subtle flex items-center justify-center text-muted hover:text-ink hover:border-gold transition-colors"
                     >
                       <Minus size={12} />
                     </button>
-                    <span className="text-[#e8e8e8] text-sm w-5 text-center">
+                    <span className="text-ink text-sm w-5 text-center">
                       {item.quantity}
                     </span>
                     <button
                       onClick={() =>
                         updateQuantity(item.variantId, item.quantity + 1)
                       }
-                      className="w-6 h-6 rounded border border-subtle flex items-center justify-center text-muted hover:text-[#e8e8e8] hover:border-gold/40 transition-colors"
+                      className="w-6 h-6 border border-subtle flex items-center justify-center text-muted hover:text-ink hover:border-gold transition-colors"
                     >
                       <Plus size={12} />
                     </button>
@@ -123,7 +123,7 @@ export function CartDrawer() {
           <div className="p-4 border-t border-subtle flex flex-col gap-3">
             <div className="flex items-center justify-between">
               <span className="text-muted text-sm">Total</span>
-              <span className="text-gold font-bold text-xl">
+              <span className="text-gold-700 font-bold text-xl">
                 {formatCOP(cartTotal)}
               </span>
             </div>

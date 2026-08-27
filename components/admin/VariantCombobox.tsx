@@ -82,9 +82,9 @@ export function VariantCombobox({
         ref={triggerRef}
         type="button"
         onClick={open ? close : openDropdown}
-        className="w-full bg-white/5 border border-subtle rounded-lg px-3 py-2.5 text-sm text-left flex items-center justify-between gap-2 focus:outline-none focus:border-gold/50 transition-colors hover:border-gold/30"
+        className="w-full bg-white border border-subtle px-3 py-2.5 text-sm text-left flex items-center justify-between gap-2 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors hover:border-gold"
       >
-        <span className={`truncate ${selected ? "text-[#e8e8e8]" : "text-muted"}`}>
+        <span className={`truncate ${selected ? "text-ink" : "text-muted"}`}>
           {selectedLabel
             ? `${selectedLabel}${selectedPrice != null ? ` — ${formatCOP(selectedPrice)}` : ""}`
             : "Seleccionar producto..."}
@@ -96,7 +96,7 @@ export function VariantCombobox({
         <div
           ref={dropdownRef}
           style={{ position: "fixed", top: rect.bottom + 4, left: rect.left, width: rect.width, zIndex: 9999 }}
-          className="bg-[#1a1a1b] border border-subtle rounded-lg shadow-card overflow-hidden"
+          className="bg-white border border-subtle shadow-md overflow-hidden"
         >
           <div className="flex items-center gap-2 px-3 py-2 border-b border-subtle">
             <Search size={13} className="text-muted flex-shrink-0" />
@@ -106,7 +106,7 @@ export function VariantCombobox({
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Buscar por nombre, talla, color, SKU…"
-              className="flex-1 bg-transparent text-sm text-[#e8e8e8] placeholder:text-muted focus:outline-none"
+              className="flex-1 bg-transparent text-sm text-ink placeholder:text-muted focus:outline-none"
             />
           </div>
           <div className="max-h-52 overflow-y-auto">
@@ -120,14 +120,14 @@ export function VariantCombobox({
                     key={v.id}
                     type="button"
                     onClick={() => select(v)}
-                    className={`w-full text-left px-3 py-2.5 text-sm hover:bg-white/5 transition-colors flex items-center justify-between gap-3 ${
-                      v.id === value ? "bg-white/5 text-gold" : "text-[#e8e8e8]"
+                    className={`w-full text-left px-3 py-2.5 text-sm hover:bg-subtle2 transition-colors flex items-center justify-between gap-3 ${
+                      v.id === value ? "bg-gold-50 text-gold-700" : "text-ink"
                     }`}
                   >
                     <div className="min-w-0 flex items-center gap-2">
                       {v.colors?.hex_code && (
                         <span
-                          className="w-3 h-3 rounded-full border border-white/20 flex-shrink-0"
+                          className="w-3 h-3 border border-subtle flex-shrink-0"
                           style={{ background: v.colors.hex_code }}
                         />
                       )}
@@ -138,7 +138,7 @@ export function VariantCombobox({
                       </div>
                     </div>
                     <div className="flex-shrink-0 text-right">
-                      <p className="text-gold text-xs font-semibold">{formatCOP(price)}</p>
+                      <p className="text-gold-700 text-xs font-bold">{formatCOP(price)}</p>
                     </div>
                   </button>
                 );

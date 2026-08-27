@@ -4,14 +4,17 @@
 
 @layer base {
   :root {
-    --bg: #0f0f10;
-    --gold: #caa45a;
-    --text: #e8e8e8;
-    --muted: #9a9a9a;
-    --surface: rgba(255, 255, 255, 0.04);
-    --border: rgba(255, 255, 255, 0.08);
-    --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-    --radius: 16px;
+    --bg: #fbf7f0;
+    --page: #efeae1;
+    --gold: #c09449;
+    --text: #2b2420;
+    --muted: #8a7c6c;
+    --body: #6b5d4e;
+    --label: #b09b78;
+    --surface: #ffffff;
+    --border: #e6d9bf;
+    --shadow: 0 1px 2px rgba(43, 36, 32, 0.1);
+    --radius: 0px;
   }
 
   * {
@@ -23,57 +26,61 @@
   }
 
   body {
-    background-color: #0f0f10;
-    color: #e8e8e8;
-    font-family: system-ui, -apple-system, sans-serif;
+    background-color: #fbf7f0;
+    color: #2b2420;
+    font-family: var(--font-archivo), system-ui, -apple-system, sans-serif;
     min-height: 100vh;
   }
 
   ::selection {
-    background-color: rgba(202, 164, 90, 0.3);
-    color: #e8e8e8;
+    background-color: rgba(192, 148, 73, 0.25);
+    color: #2b2420;
   }
 
   ::-webkit-scrollbar {
-    width: 6px;
+    width: 10px;
+    height: 10px;
   }
   ::-webkit-scrollbar-track {
-    background: #0f0f10;
+    background: #fbf7f0;
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(202, 164, 90, 0.3);
-    border-radius: 3px;
+    background: #dccfb6;
+    border-radius: 0;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(202, 164, 90, 0.5);
+    background: #c9b795;
   }
 }
 
 @layer components {
   .glass {
-    background: rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #ffffff;
+    border: 1px solid #e6d9bf;
+  }
+
+  .eyebrow {
+    @apply text-[10px] font-extrabold uppercase tracking-[0.22em] text-gold-600;
+  }
+
+  .label-sm {
+    @apply text-[10px] font-extrabold uppercase tracking-[0.2em] text-muted;
   }
 
   .gold-text {
-    background: linear-gradient(135deg, #caa45a, #f0d080);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #c09449;
   }
 
   .btn-gold {
-    @apply bg-gold hover:bg-gold-light text-bg font-semibold px-6 py-3 rounded-xl transition-all duration-200;
-    box-shadow: 0 4px 16px rgba(202, 164, 90, 0.3);
-  }
-  .btn-gold:hover {
-    box-shadow: 0 6px 24px rgba(202, 164, 90, 0.45);
-    transform: translateY(-1px);
+    @apply bg-gold hover:bg-gold-600 text-white font-extrabold text-[13px] tracking-wide px-6 py-3.5 transition-colors duration-150;
   }
 
   .btn-ghost {
-    @apply border border-gold/40 text-gold hover:bg-gold/10 px-6 py-3 rounded-xl transition-all duration-200 font-semibold;
+    @apply border border-gold text-gold-700 hover:bg-gold-50 font-extrabold text-[13px] tracking-wide px-6 py-3.5 transition-colors duration-150;
+  }
+
+  .btn-dark {
+    @apply bg-ink hover:bg-[#3a322b] text-white font-extrabold text-[13px] tracking-wide px-6 py-3.5 transition-colors duration-150;
   }
 
   .section {
@@ -81,22 +88,18 @@
   }
 
   .section-title {
-    @apply text-2xl md:text-3xl font-bold mb-2;
-    background: linear-gradient(135deg, #caa45a, #f0d080);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    @apply text-2xl md:text-3xl font-bold mb-1 text-ink;
+  }
+
+  .divider {
+    height: 2px;
+    background: #e6d9bf;
   }
 
   .card-product {
-    @apply rounded-card overflow-hidden transition-all duration-300 cursor-pointer;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    @apply overflow-hidden transition-colors duration-200 cursor-pointer bg-white border border-subtle;
   }
   .card-product:hover {
-    border-color: rgba(202, 164, 90, 0.4);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(202, 164, 90, 0.15);
-    transform: translateY(-4px);
+    border-color: #c09449;
   }
 }

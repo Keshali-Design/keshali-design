@@ -118,15 +118,15 @@ export function StockManager({
 
   return (
     <div className="max-w-5xl">
-      <h1 className="text-2xl font-bold text-[#e8e8e8] mb-1">Stock</h1>
-      <p className="text-muted text-sm mb-1">
-        El stock se comparte por <span className="text-[#e8e8e8]">categoría + tamaño + color</span>.
+      <h1 className="text-2xl font-bold text-ink mb-1">Stock</h1>
+      <p className="text-body text-sm mb-1">
+        El stock se comparte por <span className="text-ink">categoría + tamaño + color</span>.
         Una taza blanca de 11oz aplica a todos los productos de la categoría Tazas con ese tamaño y color.
       </p>
       <div className="flex gap-4 text-xs text-muted mb-6 mt-3">
         <span>{totalSlots} combinaciones totales</span>
-        <span className="text-emerald-400">{withStock} con stock</span>
-        <span className="text-red-400">{totalSlots - withStock} sin stock</span>
+        <span className="text-emerald-700 font-semibold">{withStock} con stock</span>
+        <span className="text-red-600 font-semibold">{totalSlots - withStock} sin stock</span>
       </div>
 
       {/* Filters */}
@@ -134,31 +134,31 @@ export function StockManager({
         <select
           value={categoria}
           onChange={(e) => setCategoria(e.target.value)}
-          className="bg-white/5 border border-subtle rounded-lg px-3 py-2 text-sm text-[#e8e8e8] focus:outline-none focus:border-gold/50"
+          className="bg-white border border-subtle px-3 py-2 text-sm text-ink focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold"
         >
-          <option value="" className="bg-[#0f0f10]">Todas las categorías</option>
+          <option value="">Todas las categorías</option>
           {categories.map((c) => (
-            <option key={c.id} value={c.id} className="bg-[#0f0f10]">{c.name}</option>
+            <option key={c.id} value={c.id}>{c.name}</option>
           ))}
         </select>
         <input
           value={buscar}
           onChange={(e) => setBuscar(e.target.value)}
           placeholder="Buscar por categoría, tamaño o color…"
-          className="bg-white/5 border border-subtle rounded-lg px-3 py-2 text-sm text-[#e8e8e8] focus:outline-none focus:border-gold/50 flex-1 min-w-[200px]"
+          className="bg-white border border-subtle px-3 py-2 text-sm text-ink focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold flex-1 min-w-[200px]"
         />
         <span className="text-muted text-sm self-center">{filtered.length} resultado{filtered.length !== 1 ? "s" : ""}</span>
       </div>
 
       {slots.length === 0 ? (
-        <div className="glass rounded-card p-10 text-center text-muted text-sm">
+        <div className="bg-surface border border-subtle p-10 text-center text-muted text-sm">
           Sin combinaciones disponibles. Configura colores y tamaños en las categorías primero.
         </div>
       ) : (
-        <div className="glass rounded-card overflow-hidden">
+        <div className="bg-surface border border-subtle overflow-hidden overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-subtle text-muted text-xs uppercase tracking-wide">
+              <tr className="border-b border-subtle text-muted label-sm">
                 <th className="text-left px-4 py-3">Categoría</th>
                 <th className="text-left px-4 py-3">Tamaño</th>
                 <th className="text-left px-4 py-3">Color</th>
@@ -167,19 +167,19 @@ export function StockManager({
             </thead>
             <tbody>
               {filtered.map((slot) => (
-                <tr key={slot.key} className="border-b border-subtle last:border-0 hover:bg-white/[0.03] transition-colors">
-                  <td className="px-4 py-3 text-[#e8e8e8] text-xs font-medium">{slot.categoryName}</td>
-                  <td className="px-4 py-3 text-xs text-[#e8e8e8]">
+                <tr key={slot.key} className="border-b border-subtle2 last:border-0 hover:bg-subtle2 transition-colors">
+                  <td className="px-4 py-3 text-ink text-xs font-medium">{slot.categoryName}</td>
+                  <td className="px-4 py-3 text-xs text-ink">
                     {slot.sizeLabel}
                     {slot.sizeAlt && <span className="text-muted ml-1">/ {slot.sizeAlt}</span>}
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <span
-                        className="w-3 h-3 rounded-full border border-white/20 flex-shrink-0"
+                        className="w-3 h-3 border border-subtle flex-shrink-0"
                         style={{ background: slot.hexCode }}
                       />
-                      <span className="text-[#e8e8e8] text-xs">{slot.colorName}</span>
+                      <span className="text-ink text-xs">{slot.colorName}</span>
                     </div>
                   </td>
                   <td className="px-4 py-3 text-center">
@@ -190,7 +190,7 @@ export function StockManager({
                           min="0"
                           value={editStock}
                           onChange={(e) => setEditStock(Number(e.target.value))}
-                          className="bg-white/5 border border-gold/50 rounded px-2 py-1 text-xs text-[#e8e8e8] w-20 text-center focus:outline-none"
+                          className="bg-white border border-gold px-2 py-1 text-xs text-ink w-20 text-center focus:outline-none focus:ring-1 focus:ring-gold"
                           autoFocus
                           onKeyDown={(e) => {
                             if (e.key === "Enter") saveStock(slot);
@@ -201,14 +201,14 @@ export function StockManager({
                           type="button"
                           onClick={() => saveStock(slot)}
                           disabled={isPending}
-                          className="p-1 text-emerald-400 hover:text-emerald-300 transition-colors"
+                          className="p-1 text-emerald-700 hover:text-emerald-800 transition-colors"
                         >
                           <Check size={13} />
                         </button>
                         <button
                           type="button"
                           onClick={() => setEditingKey(null)}
-                          className="p-1 text-muted hover:text-[#e8e8e8] transition-colors"
+                          className="p-1 text-muted hover:text-ink transition-colors"
                         >
                           <X size={13} />
                         </button>
@@ -217,12 +217,12 @@ export function StockManager({
                       <button
                         type="button"
                         onClick={() => startEdit(slot)}
-                        className={`text-sm font-semibold px-4 py-1 rounded hover:bg-white/5 transition-colors tabular-nums ${
+                        className={`text-sm font-bold px-4 py-1 hover:bg-subtle2 transition-colors tabular-nums ${
                           slot.stock === 0
-                            ? "text-red-400"
+                            ? "text-red-600"
                             : slot.stock <= 5
-                            ? "text-yellow-400"
-                            : "text-emerald-400"
+                            ? "text-gold-700"
+                            : "text-emerald-700"
                         }`}
                       >
                         {slot.stock}

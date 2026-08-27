@@ -24,8 +24,8 @@ import type {
   CategorySize,
 } from "@/app/admin/categorias/page";
 
-const FIELD = "bg-white/5 border border-subtle rounded-lg px-3 py-2 text-sm text-[#e8e8e8] focus:outline-none focus:border-gold/50 transition-colors w-full";
-const LABEL = "text-xs text-muted block mb-1";
+const FIELD = "bg-white border border-subtle px-3 py-2.5 text-sm text-ink focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors w-full";
+const LABEL = "label-sm block mb-1.5";
 
 export function CategoriasManager({
   mainCategories,
@@ -126,21 +126,21 @@ export function CategoriasManager({
   return (
     <div className="max-w-3xl">
       <div className="flex items-center justify-between mb-1">
-        <h1 className="text-2xl font-bold text-[#e8e8e8]">Categorías</h1>
+        <h1 className="text-2xl font-bold text-ink">Categorías</h1>
         <button onClick={() => setShowNew((v) => !v)} className="btn-gold flex items-center gap-2 text-sm py-2 px-4">
           <Plus size={15} />
           Nueva categoría
         </button>
       </div>
-      <p className="text-muted text-sm mb-8">
+      <p className="text-body text-sm mb-8">
         Las categorías principales definen el tipo de producto, el sistema de tamaños y el inventario compartido.
         Las subcategorías agrupan productos dentro de una categoría principal.
       </p>
 
       {/* New main category form */}
       {showNew && (
-        <form onSubmit={handleCreate} className="glass rounded-card p-5 mb-6 flex flex-col gap-4">
-          <h2 className="text-[#e8e8e8] font-semibold text-sm">Nueva categoría principal</h2>
+        <form onSubmit={handleCreate} className="bg-surface border border-subtle p-5 mb-6 flex flex-col gap-4">
+          <h2 className="text-ink font-bold text-sm border-b border-subtle pb-2">Nueva categoría principal</h2>
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
               <label className={LABEL}>Nombre *</label>
@@ -160,9 +160,9 @@ export function CategoriasManager({
                 required
                 className={FIELD}
               >
-                <option value="" className="bg-[#0f0f10]">Seleccionar…</option>
+                <option value="">Seleccionar…</option>
                 {sizeTypes.map((st) => (
-                  <option key={st.id} value={st.id} className="bg-[#0f0f10]">
+                  <option key={st.id} value={st.id}>
                     {st.name} ({st.unit_label})
                   </option>
                 ))}
@@ -170,7 +170,7 @@ export function CategoriasManager({
               <p className="text-muted text-xs mt-1">⚠ No se puede cambiar después de crear.</p>
             </div>
           </div>
-          {formError && <p className="text-red-400 text-sm">{formError}</p>}
+          {formError && <p className="text-red-600 text-sm">{formError}</p>}
           <div className="flex gap-3">
             <button type="submit" disabled={saving} className="btn-gold text-sm py-2 px-4 disabled:opacity-60">
               {saving ? "Guardando..." : "Crear categoría"}
@@ -195,7 +195,7 @@ export function CategoriasManager({
           const catSubs = subcategories.filter((s) => s.parent_id === cat.id);
 
           return (
-            <div key={cat.id} className="glass rounded-card overflow-hidden">
+            <div key={cat.id} className="bg-surface border border-subtle overflow-hidden">
               {/* Main category header */}
               <div className="flex items-center gap-3 px-4 py-3 border-b border-subtle">
                 <button
@@ -208,13 +208,13 @@ export function CategoriasManager({
                     : <ChevronRight size={15} className="text-muted flex-shrink-0" />
                   }
                   {cat.image_url && (
-                    <div className="w-8 h-8 rounded overflow-hidden flex-shrink-0 border border-subtle">
+                    <div className="w-8 h-8 overflow-hidden flex-shrink-0 border border-subtle">
                       <Image src={cat.image_url} alt={cat.name} width={32} height={32} className="object-cover w-full h-full" />
                     </div>
                   )}
-                  <span className="text-[#e8e8e8] font-bold text-sm">{cat.name}</span>
+                  <span className="text-ink font-bold text-sm">{cat.name}</span>
                   {cat.size_types && (
-                    <span className="text-muted text-xs font-mono bg-white/5 px-1.5 py-0.5 rounded">
+                    <span className="text-muted text-[10px] font-bold uppercase tracking-wide bg-gold-50 px-1.5 py-0.5">
                       {cat.size_types.name}
                     </span>
                   )}
@@ -229,10 +229,10 @@ export function CategoriasManager({
                 <button
                   type="button"
                   onClick={() => toggleCategory(cat.id, !cat.active)}
-                  className={`text-xs px-2.5 py-1 rounded-full border transition-colors flex-shrink-0 ${
+                  className={`text-[10px] font-bold uppercase tracking-wide px-2.5 py-1 border transition-colors flex-shrink-0 ${
                     cat.active
-                      ? "border-emerald-500/30 text-emerald-400 bg-emerald-400/10 hover:bg-emerald-400/20"
-                      : "border-muted/20 text-muted bg-white/5 hover:border-gold/30 hover:text-gold"
+                      ? "border-gold-300 text-gold-700 bg-gold-100 hover:bg-gold-200"
+                      : "border-subtle text-muted bg-subtle2 hover:border-gold hover:text-gold-700"
                   }`}
                 >
                   {cat.active ? "Activa" : "Inactiva"}
@@ -245,7 +245,7 @@ export function CategoriasManager({
 
                   {/* Colors */}
                   <div>
-                    <p className="text-xs font-semibold text-muted uppercase tracking-wide mb-3">Colores disponibles</p>
+                    <p className="label-sm mb-3">Colores disponibles</p>
                     <div className="flex flex-wrap gap-2">
                       {allColors.map((color) => {
                         const isSel = selectedColors.has(color.id);
@@ -264,15 +264,15 @@ export function CategoriasManager({
                                 else toggleColorSel(cat.id, color.id);
                               }
                             }}
-                            className={`flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs transition-all ${
+                            className={`flex items-center gap-2 px-3 py-1.5 border text-xs transition-all ${
                               isSel
                                 ? isAct || inPend
-                                  ? "border-gold/50 bg-gold/10 text-gold"
-                                  : "border-muted/30 bg-white/5 text-muted line-through"
-                                : "border-subtle text-muted hover:border-gold/30 hover:text-[#e8e8e8]"
+                                  ? "border-gold bg-gold-50 text-gold-700"
+                                  : "border-subtle bg-subtle2 text-muted line-through"
+                                : "border-subtle text-muted hover:border-gold hover:text-ink"
                             }`}
                           >
-                            <span className="w-3 h-3 rounded-full border border-white/20 flex-shrink-0" style={{ background: color.hex_code }} />
+                            <span className="w-3 h-3 border border-subtle flex-shrink-0" style={{ background: color.hex_code }} />
                             {color.name}
                           </button>
                         );
@@ -282,7 +282,7 @@ export function CategoriasManager({
 
                   {/* Sizes */}
                   <div>
-                    <p className="text-xs font-semibold text-muted uppercase tracking-wide mb-3">
+                    <p className="label-sm mb-3">
                       Tamaños disponibles
                       {cat.size_types && <span className="font-normal normal-case ml-1">({cat.size_types.name})</span>}
                     </p>
@@ -307,12 +307,12 @@ export function CategoriasManager({
                                   else toggleSizeSel(cat.id, size.id);
                                 }
                               }}
-                              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs transition-all ${
+                              className={`flex items-center gap-1.5 px-3 py-1.5 border text-xs transition-all ${
                                 isSel
                                   ? isAct || inPend
-                                    ? "border-gold/50 bg-gold/10 text-gold"
-                                    : "border-muted/30 bg-white/5 text-muted line-through"
-                                  : "border-subtle text-muted hover:border-gold/30 hover:text-[#e8e8e8]"
+                                    ? "border-gold bg-gold-50 text-gold-700"
+                                    : "border-subtle bg-subtle2 text-muted line-through"
+                                  : "border-subtle text-muted hover:border-gold hover:text-ink"
                               }`}
                             >
                               {size.label}
@@ -337,14 +337,14 @@ export function CategoriasManager({
 
                   {/* Category image */}
                   <div className="border-t border-subtle pt-5">
-                    <p className="text-xs font-semibold text-muted uppercase tracking-wide mb-3">Imagen de portada</p>
+                    <p className="label-sm mb-3">Imagen de portada</p>
                     <div className="flex items-start gap-4">
                       {cat.image_url ? (
-                        <div className="relative w-28 h-28 rounded-lg overflow-hidden border border-subtle flex-shrink-0">
+                        <div className="relative w-28 h-28 overflow-hidden border border-subtle flex-shrink-0">
                           <Image src={cat.image_url} alt={cat.name} fill className="object-cover" sizes="112px" />
                         </div>
                       ) : (
-                        <div className="w-28 h-28 rounded-lg border border-dashed border-subtle flex items-center justify-center flex-shrink-0">
+                        <div className="w-28 h-28 border border-dashed border-subtle flex items-center justify-center flex-shrink-0">
                           <ImagePlus size={24} className="text-muted" />
                         </div>
                       )}
@@ -385,14 +385,14 @@ export function CategoriasManager({
                               setUploadingImg(null);
                             }}
                             disabled={uploadingImg === cat.id}
-                            className="text-xs text-red-400 hover:text-red-300 flex items-center gap-1.5 py-1 disabled:opacity-60 transition-colors"
+                            className="text-xs text-red-600 hover:text-red-700 flex items-center gap-1.5 py-1 disabled:opacity-50 transition-colors"
                           >
                             <Trash2 size={12} />
                             Eliminar imagen
                           </button>
                         )}
                         {imgError[cat.id] && (
-                          <p className="text-red-400 text-xs">{imgError[cat.id]}</p>
+                          <p className="text-red-600 text-xs">{imgError[cat.id]}</p>
                         )}
                         <p className="text-muted text-xs">Recomendado: 800×600 px. Se convierte a WebP automáticamente.</p>
                       </div>
@@ -402,7 +402,7 @@ export function CategoriasManager({
                   {/* Subcategories */}
                   <div className="border-t border-subtle pt-5">
                     <div className="flex items-center justify-between mb-3">
-                      <p className="text-xs font-semibold text-muted uppercase tracking-wide flex items-center gap-1.5">
+                      <p className="label-sm flex items-center gap-1.5">
                         <FolderOpen size={13} />
                         Subcategorías
                       </p>
@@ -422,15 +422,15 @@ export function CategoriasManager({
                       )}
 
                       {catSubs.map((sub) => (
-                        <div key={sub.id} className="flex items-center gap-3 px-3 py-2 rounded-lg bg-white/[0.03] border border-subtle">
-                          <span className="text-[#e8e8e8] text-sm flex-1">{sub.name}</span>
+                        <div key={sub.id} className="flex items-center gap-3 px-3 py-2 bg-[#FDFBF7] border border-subtle">
+                          <span className="text-ink text-sm flex-1">{sub.name}</span>
                           <button
                             type="button"
                             onClick={() => toggleSubcategory(sub.id, !sub.active)}
-                            className={`text-xs px-2 py-0.5 rounded-full border transition-colors ${
+                            className={`text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 border transition-colors ${
                               sub.active
-                                ? "border-emerald-500/30 text-emerald-400 bg-emerald-400/10"
-                                : "border-muted/20 text-muted bg-white/5"
+                                ? "border-gold-300 text-gold-700 bg-gold-100"
+                                : "border-subtle text-muted bg-subtle2"
                             }`}
                           >
                             {sub.active ? "Activa" : "Inactiva"}
@@ -445,7 +445,7 @@ export function CategoriasManager({
                             onChange={(e) => setNewSubName(e.target.value)}
                             required
                             placeholder="Nombre de la subcategoría…"
-                            className="flex-1 bg-white/5 border border-subtle rounded-lg px-3 py-2 text-sm text-[#e8e8e8] focus:outline-none focus:border-gold/50 transition-colors"
+                            className="flex-1 bg-white border border-subtle px-3 py-2 text-sm text-ink focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                             autoFocus
                           />
                           <button
@@ -458,7 +458,7 @@ export function CategoriasManager({
                           <button
                             type="button"
                             onClick={() => setShowNewSub(null)}
-                            className="text-muted hover:text-[#e8e8e8] text-xs px-2 py-2 transition-colors"
+                            className="text-muted hover:text-ink text-xs px-2 py-2 transition-colors"
                           >
                             Cancelar
                           </button>

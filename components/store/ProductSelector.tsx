@@ -85,7 +85,7 @@ export function ProductSelector({
     <div className="grid md:grid-cols-2 gap-10">
       {/* Images */}
       <div className="flex flex-col gap-3">
-        <div className="glass rounded-card overflow-hidden aspect-square relative">
+        <div className="bg-white border border-subtle overflow-hidden aspect-square relative">
           {activeImg ? (
             <Image src={activeImg} alt={product.product_name} fill className="object-cover" priority />
           ) : (
@@ -99,8 +99,8 @@ export function ProductSelector({
                 key={img.id}
                 type="button"
                 onClick={() => setActiveImgIdx(idx)}
-                className={`relative w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 border transition-colors ${
-                  activeImgIdx === idx ? "border-gold" : "border-subtle hover:border-gold/40"
+                className={`relative w-16 h-16 overflow-hidden flex-shrink-0 border transition-colors ${
+                  activeImgIdx === idx ? "border-gold" : "border-subtle hover:border-gold"
                 }`}
               >
                 <Image src={img.url} alt="" fill className="object-cover" />
@@ -116,24 +116,24 @@ export function ProductSelector({
         <div>
           <Link
             href={`/catalogo?categoria=${product.category_slug}`}
-            className="text-gold text-xs uppercase tracking-widest font-medium hover:underline"
+            className="eyebrow hover:underline"
           >
             {product.category_name}
           </Link>
-          <h1 className="text-2xl md:text-3xl font-bold mt-1 text-[#e8e8e8]">{product.product_name}</h1>
+          <h1 className="text-2xl md:text-3xl font-bold mt-1 text-ink">{product.product_name}</h1>
           {product.description && (
-            <p className="text-muted text-sm mt-2">{product.description}</p>
+            <p className="text-body text-sm mt-2">{product.description}</p>
           )}
         </div>
 
         {/* Price */}
-        <div className="text-3xl font-bold gold-text">
+        <div className="text-3xl font-bold text-gold-700">
           {selectedVariant ? formatCOP(selectedVariant.price) : "—"}
         </div>
 
         {/* Size selector */}
         <div>
-          <p className="text-xs font-semibold text-muted uppercase tracking-wide mb-2">
+          <p className="label-sm mb-2">
             {product.size_type_name}
           </p>
           <div className="flex flex-wrap gap-2">
@@ -146,12 +146,12 @@ export function ProductSelector({
                   key={s.size_id}
                   type="button"
                   onClick={() => { setSelectedSizeId(s.size_id); setSelectedColorId(""); setActiveImgIdx(0); }}
-                  className={`px-4 py-2 rounded-lg border text-sm transition-all ${
+                  className={`px-4 py-2 border text-sm transition-colors ${
                     selectedSizeId === s.size_id
-                      ? "border-gold bg-gold/10 text-gold font-semibold"
+                      ? "border-gold bg-gold-50 text-gold-700 font-semibold"
                       : hasStock
-                      ? "border-subtle text-[#e8e8e8] hover:border-gold/40"
-                      : "border-subtle/50 text-muted/50 cursor-not-allowed"
+                      ? "border-subtle bg-white text-ink hover:border-gold"
+                      : "border-subtle2 text-muted/50 cursor-not-allowed"
                   }`}
                   disabled={!hasStock}
                 >
@@ -165,7 +165,7 @@ export function ProductSelector({
 
         {/* Color selector */}
         <div>
-          <p className="text-xs font-semibold text-muted uppercase tracking-wide mb-2">
+          <p className="label-sm mb-2">
             Color{effectiveColorId && ` — ${colorsForSize.find((c) => c.color_id === effectiveColorId)?.color_name}`}
           </p>
           <div className="flex flex-wrap gap-2">
@@ -182,13 +182,13 @@ export function ProductSelector({
                   type="button"
                   onClick={() => { setSelectedColorId(c.color_id); setActiveImgIdx(0); }}
                   title={c.color_name}
-                  className={`w-9 h-9 rounded-full border-2 transition-all flex items-center justify-center ${
-                    isSelected ? "border-gold scale-110" : "border-subtle hover:border-gold/50 hover:scale-105"
+                  className={`w-9 h-9 border-2 transition-colors flex items-center justify-center ${
+                    isSelected ? "border-gold" : "border-subtle hover:border-gold"
                   } ${!hasStock ? "opacity-40 cursor-not-allowed" : ""}`}
                   disabled={!hasStock}
                 >
                   <span
-                    className="w-6 h-6 rounded-full border border-white/10"
+                    className="w-6 h-6 border border-subtle"
                     style={{ background: c.hex_code }}
                   />
                 </button>
@@ -206,21 +206,21 @@ export function ProductSelector({
         {/* Quantity + cart */}
         <div className="flex flex-col sm:flex-row gap-3">
           {/* Quantity */}
-          <div className="flex items-center border border-subtle rounded-lg overflow-hidden">
+          <div className="flex items-center border border-subtle bg-white">
             <button
               type="button"
               onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-              className="px-3 py-2.5 text-muted hover:text-[#e8e8e8] hover:bg-white/5 transition-colors"
+              className="px-3 py-2.5 text-body hover:text-ink hover:bg-subtle2 transition-colors"
             >
               <Minus size={14} />
             </button>
-            <span className="px-4 py-2.5 text-[#e8e8e8] font-medium text-sm min-w-[40px] text-center">
+            <span className="px-4 py-2.5 text-ink font-medium text-sm min-w-[40px] text-center">
               {quantity}
             </span>
             <button
               type="button"
               onClick={() => setQuantity((q) => Math.min(selectedVariant?.stock ?? 99, q + 1))}
-              className="px-3 py-2.5 text-muted hover:text-[#e8e8e8] hover:bg-white/5 transition-colors"
+              className="px-3 py-2.5 text-body hover:text-ink hover:bg-subtle2 transition-colors"
               disabled={outOfStock}
             >
               <Plus size={14} />

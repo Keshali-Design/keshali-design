@@ -37,25 +37,25 @@ export default async function AdminProductosPage() {
   return (
     <div className="max-w-6xl">
       <div className="flex items-center justify-between mb-1">
-        <h1 className="text-2xl font-bold text-[#e8e8e8]">Productos</h1>
+        <h1 className="text-2xl font-bold text-ink">Productos</h1>
         <Link href="/admin/productos/nuevo" className="btn-gold flex items-center gap-2 text-sm py-2 px-4">
           <Plus size={16} />
           Nuevo producto
         </Link>
       </div>
-      <p className="text-muted text-sm mb-8">
+      <p className="text-body text-sm mb-8">
         Cada producto agrupa variantes por color y tamaño. El stock se gestiona en la sección Stock.
       </p>
 
-      <div className="glass rounded-card overflow-hidden">
+      <div className="bg-surface border border-subtle overflow-hidden">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-subtle text-muted text-xs uppercase tracking-wide">
-              <th className="text-left px-4 py-3">Producto</th>
-              <th className="text-left px-4 py-3 hidden md:table-cell">Categoría</th>
-              <th className="text-right px-4 py-3">Precio</th>
-              <th className="text-center px-4 py-3">Variantes</th>
-              <th className="text-center px-4 py-3">Estado</th>
+            <tr className="border-b-2 border-subtle">
+              <th className="text-left px-4 py-3 label-sm">Producto</th>
+              <th className="text-left px-4 py-3 hidden md:table-cell label-sm">Categoría</th>
+              <th className="text-right px-4 py-3 label-sm">Precio</th>
+              <th className="text-center px-4 py-3 label-sm">Variantes</th>
+              <th className="text-center px-4 py-3 label-sm">Estado</th>
               <th className="px-4 py-3" />
             </tr>
           </thead>
@@ -66,30 +66,30 @@ export default async function AdminProductosPage() {
               const priceLabel = min === max ? formatCOP(min) : `${formatCOP(min)} – ${formatCOP(max)}`;
 
               return (
-                <tr key={p.id} className="border-b border-subtle last:border-0 hover:bg-white/[0.03] transition-colors">
+                <tr key={p.id} className="border-b border-subtle2 last:border-0 hover:bg-bg transition-colors">
                   <td className="px-4 py-3">
-                    <p className="text-[#e8e8e8] font-medium line-clamp-1">{p.name}</p>
+                    <p className="text-ink font-medium line-clamp-1">{p.name}</p>
                     {p.description && (
-                      <p className="text-muted text-xs mt-0.5 line-clamp-1">{p.description}</p>
+                      <p className="text-body text-xs mt-0.5 line-clamp-1">{p.description}</p>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-muted text-xs hidden md:table-cell">
+                  <td className="px-4 py-3 text-body text-xs hidden md:table-cell">
                     {p.categories?.name ?? "—"}
                   </td>
-                  <td className="px-4 py-3 text-right text-gold font-semibold text-xs">
+                  <td className="px-4 py-3 text-right text-gold-700 font-bold text-xs">
                     {p.product_sizes.length ? priceLabel : "—"}
                     {p.price_varies_by_color && (
                       <span className="text-muted font-normal ml-1 text-[10px]">+color</span>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-center text-muted text-xs">
+                  <td className="px-4 py-3 text-center text-body text-xs">
                     {p.product_variants.length}
                   </td>
                   <td className="px-4 py-3 text-center">
-                    <span className={`text-xs px-2 py-0.5 rounded-full border ${
+                    <span className={`text-[10px] font-extrabold uppercase tracking-wide px-2 py-1 border ${
                       p.active
-                        ? "border-emerald-500/30 text-emerald-400 bg-emerald-400/10"
-                        : "border-muted/20 text-muted bg-white/5"
+                        ? "border-emerald-600/30 text-emerald-700 bg-emerald-50"
+                        : "border-subtle text-muted bg-bg"
                     }`}>
                       {p.active ? "Activo" : "Inactivo"}
                     </span>
@@ -98,7 +98,7 @@ export default async function AdminProductosPage() {
                     <div className="flex items-center justify-end gap-1">
                       <Link
                         href={`/admin/productos/${p.id}`}
-                        className="inline-flex items-center gap-1 text-xs text-muted hover:text-gold transition-colors px-2 py-1.5 rounded hover:bg-white/5"
+                        className="inline-flex items-center gap-1 text-xs text-body hover:text-gold-700 transition-colors px-2 py-1.5 border border-subtle bg-bg"
                       >
                         <Pencil size={12} />
                         Editar
@@ -114,7 +114,7 @@ export default async function AdminProductosPage() {
 
         {(!products || products.length === 0) && (
           <p className="text-muted text-sm text-center py-10">
-            Sin productos. <Link href="/admin/productos/nuevo" className="text-gold hover:underline">Crea el primero.</Link>
+            Sin productos. <Link href="/admin/productos/nuevo" className="text-gold-700 hover:underline">Crea el primero.</Link>
           </p>
         )}
       </div>
