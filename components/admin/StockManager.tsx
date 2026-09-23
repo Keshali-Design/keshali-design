@@ -120,8 +120,9 @@ export function StockManager({
     <div className="max-w-5xl">
       <h1 className="text-2xl font-bold text-ink mb-1">Stock</h1>
       <p className="text-body text-sm mb-1">
-        El stock se comparte por <span className="text-ink">categoría + tamaño + color</span>.
-        Una taza blanca de 11oz aplica a todos los productos de la categoría Tazas con ese tamaño y color.
+        El stock se comparte por <span className="text-ink">subcategoría + tamaño + color</span> (o por
+        categoría cuando no tiene subcategorías). Ej: el stock de Buzo es independiente del de Camisetas,
+        aunque ambas sean de la categoría Hombre.
       </p>
       <div className="flex gap-4 text-xs text-muted mb-6 mt-3">
         <span>{totalSlots} combinaciones totales</span>

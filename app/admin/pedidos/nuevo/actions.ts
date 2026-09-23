@@ -77,14 +77,17 @@ export async function createManualOrder(input: ManualOrderInput) {
   for (const item of input.items) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data: variant } = await (supabase.from("product_variants") as any)
-      .select("size_id, color_id, products ( category_id )")
+      .select("size_id, color_id, products ( category_id, subcategory_id )")
       .eq("id", item.variantId)
-      .single() as { data: { size_id: string; color_id: string; products: { category_id: string } | null } | null };
+      .single() as { data: { size_id: string; color_id: string; products: { category_id: string; subcategory_id: string | null } | null } | null };
 
     if (!variant?.products) continue;
 
-    const { size_id, color_id, products: { category_id } } = variant;
-    await decrementInventory(supabase, category_id, size_id, color_id, item.quantity);
+    const { size_id, color_id, products } = variant;
+    // Stock lives on the subcategory when the product has one, falling back
+    // to the main category for products with no subcategory.
+    const stockCategoryId = products.subcategory_id ?? products.category_id;
+    await decrementInventory(supabase, stockCategoryId, size_id, color_id, item.quantity);
   }
 
   revalidatePath("/admin/pedidos");

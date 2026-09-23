@@ -27,7 +27,7 @@ export default async function StockPage({
   const supabase = createAdminClient();
 
   const [
-    { data: categories },
+    { data: allCats },
     { data: allSizes },
     { data: allColors },
     { data: categorySizes },
@@ -36,10 +36,9 @@ export default async function StockPage({
   ] = await Promise.all([
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (supabase.from("categories") as any)
-      .select("id, name")
+      .select("id, name, parent_id")
       .eq("active", true)
-      .is("parent_id", null)
-      .order("name") as Promise<{ data: CategoryOpt[] | null }>,
+      .order("name") as Promise<{ data: { id: string; name: string; parent_id: string | null }[] | null }>,
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (supabase.from("sizes") as any)
@@ -69,9 +68,25 @@ export default async function StockPage({
       .order("category_id") as Promise<{ data: { id: string; category_id: string; size_id: string; color_id: string; stock: number }[] | null }>,
   ]);
 
+  // Stock unit = subcategory when the main category has one, otherwise the
+  // main category itself (e.g. "Gorras", "Regalos", which have no subs).
+  const cats = allCats ?? [];
+  const parents = cats.filter((c) => !c.parent_id);
+  const stockUnits: CategoryOpt[] = [];
+  for (const parent of parents) {
+    const children = cats.filter((c) => c.parent_id === parent.id);
+    if (children.length === 0) {
+      stockUnits.push({ id: parent.id, name: parent.name });
+    } else {
+      for (const child of children) {
+        stockUnits.push({ id: child.id, name: `${parent.name} — ${child.name}` });
+      }
+    }
+  }
+
   return (
     <StockManager
-      categories={categories ?? []}
+      categories={stockUnits}
       allSizes={allSizes ?? []}
       allColors={allColors ?? []}
       categorySizes={categorySizes ?? []}

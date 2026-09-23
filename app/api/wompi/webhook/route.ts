@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
       sku: string;
       size_id: string;
       color_id: string;
-      products: { name: string; category_id: string } | null;
+      products: { name: string; category_id: string; subcategory_id: string | null } | null;
       sizes: { label: string } | null;
       colors: { name: string } | null;
     } | null;
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
         id, quantity, unit_price, total_price,
         product_variants (
           id, sku, size_id, color_id,
-          products ( name, category_id ),
+          products ( name, category_id, subcategory_id ),
           sizes ( label ),
           colors ( name )
         )
@@ -96,9 +96,11 @@ export async function POST(req: NextRequest) {
     await Promise.all(
       items.map((item) => {
         const pv = item.product_variants;
-        const categoryId = pv?.products?.category_id;
-        if (!pv || !categoryId) return Promise.resolve();
-        return decrementInventory(supabase, categoryId, pv.size_id, pv.color_id, item.quantity);
+        // Stock lives on the subcategory when the product has one (e.g. "Buzo"),
+        // falling back to the main category for products with no subcategory.
+        const stockCategoryId = pv?.products?.subcategory_id ?? pv?.products?.category_id;
+        if (!pv || !stockCategoryId) return Promise.resolve();
+        return decrementInventory(supabase, stockCategoryId, pv.size_id, pv.color_id, item.quantity);
       })
     );
 

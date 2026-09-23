@@ -68,11 +68,21 @@ export async function createSubcategory(data: {
   const supabase = createAdminClient();
   const slug = toSlug(data.name);
 
+  // Inherit the parent's size type — a subcategory is its own stock unit
+  // (own colors/sizes/inventory), but it always draws from the same size
+  // system as its siblings.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: parent } = await (supabase.from("categories") as any)
+    .select("size_type_id")
+    .eq("id", data.parent_id)
+    .single() as { data: { size_type_id: string | null } | null };
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { error } = await (supabase.from("categories") as any).insert({
     name: data.name.trim(),
     slug,
     parent_id: data.parent_id,
+    size_type_id: parent?.size_type_id ?? null,
     active: true,
   });
 
