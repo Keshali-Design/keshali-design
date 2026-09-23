@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { verifyWompiWebhook, type WompiWebhookBody } from "@/lib/wompi";
 import { sendNewOrderNotification, sendOrderConfirmationToCustomer } from "@/lib/email";
+import { decrementInventory } from "@/lib/inventory";
 
 export async function POST(req: NextRequest) {
   let body: WompiWebhookBody;
@@ -11,8 +12,6 @@ export async function POST(req: NextRequest) {
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
-
-  console.log("[wompi webhook] body:", JSON.stringify(body, null, 2));
 
   // Validate signature
   if (!verifyWompiWebhook(body)) {
@@ -88,9 +87,20 @@ export async function POST(req: NextRequest) {
     .update({ status: newStatus, updated_at: new Date().toISOString() })
     .eq("id", order.id);
 
-  // On approval: send emails (stock was already decremented at checkout time)
+  // On approval: decrement inventory now that payment is confirmed, then
+  // send emails. Declined/voided/pending transactions never touched stock,
+  // so there's nothing to roll back for those.
   if (tx.status === "APPROVED") {
     const items: OrderItemRow[] = order.order_items ?? [];
+
+    await Promise.all(
+      items.map((item) => {
+        const pv = item.product_variants;
+        const categoryId = pv?.products?.category_id;
+        if (!pv || !categoryId) return Promise.resolve();
+        return decrementInventory(supabase, categoryId, pv.size_id, pv.color_id, item.quantity);
+      })
+    );
 
     // Build email data — construct variant title from product + size + color
     const shippingAddr = order.shipping_address;

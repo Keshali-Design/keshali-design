@@ -9,8 +9,6 @@ import { formatCOP } from "@/lib/utils";
 import { createOrder } from "./actions";
 import Image from "next/image";
 
-const SHIPPING_COST = 0; // Por coordinar con el cliente
-
 const FIELD =
   "block w-full mt-1 border border-subtle bg-[#FDFBF7] px-3 py-2.5 text-sm text-ink placeholder:text-muted focus:outline-none focus:border-gold transition-colors";
 
@@ -49,11 +47,7 @@ export default function CheckoutPage() {
         sku: i.sku,
         title: `${i.productName} — ${i.sizeLabel} / ${i.colorName}`,
         quantity: i.quantity,
-        price: i.price,
       })),
-      subtotal: cartTotal,
-      shippingCost: SHIPPING_COST,
-      total: cartTotal + SHIPPING_COST,
     });
 
     if (err || !wompiUrl) {

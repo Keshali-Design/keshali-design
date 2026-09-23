@@ -65,12 +65,13 @@ export function verifyWompiWebhook(body: WompiWebhookBody): boolean {
   });
 
   const str = [...values, body.timestamp, secret].join("");
-  const expected = crypto.createHash("sha256").update(str).digest("hex");
+  const expectedHex = crypto.createHash("sha256").update(str).digest("hex");
 
-  console.log("[wompi] checksum expected:", expected);
-  console.log("[wompi] checksum received:", checksum);
+  const expected = Buffer.from(expectedHex, "hex");
+  const received = Buffer.from(checksum ?? "", "hex");
+  if (expected.length !== received.length) return false;
 
-  return expected === checksum;
+  return crypto.timingSafeEqual(expected, received);
 }
 
 export type WompiTransactionStatus =
