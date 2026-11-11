@@ -133,7 +133,7 @@ export default async function HomePage() {
             className="w-full h-auto"
           />
           {/* Desktop: CTAs in the empty band between the tagline and the gold box (% of the artwork). */}
-          <div className="hidden lg:flex absolute left-[52.5%] top-[62%] -translate-x-1/2 -translate-y-1/2 gap-4">
+          <div className="hidden lg:flex absolute left-[52.5%] top-[65%] -translate-x-1/2 -translate-y-1/2 gap-4">
             <HeroButtons />
           </div>
         </div>

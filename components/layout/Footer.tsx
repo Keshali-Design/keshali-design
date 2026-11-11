@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { INSTAGRAM, TIKTOK, WHATSAPP_NUMBER, WHATSAPP_DISPLAY } from "@/lib/site";
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -43,32 +44,32 @@ export function Footer() {
             <ul className="space-y-1.5 text-xs text-muted">
               <li>
                 <a
-                  href="https://wa.me/573159635343"
+                  href={`https://wa.me/${WHATSAPP_NUMBER}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-gold transition-colors"
                 >
-                  WhatsApp: +57 315 9635343
+                  WhatsApp: {WHATSAPP_DISPLAY}
                 </a>
               </li>
               <li>
                 <a
-                  href="https://www.instagram.com/keshalidesign/"
+                  href={INSTAGRAM.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-gold transition-colors"
+                  className="hover:text-gold transition-colors break-all"
                 >
-                  Instagram: @keshalidesign
+                  Instagram: @{INSTAGRAM.handle}
                 </a>
               </li>
               <li>
                 <a
-                  href="https://www.tiktok.com/@keshalidesign"
+                  href={TIKTOK.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-gold transition-colors"
+                  className="hover:text-gold transition-colors break-all"
                 >
-                  Tiktok: @keshalidesign
+                  TikTok: @{TIKTOK.handle}
                 </a>
               </li>
             </ul>

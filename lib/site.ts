@@ -25,10 +25,15 @@ export const SITE_KEYWORDS = [
 
 export const WHATSAPP_NUMBER = "573159635343";
 export const WHATSAPP_DISPLAY = "+57 315 9635343";
-export const SOCIAL_LINKS = [
-  "https://www.instagram.com/keshalidesign/",
-  "https://www.tiktok.com/@keshalidesign",
-];
+export const INSTAGRAM = {
+  handle: "keshalidesign_sublimacion",
+  url: "https://www.instagram.com/keshalidesign_sublimacion/",
+};
+export const TIKTOK = {
+  handle: "keshalidesignsublimacion",
+  url: "https://www.tiktok.com/@keshalidesignsublimacion",
+};
+export const SOCIAL_LINKS = [INSTAGRAM.url, TIKTOK.url];
 
 export function absoluteUrl(path: string) {
   return `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;
