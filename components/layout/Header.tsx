@@ -23,12 +23,12 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 bg-nav border-b border-subtle">
       <div className="max-w-7xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between gap-4">
-        <Link href="/" className="flex flex-col leading-none">
+        <Link href="/" className="flex flex-col leading-none" aria-label="Keshali Design Sublimación — Inicio">
           <span className="text-lg font-extrabold tracking-tight text-gold-700">
             KESHALI
           </span>
-          <span className="text-[9.5px] font-normal uppercase tracking-[0.34em] text-label mt-1">
-            Design
+          <span className="text-[9.5px] font-normal uppercase tracking-[0.22em] text-label mt-1 whitespace-nowrap">
+            Design Sublimación
           </span>
         </Link>
 

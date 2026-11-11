@@ -9,12 +9,12 @@ export function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mb-8">
           <div>
             <div className="text-base font-extrabold text-gold">KESHALI</div>
-            <div className="text-[9px] font-normal uppercase tracking-[0.34em] text-muted mb-3">
-              Design
+            <div className="text-[9px] font-normal uppercase tracking-[0.22em] text-muted mb-3">
+              Design Sublimación
             </div>
-            <p className="text-sidebarText/70 text-xs max-w-[220px] leading-relaxed">
-              Tu esencia en cada diseño. Productos personalizados con el mejor
-              acabado.
+            <p className="text-sidebarText/70 text-xs max-w-[240px] leading-relaxed">
+              Tu esencia en cada diseño. Sublimación, estampación y personalización
+              de productos con el mejor acabado.
             </p>
           </div>
 
@@ -78,6 +78,8 @@ export function Footer() {
             <p className="label-sm text-muted mb-3">Novedades</p>
             <div className="flex">
               <input
+                type="email"
+                aria-label="Tu correo para recibir novedades"
                 placeholder="Tu correo"
                 className="flex-1 min-w-0 border border-[#43392F] bg-[#2C251F] text-sidebarText placeholder:text-muted px-3 py-2.5 text-xs"
               />
@@ -89,7 +91,7 @@ export function Footer() {
         </div>
 
         <div className="border-t border-[#3A312A] pt-6 text-center text-xs text-muted">
-          &copy; {year} Keshali Design. Todos los derechos reservados.
+          &copy; {year} Keshali Design Sublimación. Todos los derechos reservados.
         </div>
       </div>
     </footer>

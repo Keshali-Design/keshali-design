@@ -1,7 +1,10 @@
 import { createClient } from "@/lib/supabase/server";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 
-export const metadata = { title: "Admin — Keshali Design" };
+export const metadata = {
+  title: { absolute: "Admin — Keshali Design" },
+  robots: { index: false, follow: false },
+};
 
 export default async function AdminLayout({
   children,

@@ -4,7 +4,7 @@ import type { CatalogProduct } from "@/lib/supabase/queries";
 import { formatCOP } from "@/lib/utils";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 
-export function ProductCard({ product }: { product: CatalogProduct }) {
+export function ProductCard({ product, badge }: { product: CatalogProduct; badge?: string }) {
   const inStock = product.total_stock > 0;
   const priceLabel =
     product.min_price === product.max_price
@@ -25,6 +25,11 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
             />
           ) : (
             <ImagePlaceholder className="w-full h-full" />
+          )}
+          {badge && (
+            <span className="absolute top-2 left-2 bg-ink text-white text-[10px] font-extrabold uppercase tracking-wide px-2 py-1">
+              {badge}
+            </span>
           )}
         </div>
       </Link>

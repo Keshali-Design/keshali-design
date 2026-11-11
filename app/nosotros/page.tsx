@@ -1,4 +1,11 @@
-export const metadata = { title: "Nosotros — Keshali Design" };
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Nosotros",
+  description:
+    "Conoce Keshali Design Sublimación: misión, visión y valores de nuestra marca de sublimación, estampación y personalización de productos en Colombia.",
+  alternates: { canonical: "/nosotros" },
+};
 
 export default function NosotrosPage() {
   return (

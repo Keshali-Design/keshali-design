@@ -1,46 +1,136 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { getCategories, getCatalogProducts } from "@/lib/supabase/queries";
+import {
+  getCategories,
+  getCatalogProducts,
+  getBestSellerIds,
+  getMostViewedIds,
+  type CatalogProduct,
+} from "@/lib/supabase/queries";
 import { ProductCard } from "@/components/store/ProductCard";
 import { CategoryCard } from "@/components/store/CategoryCard";
+import { SITE_NAME, SITE_TAGLINE, WHATSAPP_NUMBER } from "@/lib/site";
 
 export const revalidate = 60;
 
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
+
+const SECTION_SIZE = 8;
+const MIN_SECTION_SIZE = 4;
+
+type RankedItem = { product: CatalogProduct; ranked: boolean };
+
+// Real ranking first; while there isn't enough sales/view data yet, top up with
+// other catalog products (without the badge) so the section never looks empty.
+function buildRanking(ids: string[], all: CatalogProduct[], exclude: Set<string>): RankedItem[] {
+  const byId = new Map(all.map((p) => [p.product_id, p]));
+  const ranked = ids
+    .map((id) => byId.get(id))
+    .filter((p): p is CatalogProduct => !!p)
+    .slice(0, SECTION_SIZE)
+    .map((product) => ({ product, ranked: true }));
+
+  if (ranked.length >= MIN_SECTION_SIZE) return ranked;
+
+  const used = new Set(ranked.map((r) => r.product.product_id));
+  const fillers = all
+    .filter((p) => !used.has(p.product_id) && !exclude.has(p.product_id) && p.total_stock > 0)
+    .slice(0, MIN_SECTION_SIZE - ranked.length)
+    .map((product) => ({ product, ranked: false }));
+
+  return [...ranked, ...fillers];
+}
+
+function ProductSection({
+  title,
+  subtitle,
+  badge,
+  items,
+  tone,
+}: {
+  title: string;
+  subtitle: string;
+  badge: string;
+  items: RankedItem[];
+  tone: "white" | "section";
+}) {
+  if (items.length === 0) return null;
+  return (
+    <section className={`${tone === "white" ? "bg-white" : "bg-section"} border-b border-subtle`}>
+      <div className="section">
+        <div className="flex items-baseline justify-between gap-4 flex-wrap mb-8">
+          <div>
+            <h2 className="section-title">{title}</h2>
+            <p className="text-body">{subtitle}</p>
+          </div>
+          <Link href="/catalogo" className="btn-ghost hidden sm:inline-flex">
+            Ver todo
+          </Link>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {items.map(({ product, ranked }) => (
+            <ProductCard key={product.product_id} product={product} badge={ranked ? badge : undefined} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default async function HomePage() {
-  const [categories, featured] = await Promise.all([
+  const [categories, allProducts, bestSellerIds, mostViewedIds] = await Promise.all([
     getCategories(),
     getCatalogProducts(),
+    getBestSellerIds(SECTION_SIZE),
+    getMostViewedIds(SECTION_SIZE),
   ]);
+
+  const bestSellers = buildRanking(bestSellerIds, allProducts, new Set());
+  const mostViewed = buildRanking(
+    mostViewedIds,
+    allProducts,
+    new Set(bestSellers.map((b) => b.product.product_id))
+  );
 
   return (
     <>
-      {/* Hero */}
-      <section className="relative min-h-[560px] flex items-center overflow-hidden bg-black">
-        <Image
-          src="/hero-banner.png"
-          alt="Keshali Design"
-          fill
-          className="object-cover object-center opacity-80"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
-        <div className="section relative z-10">
-          <p className="text-gold font-medium tracking-widest uppercase text-sm mb-4">
-            Personalización Premium
-          </p>
-          <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
-            Tu esencia en{" "}
-            <span className="gold-text">cada diseño</span>
-          </h1>
-          <p className="text-muted text-lg max-w-xl mb-8 leading-relaxed">
-            Creamos productos únicos que reflejan tu identidad. Sublimación y estampado de alta calidad.
-          </p>
-          <div className="flex flex-wrap gap-4">
+      {/* Hero banner — shown whole: the artwork already carries its own text */}
+      <section className="bg-[#0A1B2F]">
+        <div className="max-w-[1600px] mx-auto">
+          <Image
+            src="/hero-banner.webp"
+            alt={`${SITE_NAME}: personalización premium, sublimación y estampado. ${SITE_TAGLINE}.`}
+            width={1600}
+            height={525}
+            priority
+            sizes="100vw"
+            className="w-full h-auto"
+          />
+        </div>
+      </section>
+
+      {/* Intro — the page's H1, carrying the brand + main search keywords */}
+      <section className="bg-white border-b border-subtle">
+        <div className="section py-10 md:py-12 grid md:grid-cols-[1fr_auto] gap-6 md:gap-10 items-center">
+          <div>
+            <p className="eyebrow mb-3">{SITE_NAME}</p>
+            <h1 className="text-3xl md:text-4xl font-bold leading-tight text-ink mb-3">
+              Sublimación, estampación y <span className="gold-text">personalización</span> a tu medida
+            </h1>
+            <p className="text-body max-w-2xl leading-relaxed">
+              {SITE_TAGLINE}. Creamos mugs, camisetas, buzos, gorras, cojines y regalos personalizados con
+              sublimación y estampado DTF de alta calidad.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3">
             <Link href="/catalogo" className="btn-gold">
               Ver catálogo
             </Link>
             <a
-              href="https://wa.me/573159635343"
+              href={`https://wa.me/${WHATSAPP_NUMBER}`}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-ghost"
@@ -53,10 +143,10 @@ export default async function HomePage() {
 
       {/* Categories */}
       {categories.length > 0 && (
-        <section className="section bg-white border-b border-subtle">
+        <section className="section">
           <h2 className="section-title">Categorías</h2>
           <p className="text-body mb-8">
-            Explora nuestra colección de productos personalizables
+            Explora nuestros productos personalizables con sublimación y estampación
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {categories.map((cat, i) => (
@@ -72,34 +162,21 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* Featured products */}
-      {featured.length > 0 && (
-        <section className="bg-section border-b border-subtle">
-          <div className="section">
-            <div className="flex items-baseline justify-between gap-4 flex-wrap mb-8">
-              <div>
-                <h2 className="section-title">Catálogo destacado</h2>
-                <p className="text-body">
-                  Los productos más populares de nuestra tienda
-                </p>
-              </div>
-              <Link href="/catalogo" className="btn-ghost hidden sm:inline-flex">
-                Ver todo
-              </Link>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {featured.slice(0, 12).map((p) => (
-                <ProductCard key={p.product_id} product={p} />
-              ))}
-            </div>
-            <div className="text-center mt-10 sm:hidden">
-              <Link href="/catalogo" className="btn-ghost">
-                Ver todos los productos
-              </Link>
-            </div>
-          </div>
-        </section>
-      )}
+      <ProductSection
+        title="Lo más vendido"
+        subtitle="Los favoritos de nuestros clientes"
+        badge="Más vendido"
+        items={bestSellers}
+        tone="white"
+      />
+
+      <ProductSection
+        title="Lo más buscado"
+        subtitle="Los productos que más están mirando en la tienda"
+        badge="Tendencia"
+        items={mostViewed}
+        tone="section"
+      />
 
       {/* About teaser */}
       <section className="section bg-white">

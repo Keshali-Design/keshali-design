@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { CategoryIcon } from "@/components/ui/CategoryIcon";
+import { catalogUrl } from "@/app/catalogo/catalogUrl";
 
 type Props = {
   name: string;
@@ -11,7 +12,7 @@ type Props = {
 
 export function CategoryCard({ name, slug, image, index = 0 }: Props) {
   return (
-    <Link href={`/catalogo?categoria=${slug}`} className="group card-product flex flex-col">
+    <Link href={catalogUrl({ categoria: slug })} className="group card-product flex flex-col">
       <div className="relative aspect-[4/3] overflow-hidden bg-subtle2">
         {image ? (
           <Image

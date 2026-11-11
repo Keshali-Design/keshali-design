@@ -1,6 +1,9 @@
+import { cache } from "react";
 import { createClient } from "./server";
 
 // ── Types ─────────────────────────────────────────────────────
+
+export type ProductSize = { label: string; sortOrder: number; typeName: string };
 
 export type CatalogProduct = {
   product_id: string;
@@ -18,6 +21,7 @@ export type CatalogProduct = {
   max_price: number;
   primary_image_url: string | null;
   total_stock: number;
+  sizes: ProductSize[];
 };
 
 export type ProductVariantDetail = {
@@ -45,6 +49,9 @@ export type ProductDetail = {
   price_varies_by_color: boolean;
   category_name: string;
   category_slug: string;
+  subcategory_name: string | null;
+  subcategory_slug: string | null;
+  technique: string | null;
   size_type_name: string;
   unit_label: string;
   variants: ProductVariantDetail[];
@@ -55,7 +62,7 @@ export type Subcategory = { id: string; name: string; slug: string; parent_id: s
 
 // ── Categories ────────────────────────────────────────────────
 
-export async function getCategories(): Promise<Category[]> {
+export const getCategories = cache(async (): Promise<Category[]> => {
   const supabase = await createClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data } = await (supabase.from("categories") as any)
@@ -64,9 +71,9 @@ export async function getCategories(): Promise<Category[]> {
     .is("parent_id", null)
     .order("name");
   return (data as Category[]) ?? [];
-}
+});
 
-export async function getSubcategories(): Promise<Subcategory[]> {
+export const getSubcategories = cache(async (): Promise<Subcategory[]> => {
   const supabase = await createClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data } = await (supabase.from("categories") as any)
@@ -75,7 +82,7 @@ export async function getSubcategories(): Promise<Subcategory[]> {
     .not("parent_id", "is", null)
     .order("name");
   return (data as Subcategory[]) ?? [];
-}
+});
 
 // ── Catalog listing (one card per product) ────────────────────
 
@@ -90,7 +97,7 @@ export async function getCatalogProducts(options?: {
   // Use catalog_view, group by product
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let query = (supabase.from("catalog_view") as any)
-    .select("product_id, product_name, description, category_id, category_name, category_slug, subcategory_id, subcategory_name, subcategory_slug, technique, price_varies_by_color, price, stock, primary_image_url, variant_active, product_active, category_active");
+    .select("product_id, product_name, description, category_id, category_name, category_slug, subcategory_id, subcategory_name, subcategory_slug, technique, price_varies_by_color, price, stock, primary_image_url, variant_active, product_active, category_active, size_label, size_sort_order, size_type_name");
 
   if (options?.categorySlug) {
     query = query.eq("category_slug", options.categorySlug);
@@ -120,6 +127,9 @@ export async function getCatalogProducts(options?: {
     variant_active: boolean;
     product_active: boolean;
     category_active: boolean;
+    size_label: string;
+    size_sort_order: number;
+    size_type_name: string;
   }[] | null };
 
   if (!data) return [];
@@ -129,6 +139,7 @@ export async function getCatalogProducts(options?: {
   const map = new Map<string, CatalogProduct>();
 
   for (const row of active) {
+    const size: ProductSize = { label: row.size_label, sortOrder: row.size_sort_order, typeName: row.size_type_name };
     const existing = map.get(row.product_id);
     if (!existing) {
       map.set(row.product_id, {
@@ -147,11 +158,13 @@ export async function getCatalogProducts(options?: {
         max_price: row.price,
         primary_image_url: row.primary_image_url,
         total_stock: row.stock,
+        sizes: [size],
       });
     } else {
       existing.min_price = Math.min(existing.min_price, row.price);
       existing.max_price = Math.max(existing.max_price, row.price);
       existing.total_stock += row.stock;
+      if (!existing.sizes.some((s) => s.label === size.label)) existing.sizes.push(size);
       if (!existing.primary_image_url && row.primary_image_url) {
         existing.primary_image_url = row.primary_image_url;
       }
@@ -186,7 +199,8 @@ export async function getPriceRange(): Promise<{ min: number; max: number }> {
 
 // ── Product detail (all variants) ────────────────────────────
 
-export async function getProductDetail(productId: string): Promise<ProductDetail | null> {
+// cache(): generateMetadata and the page both call this in the same request.
+export const getProductDetail = cache(async (productId: string): Promise<ProductDetail | null> => {
   const supabase = await createClient();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -216,6 +230,9 @@ export async function getProductDetail(productId: string): Promise<ProductDetail
       price_varies_by_color: boolean;
       category_name: string;
       category_slug: string;
+      subcategory_name: string | null;
+      subcategory_slug: string | null;
+      technique: string | null;
       size_type_name: string;
       unit_label: string;
     }[] | null };
@@ -230,6 +247,9 @@ export async function getProductDetail(productId: string): Promise<ProductDetail
     price_varies_by_color: first.price_varies_by_color,
     category_name: first.category_name,
     category_slug: first.category_slug,
+    subcategory_name: first.subcategory_name,
+    subcategory_slug: first.subcategory_slug,
+    technique: first.technique,
     size_type_name: first.size_type_name,
     unit_label: first.unit_label,
     variants: data.map((v) => ({
@@ -250,6 +270,25 @@ export async function getProductDetail(productId: string): Promise<ProductDetail
       primary_image_url: v.primary_image_url,
     })),
   };
+});
+
+// ── Rankings (home: "más vendido" / "más buscado") ───────────
+
+async function getRankedProductIds(fn: "get_best_selling_products" | "get_most_viewed_products", limit: number) {
+  const supabase = await createClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (supabase as any).rpc(fn, { p_limit: limit });
+  // Before migration 007 runs the RPC doesn't exist — degrade to "no data".
+  if (error || !data) return [];
+  return (data as { product_id: string }[]).map((r) => r.product_id);
+}
+
+export function getBestSellerIds(limit = 8) {
+  return getRankedProductIds("get_best_selling_products", limit);
+}
+
+export function getMostViewedIds(limit = 8) {
+  return getRankedProductIds("get_most_viewed_products", limit);
 }
 
 // ── Variant images ────────────────────────────────────────────
