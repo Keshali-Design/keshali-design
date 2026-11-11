@@ -9,9 +9,14 @@ const LINK = "block px-2.5 py-1.5 text-xs transition-colors";
 const LINK_ACTIVE = "bg-gold-100 text-gold-700 font-bold";
 const LINK_IDLE = "text-body hover:bg-subtle2 hover:text-ink";
 
+function Count({ n }: { n: number }) {
+  return <span className="ml-1.5 text-[10px] font-normal text-muted tabular-nums">{n}</span>;
+}
+
 export function CatalogSidebar({
   categories,
   subcategories,
+  counts,
   sizeGroups,
   techniques,
   priceRange,
@@ -19,12 +24,19 @@ export function CatalogSidebar({
 }: {
   categories: Category[];
   subcategories: Subcategory[];
+  counts: Record<string, number>;
   sizeGroups: SizeGroup[];
   techniques: string[];
   priceRange: { min: number; max: number };
   current: CatalogParams;
 }) {
   const hasExtraFilters = !!(current.talla || current.tecnica || current.precioMax);
+
+  // Empty (sub)categories lead to a dead end, so they're hidden until they get
+  // products — except the one being viewed, so a direct link isn't stranded.
+  const isCurrentCat = (c: Category) => current.categoria === c.slug;
+  const isCurrentSub = (c: Category, s: Subcategory) => isCurrentCat(c) && current.subcategoria === s.slug;
+  const visibleCategories = categories.filter((c) => counts[c.id] || isCurrentCat(c));
 
   return (
     <div className="flex flex-col gap-7">
@@ -40,8 +52,10 @@ export function CatalogSidebar({
               Todo el catálogo
             </Link>
           </li>
-          {categories.map((cat) => {
-            const subs = subcategories.filter((s) => s.parent_id === cat.id);
+          {visibleCategories.map((cat) => {
+            const subs = subcategories.filter(
+              (s) => s.parent_id === cat.id && (counts[s.id] || isCurrentSub(cat, s))
+            );
             const catActive = current.categoria === cat.slug && !current.subcategoria;
             return (
               <li key={cat.id}>
@@ -50,6 +64,7 @@ export function CatalogSidebar({
                   className={`${LINK} font-semibold ${catActive ? LINK_ACTIVE : LINK_IDLE}`}
                 >
                   {cat.name}
+                  <Count n={counts[cat.id] ?? 0} />
                 </Link>
                 {subs.length > 0 && (
                   <ul className="ml-2.5 border-l border-subtle pl-1.5 my-0.5 flex flex-col gap-0.5">
@@ -62,6 +77,7 @@ export function CatalogSidebar({
                             className={`${LINK} ${subActive ? LINK_ACTIVE : LINK_IDLE}`}
                           >
                             {sub.name}
+                            <Count n={counts[sub.id] ?? 0} />
                           </Link>
                         </li>
                       );

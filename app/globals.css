@@ -103,3 +103,10 @@
     border-color: #c09449;
   }
 }
+
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: #e6d9bf transparent;
+  }
+}

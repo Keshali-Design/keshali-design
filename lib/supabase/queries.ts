@@ -180,6 +180,19 @@ export async function getCatalogProducts(options?: {
   return results;
 }
 
+// Whole active catalog, deduped per request (catalog page + its metadata + sitemap).
+export const getAllCatalogProducts = cache(() => getCatalogProducts());
+
+// Active product count per category id and per subcategory id.
+export const getCategoryProductCounts = cache(async () => {
+  const counts = new Map<string, number>();
+  for (const p of await getAllCatalogProducts()) {
+    counts.set(p.category_id, (counts.get(p.category_id) ?? 0) + 1);
+    if (p.subcategory_id) counts.set(p.subcategory_id, (counts.get(p.subcategory_id) ?? 0) + 1);
+  }
+  return counts;
+});
+
 // ── Price range (for the catalog price slider) ────────────────
 
 export async function getPriceRange(): Promise<{ min: number; max: number }> {

@@ -1,5 +1,10 @@
 import type { MetadataRoute } from "next";
-import { getCategories, getSubcategories, getCatalogProducts } from "@/lib/supabase/queries";
+import {
+  getCategories,
+  getSubcategories,
+  getAllCatalogProducts,
+  getCategoryProductCounts,
+} from "@/lib/supabase/queries";
 import { absoluteUrl } from "@/lib/site";
 import { catalogUrl } from "./catalogo/catalogUrl";
 
@@ -9,13 +14,16 @@ const xmlUrl = (path: string) => absoluteUrl(path).replace(/&/g, "&amp;");
 export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [categories, subcategories, products] = await Promise.all([
+  const [allCategories, subcategories, products, counts] = await Promise.all([
     getCategories(),
     getSubcategories(),
-    getCatalogProducts(),
+    getAllCatalogProducts(),
+    getCategoryProductCounts(),
   ]);
 
   const now = new Date();
+  // Empty category pages are thin content — list them once they have products.
+  const categories = allCategories.filter((c) => counts.get(c.id));
   const catSlugById = new Map(categories.map((c) => [c.id, c.slug]));
 
   return [
@@ -28,7 +36,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     })),
     ...subcategories
-      .filter((s) => catSlugById.has(s.parent_id))
+      .filter((s) => catSlugById.has(s.parent_id) && counts.get(s.id))
       .map((s) => ({
         url: xmlUrl(catalogUrl({ categoria: catSlugById.get(s.parent_id), subcategoria: s.slug })),
         lastModified: now,

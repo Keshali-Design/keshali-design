@@ -3,6 +3,8 @@ import Link from "next/link";
 import { SlidersHorizontal } from "lucide-react";
 import {
   getCatalogProducts,
+  getAllCatalogProducts,
+  getCategoryProductCounts,
   getCategories,
   getSubcategories,
   getPriceRange,
@@ -32,8 +34,14 @@ function resolveSelection(params: CatalogParams, categories: Category[], subcate
 
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
   const params = await searchParams;
-  const [categories, subcategories] = await Promise.all([getCategories(), getSubcategories()]);
+  const [categories, subcategories, counts] = await Promise.all([
+    getCategories(),
+    getSubcategories(),
+    getCategoryProductCounts(),
+  ]);
   const { category, subcategory } = resolveSelection(params, categories, subcategories);
+  const selected = subcategory ?? category;
+  const isEmpty = !!selected && !counts.get(selected.id);
 
   const name = subcategory
     ? `${category ? `${category.name} · ` : ""}${subcategory.name}`
@@ -47,7 +55,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
     : `Catálogo de ${SITE_NAME}: mugs, camisetas, buzos, gorras, cojines y regalos personalizados con sublimación y estampación DTF.`;
 
   // Canonical = the category/subcategory page; size/technique/price combos are
-  // thin variations, so they're kept out of the index (links still followed).
+  // thin variations, and empty categories have no content — keep both out of the index.
   const canonical = catalogUrl({ categoria: category?.slug, subcategoria: subcategory?.slug });
   const isFilteredVariant = !!(params.talla || params.tecnica || params.precioMax);
 
@@ -56,7 +64,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
     description,
     alternates: { canonical },
     openGraph: { title, description, url: canonical },
-    robots: isFilteredVariant ? { index: false, follow: true } : undefined,
+    robots: isFilteredVariant || isEmpty ? { index: false, follow: true } : undefined,
   };
 }
 
@@ -64,16 +72,21 @@ export default async function CatalogoPage({ searchParams }: Props) {
   const params = await searchParams;
   const maxPrice = params.precioMax ? Number(params.precioMax) : undefined;
 
-  const [categories, subcategories, priceRange, baseProducts] = await Promise.all([
+  const narrowed = !!(params.categoria || params.subcategoria || params.tecnica || maxPrice != null);
+  const [categories, subcategories, priceRange, counts, baseProducts] = await Promise.all([
     getCategories(),
     getSubcategories(),
     getPriceRange(),
-    getCatalogProducts({
-      categorySlug: params.categoria,
-      subcategorySlug: params.subcategoria,
-      technique: params.tecnica,
-      maxPrice,
-    }),
+    getCategoryProductCounts(),
+    // Unfiltered view reuses the cached full catalog the counts were built from.
+    narrowed
+      ? getCatalogProducts({
+          categorySlug: params.categoria,
+          subcategorySlug: params.subcategoria,
+          technique: params.tecnica,
+          maxPrice,
+        })
+      : getAllCatalogProducts(),
   ]);
 
   const { category, subcategory } = resolveSelection(params, categories, subcategories);
@@ -105,6 +118,7 @@ export default async function CatalogoPage({ searchParams }: Props) {
     <CatalogSidebar
       categories={categories}
       subcategories={subcategories}
+      counts={Object.fromEntries(counts)}
       sizeGroups={sizeGroups}
       techniques={TECHNIQUES}
       priceRange={priceRange}
@@ -151,7 +165,8 @@ export default async function CatalogoPage({ searchParams }: Props) {
 
       <div className="grid grid-cols-1 lg:grid-cols-[230px_1fr] gap-8 items-start">
         {/* Mobile: filters collapse behind a toggle so the grid stays above the fold */}
-        <details className="lg:hidden border border-subtle bg-white">
+        {/* key: remount (closed) after every filter change so the updated results are in view. */}
+        <details key={catalogUrl(params)} className="lg:hidden border border-subtle bg-white">
           <summary className="flex items-center gap-2 px-4 py-3 text-sm font-semibold text-ink cursor-pointer select-none">
             <SlidersHorizontal size={16} />
             Filtros{filterCount > 0 && <span className="text-gold-700">({filterCount})</span>}
@@ -159,7 +174,14 @@ export default async function CatalogoPage({ searchParams }: Props) {
           <div className="px-4 pb-5 pt-1">{sidebar}</div>
         </details>
 
-        <aside className="hidden lg:block lg:sticky lg:top-24">{sidebar}</aside>
+        {/* Sticky + capped to the viewport with its own scroll: otherwise a long
+            category tree pushes Tallas/Técnica/Precio below the fold, unreachable. */}
+        <aside
+          aria-label="Filtros del catálogo"
+          className="hidden lg:block lg:sticky lg:top-24 lg:max-h-[calc(100vh-7.5rem)] lg:overflow-y-auto overscroll-contain scrollbar-thin pr-3 pb-6"
+        >
+          {sidebar}
+        </aside>
 
         {products.length === 0 ? (
           <div className="text-center py-20 text-muted">
