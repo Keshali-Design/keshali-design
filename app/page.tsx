@@ -44,6 +44,24 @@ function buildRanking(ids: string[], all: CatalogProduct[], exclude: Set<string>
   return [...ranked, ...fillers];
 }
 
+function HeroButtons() {
+  return (
+    <>
+      <Link href="/catalogo" className="btn-gold shadow-lg shadow-black/30">
+        Ver catálogo
+      </Link>
+      <a
+        href={`https://wa.me/${WHATSAPP_NUMBER}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="border border-gold text-gold hover:bg-gold hover:text-white font-extrabold text-[13px] tracking-wide px-6 py-3.5 transition-colors duration-150 bg-[#0A1B2F]/60 backdrop-blur-sm"
+      >
+        Hablar por WhatsApp
+      </a>
+    </>
+  );
+}
+
 function ProductSection({
   title,
   subtitle,
@@ -97,9 +115,14 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* Hero banner — shown whole: the artwork already carries its own text */}
+      {/* Hero — the banner artwork carries its own headline, so only the CTAs sit on top.
+          Its text is baked into the image, so it's shown whole (never cropped). */}
       <section className="bg-[#0A1B2F]">
-        <div className="max-w-[1600px] mx-auto">
+        {/* The visible headline lives in the artwork; this H1 states the same for search engines and screen readers. */}
+        <h1 className="sr-only">
+          {SITE_NAME}: sublimación, estampación y personalización. {SITE_TAGLINE}.
+        </h1>
+        <div className="relative max-w-[1600px] mx-auto">
           <Image
             src="/hero-banner.webp"
             alt={`${SITE_NAME}: personalización premium, sublimación y estampado. ${SITE_TAGLINE}.`}
@@ -109,35 +132,14 @@ export default async function HomePage() {
             sizes="100vw"
             className="w-full h-auto"
           />
+          {/* Desktop: CTAs in the empty band between the tagline and the gold box (% of the artwork). */}
+          <div className="hidden lg:flex absolute left-[52.5%] top-[62%] -translate-x-1/2 -translate-y-1/2 gap-4">
+            <HeroButtons />
+          </div>
         </div>
-      </section>
-
-      {/* Intro — the page's H1, carrying the brand + main search keywords */}
-      <section className="bg-white border-b border-subtle">
-        <div className="section py-10 md:py-12 grid md:grid-cols-[1fr_auto] gap-6 md:gap-10 items-center">
-          <div>
-            <p className="eyebrow mb-3">{SITE_NAME}</p>
-            <h1 className="text-3xl md:text-4xl font-bold leading-tight text-ink mb-3">
-              Sublimación, estampación y <span className="gold-text">personalización</span> a tu medida
-            </h1>
-            <p className="text-body max-w-2xl leading-relaxed">
-              {SITE_TAGLINE}. Creamos mugs, camisetas, buzos, gorras, cojines y regalos personalizados con
-              sublimación y estampado DTF de alta calidad.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <Link href="/catalogo" className="btn-gold">
-              Ver catálogo
-            </Link>
-            <a
-              href={`https://wa.me/${WHATSAPP_NUMBER}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-ghost"
-            >
-              Hablar por WhatsApp
-            </a>
-          </div>
+        {/* Below lg the artwork is too short to overlay; CTAs go under it. */}
+        <div className="lg:hidden flex flex-wrap justify-center gap-3 px-4 py-5">
+          <HeroButtons />
         </div>
       </section>
 
