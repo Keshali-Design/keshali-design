@@ -1,4 +1,5 @@
 import { createAdminClient } from "@/lib/supabase/admin";
+import { fetchAllPages } from "@/lib/supabase/paginate";
 import { StockManager } from "@/components/admin/StockManager";
 
 export const metadata = { title: "Stock — Admin" };
@@ -62,10 +63,14 @@ export default async function StockPage({
       .select("category_id, color_id")
       .eq("active", true) as Promise<{ data: { category_id: string; color_id: string }[] | null }>,
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (supabase.from("inventory") as any)
-      .select("id, category_id, size_id, color_id, stock")
-      .order("category_id") as Promise<{ data: { id: string; category_id: string; size_id: string; color_id: string; stock: number }[] | null }>,
+    // Inventory outgrew the API's 1000-row cap (rows past it showed as stock 0).
+    fetchAllPages<{ id: string; category_id: string; size_id: string; color_id: string; stock: number }>((from, to) =>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (supabase.from("inventory") as any)
+        .select("id, category_id, size_id, color_id, stock")
+        .order("id")
+        .range(from, to)
+    ).then((data) => ({ data })),
   ]);
 
   // Stock unit = subcategory when the main category has one, otherwise the

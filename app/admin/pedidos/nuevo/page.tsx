@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { fetchAllPages } from "@/lib/supabase/paginate";
 import { NuevoPedidoForm } from "@/components/admin/NuevoPedidoForm";
 
 export const metadata = { title: "Nuevo pedido — Admin" };
@@ -8,16 +9,20 @@ export const metadata = { title: "Nuevo pedido — Admin" };
 export default async function NuevoPedidoPage() {
   const supabase = createAdminClient();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: variants } = await (supabase.from("product_variants") as any)
-    .select(`
-      id, sku, price_override,
-      products ( name, price_varies_by_color, product_sizes ( size_id, price ) ),
-      colors ( id, name, hex_code ),
-      sizes ( id, label, alt_label )
-    `)
-    .eq("active", true)
-    .order("sku") as { data: VariantOpt[] | null };
+  // More active variants than the API's 1000-row cap — page through all of them.
+  const variants = await fetchAllPages<VariantOpt>((from, to) =>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (supabase.from("product_variants") as any)
+      .select(`
+        id, sku, price_override,
+        products ( name, price_varies_by_color, product_sizes ( size_id, price ) ),
+        colors ( id, name, hex_code ),
+        sizes ( id, label, alt_label )
+      `)
+      .eq("active", true)
+      .order("sku")
+      .range(from, to)
+  );
 
   return (
     <div className="max-w-3xl">
@@ -32,7 +37,7 @@ export default async function NuevoPedidoPage() {
       <h1 className="text-2xl font-bold text-ink mb-1">Nuevo pedido manual</h1>
       <p className="text-body text-sm mb-8">Para pedidos recibidos por WhatsApp u otros canales.</p>
 
-      <NuevoPedidoForm variants={variants ?? []} />
+      <NuevoPedidoForm variants={variants} />
     </div>
   );
 }

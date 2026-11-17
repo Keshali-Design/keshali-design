@@ -1,5 +1,6 @@
 import { cache } from "react";
 import { createClient } from "./server";
+import { fetchAllPages } from "./paginate";
 
 // ── Types ─────────────────────────────────────────────────────
 
@@ -86,6 +87,26 @@ export const getSubcategories = cache(async (): Promise<Subcategory[]> => {
 
 // ── Catalog listing (one card per product) ────────────────────
 
+type CatalogRow = {
+  product_id: string;
+  product_name: string;
+  description: string | null;
+  category_id: string;
+  category_name: string;
+  category_slug: string;
+  subcategory_id: string | null;
+  subcategory_name: string | null;
+  subcategory_slug: string | null;
+  technique: string | null;
+  price_varies_by_color: boolean;
+  price: number;
+  stock: number;
+  primary_image_url: string | null;
+  size_label: string;
+  size_sort_order: number;
+  size_type_name: string;
+};
+
 export async function getCatalogProducts(options?: {
   categorySlug?: string;
   subcategorySlug?: string;
@@ -94,51 +115,23 @@ export async function getCatalogProducts(options?: {
 }): Promise<CatalogProduct[]> {
   const supabase = await createClient();
 
-  // Use catalog_view, group by product
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let query = (supabase.from("catalog_view") as any)
-    .select("product_id, product_name, description, category_id, category_name, category_slug, subcategory_id, subcategory_name, subcategory_slug, technique, price_varies_by_color, price, stock, primary_image_url, variant_active, product_active, category_active, size_label, size_sort_order, size_type_name");
+  // More variant rows than the API's 1000-row cap — a single select silently dropped whole products.
+  const rows = await fetchAllPages<CatalogRow>((from, to) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let query = (supabase.from("catalog_view") as any)
+      .select("product_id, product_name, description, category_id, category_name, category_slug, subcategory_id, subcategory_name, subcategory_slug, technique, price_varies_by_color, price, stock, primary_image_url, size_label, size_sort_order, size_type_name")
+      .eq("variant_active", true)
+      .eq("product_active", true)
+      .eq("category_active", true);
+    if (options?.categorySlug) query = query.eq("category_slug", options.categorySlug);
+    if (options?.subcategorySlug) query = query.eq("subcategory_slug", options.subcategorySlug);
+    if (options?.technique) query = query.eq("technique", options.technique);
+    return query.order("variant_id").range(from, to);
+  });
 
-  if (options?.categorySlug) {
-    query = query.eq("category_slug", options.categorySlug);
-  }
-  if (options?.subcategorySlug) {
-    query = query.eq("subcategory_slug", options.subcategorySlug);
-  }
-  if (options?.technique) {
-    query = query.eq("technique", options.technique);
-  }
-
-  const { data } = await query as { data: {
-    product_id: string;
-    product_name: string;
-    description: string | null;
-    category_id: string;
-    category_name: string;
-    category_slug: string;
-    subcategory_id: string | null;
-    subcategory_name: string | null;
-    subcategory_slug: string | null;
-    technique: string | null;
-    price_varies_by_color: boolean;
-    price: number;
-    stock: number;
-    primary_image_url: string | null;
-    variant_active: boolean;
-    product_active: boolean;
-    category_active: boolean;
-    size_label: string;
-    size_sort_order: number;
-    size_type_name: string;
-  }[] | null };
-
-  if (!data) return [];
-
-  // Filter active only + group by product
-  const active = data.filter((r) => r.variant_active && r.product_active && r.category_active);
   const map = new Map<string, CatalogProduct>();
 
-  for (const row of active) {
+  for (const row of rows) {
     const size: ProductSize = { label: row.size_label, sortOrder: row.size_sort_order, typeName: row.size_type_name };
     const existing = map.get(row.product_id);
     if (!existing) {
@@ -195,19 +188,14 @@ export const getCategoryProductCounts = cache(async () => {
 
 // ── Price range (for the catalog price slider) ────────────────
 
+// Derived from the cached full catalog: no second (and row-capped) query.
 export async function getPriceRange(): Promise<{ min: number; max: number }> {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from("catalog_view")
-    .select("price")
-    .eq("variant_active", true)
-    .eq("product_active", true)
-    .eq("category_active", true) as { data: { price: number }[] | null };
-
-  if (!data || data.length === 0) return { min: 0, max: 200000 };
-
-  const prices = data.map((r) => r.price);
-  return { min: Math.min(...prices), max: Math.max(...prices) };
+  const products = await getAllCatalogProducts();
+  if (products.length === 0) return { min: 0, max: 200000 };
+  return {
+    min: Math.min(...products.map((p) => p.min_price)),
+    max: Math.max(...products.map((p) => p.max_price)),
+  };
 }
 
 // ── Product detail (all variants) ────────────────────────────
