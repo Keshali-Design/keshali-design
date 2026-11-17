@@ -24,6 +24,7 @@ export function Footer() {
             <ul className="space-y-1.5 text-xs text-muted">
               {[
                 { href: "/catalogo", label: "Catálogo" },
+                { href: "/como-hacer-pedido", label: "¿Cómo hacer mi pedido?" },
                 { href: "/nosotros", label: "Nosotros" },
                 { href: "/contacto", label: "Contacto" },
               ].map((l) => (

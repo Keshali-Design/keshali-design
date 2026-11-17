@@ -43,22 +43,3 @@ export function getStockLabel(stock: number | null): {
     return { label: "Pocas unidades", color: "text-yellow-400" };
   return { label: "Disponible", color: "text-emerald-400" };
 }
-
-export function buildWhatsAppUrl(
-  phone: string,
-  items: { title: string; quantity: number; price: number }[]
-): string {
-  const lines = items.map(
-    (i) => `• ${i.title} x${i.quantity} — ${formatCOP(i.price * i.quantity)}`
-  );
-  const total = items.reduce((s, i) => s + i.price * i.quantity, 0);
-  const message = [
-    "¡Hola! Quiero hacer un pedido:",
-    "",
-    ...lines,
-    "",
-    `*Total: ${formatCOP(total)}*`,
-  ].join("\n");
-
-  return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-}

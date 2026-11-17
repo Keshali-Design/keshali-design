@@ -3,7 +3,9 @@ import { Archivo } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { PromoBar } from "@/components/layout/PromoBar";
 import { CartDrawer } from "@/components/store/CartDrawer";
+import { CartHydrator } from "@/components/store/CartHydrator";
 import { JsonLd } from "@/components/seo/JsonLd";
 import {
   SITE_URL,
@@ -61,7 +63,6 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true, "max-image-preview": "large" },
   },
-  icons: { icon: "/logo.png", apple: "/logo.png" },
   formatDetection: { telephone: false },
 };
 
@@ -74,7 +75,7 @@ const organizationLd = {
       name: SITE_NAME,
       alternateName: "Keshali Design",
       url: SITE_URL,
-      logo: absoluteUrl("/logo.png"),
+      logo: absoluteUrl("/logo-keshali.png"),
       image: absoluteUrl("/og-image.jpg"),
       description: SITE_DESCRIPTION,
       slogan: SITE_TAGLINE,
@@ -109,10 +110,12 @@ export default function RootLayout({
     <html lang="es-CO" className={archivo.variable}>
       <body className="bg-bg text-ink antialiased">
         <JsonLd data={organizationLd} />
+        <PromoBar />
         <Header />
         <main>{children}</main>
         <Footer />
         <CartDrawer />
+        <CartHydrator />
       </body>
     </html>
   );

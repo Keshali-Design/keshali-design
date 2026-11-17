@@ -75,6 +75,7 @@ export function ProductSelector({
       quantity,
       image: activeImg,
       categoryName: product.category_name,
+      subcategoryName: product.subcategory_name,
     });
 
     setAdded(true);

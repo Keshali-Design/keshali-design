@@ -50,6 +50,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
       images: p.primary_image_url ? [p.primary_image_url] : undefined,
     })),
+    { url: absoluteUrl("/como-hacer-pedido"), lastModified: now, changeFrequency: "monthly", priority: 0.6 },
     { url: absoluteUrl("/nosotros"), lastModified: now, changeFrequency: "monthly", priority: 0.5 },
     { url: absoluteUrl("/contacto"), lastModified: now, changeFrequency: "monthly", priority: 0.5 },
   ];

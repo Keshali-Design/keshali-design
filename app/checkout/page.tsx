@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ChevronLeft, ShoppingBag } from "lucide-react";
+import { ChevronLeft, ShoppingBag, MessageCircle } from "lucide-react";
 import { useCart } from "@/lib/store/cart";
 import { formatCOP } from "@/lib/utils";
+import { buildOrderWhatsAppUrl } from "@/lib/whatsapp";
 import { createOrder } from "./actions";
 import Image from "next/image";
 
@@ -14,24 +15,53 @@ const FIELD =
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, total, clearCart } = useCart();
+  const { items, total, clearCart, contact, setContact } = useCart();
   const cartTotal = total();
+  const nameRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState({
-    customerName: "",
+    customerName: contact.name,
     customerEmail: "",
     customerPhone: "",
-    city: "",
+    city: contact.city,
     address: "",
     notes: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // The saved cart (and its contact) loads right after mount; fill only empty fields.
+  useEffect(() => {
+    setForm((f) =>
+      f.customerName || f.city
+        ? f
+        : { ...f, customerName: contact.name, city: contact.city }
+    );
+  }, [contact.name, contact.city]);
+
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) {
     setForm({ ...form, [e.target.name]: e.target.value });
+    if (e.target.name === "customerName") setContact({ name: e.target.value });
+    if (e.target.name === "city") setContact({ city: e.target.value });
+  }
+
+  // Alternative to Wompi: only the name is needed; the shop confirms the rest by chat.
+  function handleWhatsApp() {
+    if (!form.customerName.trim()) {
+      nameRef.current?.reportValidity();
+      nameRef.current?.focus();
+      return;
+    }
+    const url = buildOrderWhatsAppUrl({
+      name: form.customerName,
+      city: form.city,
+      address: form.address,
+      notes: form.notes,
+      items,
+    });
+    if (!window.open(url, "_blank", "noopener,noreferrer")) window.location.href = url;
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -94,6 +124,7 @@ export default function CheckoutPage() {
             <div>
               <label className="label-sm block mb-1">Nombre completo *</label>
               <input
+                ref={nameRef}
                 name="customerName"
                 value={form.customerName}
                 onChange={handleChange}
@@ -253,6 +284,22 @@ export default function CheckoutPage() {
           <p className="text-center text-xs text-muted leading-relaxed">
             Al hacer clic serás redirigido a Wompi, la plataforma de pago segura
             de Bancolombia. Aceptamos tarjetas, PSE, Nequi y Efecty.
+          </p>
+
+          <div className="flex items-center gap-3 text-xs text-muted" aria-hidden>
+            <span className="h-px flex-1 bg-subtle" />o<span className="h-px flex-1 bg-subtle" />
+          </div>
+
+          <button
+            type="button"
+            onClick={handleWhatsApp}
+            className="flex items-center justify-center gap-2 bg-[#128C7E] hover:bg-[#0E7A6E] text-white font-extrabold text-[13px] tracking-wide px-6 py-3.5 transition-colors"
+          >
+            <MessageCircle size={18} />
+            Enviar pedido por WhatsApp
+          </button>
+          <p className="text-center text-xs text-muted leading-relaxed">
+            Te confirmamos disponibilidad, datos de pago y envío por chat.
           </p>
         </div>
       </form>

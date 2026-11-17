@@ -35,6 +35,15 @@ export const TIKTOK = {
 };
 export const SOCIAL_LINKS = [INSTAGRAM.url, TIKTOK.url];
 
+// Moving promo strip above the header. Edit freely (real offers, shipping, etc.).
+export const PROMO_MESSAGES = [
+  "✨ Sublimación y estampado DTF de alta calidad",
+  "🎨 Personaliza camisetas, buzos, gorras, mugs y más",
+  "📲 Haz tu pedido fácil por WhatsApp",
+  `📸 Síguenos en Instagram @${INSTAGRAM.handle}`,
+  "💛 Tu esencia en cada diseño",
+];
+
 export function absoluteUrl(path: string) {
   return `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;
 }
